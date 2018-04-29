@@ -53,7 +53,7 @@
 					AuthAccessToken 		VARCHAR(256) 	NOT NULL,
 					AuthRefreshToken 		VARCHAR(256) 	NOT NULL,
 					AuthExpires 			BIGINT 			NOT NULL,
-					AuthSpotifyUserID 		INT	 			NOT NULL,
+					AuthSpotifyUserID 		VARCHAR(128) 	NOT NULL,
 					
 					PRIMARY KEY(AuthID)
 				)
@@ -75,6 +75,7 @@
 					UserID					INT	 			AUTO_INCREMENT,
 					Nickname				VARCHAR(30) 	NOT NULL,
 					IsHost					INT		 		NOT NULL,
+					UserHash 				VARCHAR(128) 	NOT NULL,
 					PartyID					INT		 		NOT NULL,
 					
 					PRIMARY KEY(UserID)

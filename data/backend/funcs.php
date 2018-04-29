@@ -26,16 +26,17 @@
 						);
 
 				$ctx  = stream_context_create($options);
-				$callback(file_get_contents($url, false, $ctx), $state);
+				$result = file_get_contents($url, false, $ctx);
+				
+				if($callback !== NULL)
+					$callback($result, $state);
 			}
 			
 			public function GetRequest($url, $headers) {
 				$options = array (
 						"http" => array (
 							"method" 			=> "GET",
-							"header"			=> 
-												  "Content-type: application/x-www-form-urlencoded\r\n"
-												. $headers
+							"header"			=> $headers
 							)
 						);
 
