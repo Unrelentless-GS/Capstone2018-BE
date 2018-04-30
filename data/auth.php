@@ -58,9 +58,9 @@
 			public function AuthoriseUser() {
 				$request = "https://accounts.spotify.com/authorize/?client_id=" . CLIENT_ID
 				. "&response_type=code&redirect_uri=" . $this->_redirectURI 
-				. "&scope=" . $this->_jukeScopes 
+				. "&scope=" . rawurlencode($this->_jukeScopes)
 				. "&state=" . STATE;
-							
+						
 				header("Location: " . $request);
 				exit();
 			}
@@ -94,7 +94,8 @@
 				
 				$JUKE->PostRequest(
 					"https://accounts.spotify.com/api/token",
-					"Authorization: Basic " . base64_encode(CLIENT_ID . ":" . CLIENT_SECRET),
+					"Content-type: application/x-www-form-urlencoded\r\n"
+					. "Authorization: Basic " . base64_encode(CLIENT_ID . ":" . CLIENT_SECRET),
 					array(
 						"grant_type"			=> "authorization_code",
 						"code"					=> $code,

@@ -28,14 +28,46 @@
 			}
 			
 			/*
+			Uses a userhash cookie to find all relevant information to
+			a party.
+			*/
+			
+			private $_getSession = "
+				SELECT 
+					a.AuthAccessToken, a.AuthRefreshToken, a.AuthExpires,
+					p.*,
+					u.*
+				FROM user u
+				
+				INNER JOIN party p
+				ON p.PartyID=u.PartyID
+				
+				INNER JOIN authentication a
+				ON a.AuthID=p.AuthID
+
+				WHERE u.UserHash=:hash
+			";
+			public function GetSessionInfo($userHash) {
+				$result = $this->RunQuery($this->_getSession,
+					[
+						"hash"		=> $userHash
+					]);
+					
+				if($result === NULL || $result->rowCount() <= 0)
+					return NULL;
+				
+				return $this->GetRow($result);
+			}
+			
+			/*
 			Start a user's playback, given a spotify track URI and party ID.
 			Example track URI: spotify:track:2u9HkCJUIfofPGMyiEBh7C
 			*/
-			public function ChangeSongForParty($partyid, $spotify_track_uri) {
+			public function ChangeSongForParty($partyid, $spotify_track_id) {
 				global $JUKE;
 				
 				$row = $this->FindPartyWithID($partyid);
-				$JUKE->PostRequest(
+				$JUKE->PutRequest(
 					"https://api.spotify.com/v1/me/player/play",
 					"Authorization:  " . $row["AuthID"],
 					array(
@@ -132,20 +164,24 @@
 				return $id;
 			}
 			
-			// Adds a track to the playlist for this party.
-			// Takes a party ID and track uri.
-			public function AddSong($partyid, $spotify_track_uri) {
-				
-			}
-			
-			// Removes a track from the playlist for this party.
-			public function RemoveSong($partyid, $spotify_track_uri) {
-				
-			}
-			
 			public function EndParty($party_id) {
-				// TODO
-				// This will destroy a party, including the row, all users, its playlist, all songs and all votes.
+				// Delete all votes.
+				$this->RunQuery("DELETE v.* FROM vote v INNER JOIN user u ON u.UserID=v.UserID WHERE u.PartyID=:id", [ "id"	=> $party_id ]);
+				
+				// Delete all songs.
+				$this->RunQuery("DELETE s.* FROM song s INNER JOIN playlist p ON p.PlaylistID=s.PlaylistID WHERE p.PartyID=:id", [ "id"	=> $party_id ]);
+				
+				// Delete playlist.
+				$this->RunQuery("DELETE p.* FROM playlist p WHERE p.PlaylistID=:id", [ "id"	=> $party_id ]);
+				
+				// Delete all users.
+				$this->RunQuery("DELETE u.* FROM user u INNER JOIN party p ON p.PartyID=u.PartyID WHERE p.PartyID=:id", [ "id"	=> $party_id ]);
+
+				// Delete auth.
+				$this->RunQuery("DELETE a.* FROM authentication a INNER JOIN party p ON p.AuthID=a.AuthID WHERE p.PartyID=:id", [ "id"	=> $party_id ]);
+				
+				// Delete party.
+				$this->RunQuery("DELETE p.* FROM party p WHERE p.PartyID=:id", [ "id"	=> $party_id ]);
 			}
 			//**----------------------------**
 		}

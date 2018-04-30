@@ -55,8 +55,10 @@
 			private function ServeExistingInfo() {
 				$userHash = $_COOKIE["JukeboxCookie"];
 				
-				// Check if user's the host, if so, serve host options as well otherwise just serve user.
-				print("Welcome to your party!");
+				require_once("data/forms/party.php");
+				$party = new CPartyForm();
+				
+				$party->ServeForm($userHash);
 			}
 			
 			private function RequestPartyInfo() {
@@ -71,7 +73,7 @@
 						$permissions 		= $json["scope"];
 						$expiresIn 			= $json["expires_in"];
 						$refreshToken		= $json["refresh_token"];
-
+						
 						// Using the above information, we can now request beginning a party.
 						$party = new CCreateParty();
 						$party->ServeForm($accessToken, $expiresIn, $refreshToken);
@@ -97,6 +99,14 @@
 				$refreshToken 		= $_POST["txtRefreshToken"];
 				$userID				= $_POST["txtUserID"];
 				
+				/* 
+				TODO
+				This needs to be fixed.
+				This should stop a user currently with a party from starting a new one.
+				
+				If their party has expired, go ahead and delete it and let them create a new one.
+				*/
+				
 				/*$party = NULL;
 				if(($party = $PARTY->FindPartyWithHostID($userID) !== NULL)) {
 					// The host does exist, send them to their party.
@@ -111,11 +121,7 @@
 				$authid = $AUTHORISATION->CreateAuthInstance($accessToken, $refreshToken, time() + $expiresIn, $userID);
 				$partyid = $PARTY->CreateParty($authid, $partyName, $uniqueString);
 				
-				$userHash = md5($partyid . "[B;WLw@',2<76{CN" . $nickname);
-				setcookie("JukeboxCookie", $userHash);
-				
-				// Now, finally, we can create a new user. and serve the existing info.
-				$USER->CreateUser($nickname, 1, $userHash, $partyid);
+				$USER->EnterNewUser($partyid, $nickname, 1);
 				header("Location: jukebox.php");
 			}
 		}

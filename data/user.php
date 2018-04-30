@@ -14,6 +14,14 @@
 				parent::__construct("User");
 			}
 			
+			public function EnterNewUser($partyid, $nickname, $ishost) {
+				$userHash = md5($partyid . "[B;WLw@',2<76{CN" . $nickname);
+				setcookie("JukeboxCookie", $userHash);
+				
+				// Now, finally, we can create a new user. and serve the existing info.
+				$this->CreateUser($nickname, $ishost, $userHash, $partyid);
+			}
+			
 			private $_insertUser = "
 				INSERT INTO user(UserID, Nickname, IsHost, UserHash, PartyID)
 				VALUES (NULL, :nick, :host, :hash, :partyid)

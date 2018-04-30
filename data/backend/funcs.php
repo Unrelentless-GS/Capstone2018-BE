@@ -17,10 +17,7 @@
 				$options = array (
 						"http" => array (
 							"method" 			=> "POST",
-							"header"			=> 
-												  "Content-type: application/x-www-form-urlencoded\r\n"
-												. "Content-Length: " . strlen($data) . "\r\n"
-												. $headers,
+							"header"			=> $headers,
 							"content" 			=> $data
 							)
 						);
@@ -42,6 +39,24 @@
 
 				$ctx  = stream_context_create($options);
 				return file_get_contents($url, false, $ctx);
+			}
+			
+			public function PutRequest($url, $headers, $params, $callback, $state) {
+				$data = http_build_query($params);
+
+				$options = array (
+						"http" => array (
+							"method" 			=> "PUT",
+							"header"			=> $headers,
+							"data" 				=> $data
+							)
+						);
+
+				$ctx  = stream_context_create($options);
+				$result = file_get_contents($url, false, $ctx);
+				
+				if($callback !== NULL)
+					$callback($result, $state);
 			}
 		}
 	}
