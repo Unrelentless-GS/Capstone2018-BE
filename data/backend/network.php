@@ -17,6 +17,8 @@
 			private $_queryValid = FALSE;
 			private $_receivedValues = NULL;
 			
+			protected $_NET_SESSION = NULL;
+			
 			function __construct($name, $user_agent, $key, $required_vars) {
 				parent::__construct($name);
 				
@@ -33,6 +35,22 @@
 					return FALSE;
 				
 				return $this->_receivedValues[$name];
+			}
+			
+			protected function SessionRequired() {
+				if(!isset($_COOKIE["JukeboxCookie"]))
+					return FALSE;
+				
+				$userHash = $_COOKIE["JukeboxCookie"];
+				if($userHash == NULL) {
+					print("no presence");
+					return;
+				}
+				
+				$this->_NET_SESSION = $this->GetSessionInfo($userHash);
+				if($this->_NET_SESSION === NULL)
+					return FALSE;
+				return TRUE;
 			}
 
 			private function MakeURLSafe($text) {

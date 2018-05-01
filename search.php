@@ -44,12 +44,16 @@
 				}
 			}
 			
+			/*
+			TODO:
+			Update to use CNetwork::SessionRequired.
+			*/
 			private function SearchViaParty($term, $type) {
 				global $PARTY;
 				global $AUTHORISATION;
 				global $USER;
 				
-				$userHash = $_COOKIE["JukeboxCookie"] or NULL;
+				$userHash = $_COOKIE["JukeboxCookie"];
 				if($userHash == NULL) {
 					print("no presence");
 					return;
