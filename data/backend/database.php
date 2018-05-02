@@ -4,7 +4,6 @@
 	Wraps a link to a database.
 	
 	This solution uses PDO, because it is genuinely the best creation ever.
-	Written by Alden Viljoen
 	*/
 	
 	require_once("srvr_info.php");

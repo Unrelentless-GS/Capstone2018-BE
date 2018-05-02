@@ -97,27 +97,6 @@
 				return $this->GetPartyPlaylist($id);
 			}
 			
-			// Returns an associative array of all songs.
-			private $_getSongs = "
-				SELECT s.*
-				FROM song
-				
-				INNER JOIN playlist p
-				ON s.PlaylistID=p.PlaylistID
-				
-				WHERE p.PartyID=:id
-			";
-			public function GetPartySongs($partyid) {
-				$result = $this->RunQuery($this->_getSongs,
-					[
-						"id"			=> $partyid
-					]);
-					
-				if($result === NULL || $result->rowCount() <= 0)
-					return NULL;
-				return $this->GetAllResults($result);
-			}
-			
 			// Removes a track from the playlist for this party.
 			// This doesn't require a userid, since it'll be the Jukebox system removing songs,
 			// after they've been played.
@@ -142,40 +121,9 @@
 					]);
 			}
 			
-			private $_addVote = "
-				INSERT INTO vote(VoteID, VoteValue, SongID, UserID)
-				VALUES (NULL, :value, :songid, :userid)
-			";
 			public function UpdateUserVote($vote, $partyid, $userid, $songid) {
 				// Clear user's current vote, whatever it is.
 				// Create a new vote instance, attach it to the Playlist for this partyid.
-				
-				$this->ClearUserVote($partyid, $userid);
-				$this->RunQuery($this->_addVote,
-					[
-						"value"				=> $vote,
-						"songid"			=> $songid,
-						"userid"			=> $userid
-					]);
-			}
-			
-			private $_clearVote = "
-				DELETE v.*
-				FROM vote v
-				
-				INNER JOIN party p
-				ON p.PartyID=:partyid
-				
-				WHERE p.PartyID=:partyid1
-					AND v.UserID=:userid
-			";
-			public function ClearUserVote($partyid, $userid) {
-				$this->RunQuery($this->_clearVote,
-					[
-						"partyid"			=> $partyid,
-						"partyid1"			=> $partyid,
-						"userid"			=> $userid
-					]);
 			}
 		}
 	}
