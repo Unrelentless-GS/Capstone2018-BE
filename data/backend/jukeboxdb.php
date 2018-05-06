@@ -46,6 +46,37 @@
 				}
 			}
 			
+			/*
+			Uses a userhash cookie to find all relevant information to
+			a party.
+			*/
+			private $_getSession = "
+				SELECT 
+					a.AuthAccessToken, a.AuthRefreshToken, a.AuthExpires,
+					p.*,
+					u.*
+				FROM user u
+				
+				INNER JOIN party p
+				ON p.PartyID=u.PartyID
+				
+				INNER JOIN authentication a
+				ON a.AuthID=p.AuthID
+
+				WHERE u.UserHash=:hash
+			";
+			public function GetSessionInfo($userHash) {
+				$result = $this->RunQuery($this->_getSession,
+					[
+						"hash"		=> $userHash
+					]);
+					
+				if($result === NULL || $result->rowCount() <= 0)
+					return NULL;
+				
+				return $this->GetRow($result);
+			}
+			
 			// The tables this class uses.
 			private $_authenticationTable = "
 				CREATE TABLE authentication(
@@ -98,9 +129,8 @@
 					SongName 				VARCHAR(128) 	NOT NULL,
 					SongArtists 			VARCHAR(192) 	NOT NULL,
 					SongAlbum 				VARCHAR(128) 	NOT NULL,
-					SongSpotifyID 			INT 			NOT NULL,
+					SongSpotifyID 			VARCHAR(128) 	NOT NULL,
 					SongImageLink 			VARCHAR(192) 	NOT NULL,
-					UserID 					INT 			NOT NULL,
 					PlaylistID 				INT 			NOT NULL,
 					
 					PRIMARY KEY(SongID)

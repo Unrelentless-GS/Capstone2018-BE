@@ -55,13 +55,15 @@
 			}
 			
 			private function HandleVoting() {
-				if(isset($_POST["SongID"]) && isset($_POST["Action"])) {
+				if(isset($_POST["SongID"]) && isset($_POST["Value"])) {
 					$songid = $_POST["SongID"];
-					if($_POST["Action"] === "1") {
+					if($_POST["Value"] === "1") {
 						$this->Upvote($songid);
-					}elseif($_POST["Action"] === "0") {
+					}elseif($_POST["Value"] === "0") {
 						$this->Downvote($songid);
 					}
+					
+					header("Location: jukebox.php");
 				}
 			}
 			
@@ -69,8 +71,8 @@
 				global $PLAYLIST;
 				$PLAYLIST->UpdateUserVote(
 					1,
-					$_NET_SESSION["PartyID"],
-					$_NET_SESSION["UserID"],
+					$this->_NET_SESSION["PartyID"],
+					$this->_NET_SESSION["UserID"],
 					$songid
 				);
 				
@@ -81,8 +83,8 @@
 				global $PLAYLIST;
 				$PLAYLIST->UpdateUserVote(
 					0,
-					$_NET_SESSION["PartyID"],
-					$_NET_SESSION["UserID"],
+					$this->_NET_SESSION["PartyID"],
+					$this->_NET_SESSION["UserID"],
 					$songid
 				);
 				

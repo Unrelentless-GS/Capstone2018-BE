@@ -9,6 +9,7 @@
 	
 	require_once("data/backend/funcs.php");
 	require_once("data/party.php");
+	require_once("data/playlist.php");
 
 	if(!class_exists("CPartyForm")) {
 		class CPartyForm {
@@ -18,7 +19,10 @@
 
 			public function ServeForm($userHash) {
 				global $PARTY;
+				$PLAYLIST = new CPlaylist;
+				
 				$session = $PARTY->GetSessionInfo($userHash);
+				$songs = $PLAYLIST->GetPartySongs($session["PartyID"]);
 				
 				?>
 				<!DOCTYPE html>
@@ -46,7 +50,73 @@
 									
 									<br>
 									
-									
+									<div>
+										<div>
+											<table width="100%" border="1">
+												<tr>
+													<td><strong>Name</strong></td>
+													<td><strong>Artist</strong></td>
+													<td><strong>Votes</strong></td>
+													<td><strong>Vote</strong></td>
+												</tr>
+												
+												<?php
+													if($songs != NULL) {
+														while($song = $PLAYLIST->GetRow($songs)) {
+															?>
+															<tr>
+																<td>
+																	<?php
+																	print($song["SongName"]);
+																	?>
+																</td>
+																
+																<td>
+																	<?php
+																	print($song["SongArtists"]);
+																	?>
+																</td>
+																
+																<td>
+																	<?php
+																	print($song["VoteCount"]);
+																	?>
+																</td>
+																	
+																<td>
+																	<form id="frmVoteUp" method="POST" action="vote.php">
+																		<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
+																		<input type="hidden" name="Action" id="Action" value="Voting">
+																		<input type="hidden" name="Value" id="Value" value="1">
+																		
+																		<button type="submit" name="btnVoteUp" id="btnVoteUp">▲</button>
+																	</form>
+																	
+																	<form id="frmVoteDown" method="POST" action="vote.php">
+																		<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
+																		<input type="hidden" name="Action" id="Action" value="Voting">
+																		<input type="hidden" name="Value" id="Value" value="0">
+																		
+																		<button type="submit" name="btnVoteDown" id="btnVoteDown">▼</button>
+																	</form>
+																<td>
+															</tr>
+														<?php
+														}
+													}
+												?>
+											</table>
+										</div>
+										
+										<div>
+											<input type="hidden" name="Mode" id="Mode" value="AuthorisationCode">
+											<input type="hidden" name="Type" id="Type" value="track">
+											
+											<input type="text" name="Term" id="Term">
+											<button name="btnAdd" id="btnAdd" type="submit">Add First Song</button>
+										</div>
+									</div>
+								</div>
 								</div>
 							</div>
 						</div>
@@ -56,6 +126,7 @@
 						<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 						<!-- Core plugin JavaScript-->
 						<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+						<script src="js/jukebox.js?3"></script>
 					</body>
 				</html>
 				<?php

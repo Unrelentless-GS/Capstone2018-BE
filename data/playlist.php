@@ -23,8 +23,8 @@
 			// Parameter $session must be a session row returned by CParty::GetSessionInfo()
 			// This function is intended to be accessed by an endpoint.
 			private $_addSong = "
-				INSERT INTO song(SongID, SongName, SongArtists, SongAlbum, SongSpotifyID, SongImageLink, UserID, PlaylistID)
-				VALUES (NULL, :name, :artist, :album, :id, :image, :userid, :playlistid)
+				INSERT INTO song(SongID, SongName, SongArtists, SongAlbum, SongSpotifyID, SongImageLink, PlaylistID)
+				VALUES (NULL, :name, :artist, :album, :id, :image, :playlistid)
 			";
 			public function AddSong($session, $spotify_track_id) {
 				global $JUKE;
@@ -45,6 +45,11 @@
 				$album 		= $obj["album"]["name"];
 				$image		= $obj["album"]["images"][0]["url"];
 				
+				error_log("Name: " . $name);
+				error_log("Artists: " . $artist);
+				error_log("Album: " . $album);
+				error_log("Image: " . $image);
+				
 				$songid = $this->RunQuery_GetLastInsertID($this->_addSong,
 					[
 						"name"			=> $name,
@@ -52,7 +57,6 @@
 						"album"			=> $album,
 						"id"			=> $spotify_track_id,
 						"image"			=> $image,
-						"userid"		=> $session["UserID"],
 						"playlistid"	=> $playlist["PlaylistID"]
 					])["InsertID"];
 					
@@ -87,21 +91,35 @@
 			public function GetPartyPlaylist($partyid) {
 				$playlist = $this->RunQuery("SELECT * FROM playlist WHERE PartyID=:id", ["id"=>$partyid]);
 				if($playlist !== NULL && $playlist->rowCount() > 0)
-					return $this->GetResult($playlist);
+					return $this->GetRow($playlist);
 				
-				$id = $this->RunQuery_GetLastInsertID("
+				$this->RunQuery("
 					INSERT INTO playlist(PlaylistID, CurrentlyPlaying, PartyID)
-					VALUES (NULL, '', :id
-				", ["id"=>$partyid])["InsertID"];
+					VALUES (NULL, 'NONE', :id)
+				", ["id"=>$partyid]);
 				
-				return $this->GetPartyPlaylist($id);
+				return $this->GetPartyPlaylist($partyid);
 			}
 			
-			// Returns an associative array of all songs.
+			// Returns a statement containing all songs.
 			private $_getSongs = "
-				SELECT s.*
-				FROM song
-				
+				SELECT 
+					s.*,
+					(
+						SELECT COALESCE(SUM(v.VoteValue),0)
+						FROM vote v
+						
+						INNER JOIN song s
+						ON s.SongID=v.SongID
+						
+						INNER JOIN playlist p
+						ON s.PlaylistID=p.PlaylistID
+						
+						WHERE p.PartyID=:partyid
+					) AS VoteCount
+					
+				FROM song s
+
 				INNER JOIN playlist p
 				ON s.PlaylistID=p.PlaylistID
 				
@@ -110,12 +128,13 @@
 			public function GetPartySongs($partyid) {
 				$result = $this->RunQuery($this->_getSongs,
 					[
+						"partyid"		=> $partyid,
 						"id"			=> $partyid
 					]);
 					
 				if($result === NULL || $result->rowCount() <= 0)
 					return NULL;
-				return $this->GetAllResults($result);
+				return $result;
 			}
 			
 			// Removes a track from the playlist for this party.

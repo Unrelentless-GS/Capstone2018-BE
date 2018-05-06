@@ -13,11 +13,13 @@
 
 	if(!class_exists("CAuthResult")) {
 		class CAuthResult extends CJukeboxDB {
-			private $_redirectURI = "https://spotify-jukebox.viljoen.industries/jukebox.php";
+			private $_redirectURI;
 			private $_jukeScopes = "user-modify-playback-state user-read-playback-state playlist-read-private user-library-read user-read-email user-read-private user-read-birthdate";
 			
 			function __construct() {
 				parent::__construct("AuthResult");
+				
+				$this->_redirectURI = REDIRECT_URI;
 			}
 			
 			private $_insertAuth = "
