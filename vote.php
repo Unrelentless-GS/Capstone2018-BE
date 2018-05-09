@@ -82,7 +82,7 @@
 			private function Downvote($songid) {
 				global $PLAYLIST;
 				$PLAYLIST->UpdateUserVote(
-					0,
+					-1,
 					$this->_NET_SESSION["PartyID"],
 					$this->_NET_SESSION["UserID"],
 					$songid

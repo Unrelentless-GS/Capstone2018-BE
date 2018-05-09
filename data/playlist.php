@@ -101,7 +101,9 @@
 				return $this->GetPartyPlaylist($partyid);
 			}
 			
-			// Returns a statement containing all songs.
+			// Added AND statement in subquery, to return a single song.
+			// Returns a statement containing all songs
+			// and all votes for each song row.
 			private $_getSongs = "
 				SELECT 
 					s.*,
@@ -109,13 +111,14 @@
 						SELECT COALESCE(SUM(v.VoteValue),0)
 						FROM vote v
 						
-						INNER JOIN song s
-						ON s.SongID=v.SongID
+						INNER JOIN song s1
+						ON s1.SongID=v.SongID
 						
 						INNER JOIN playlist p
-						ON s.PlaylistID=p.PlaylistID
+						ON s1.PlaylistID=p.PlaylistID
 						
 						WHERE p.PartyID=:partyid
+							AND s.SongID=v.SongID
 					) AS VoteCount
 					
 				FROM song s
@@ -166,10 +169,10 @@
 				VALUES (NULL, :value, :songid, :userid)
 			";
 			public function UpdateUserVote($vote, $partyid, $userid, $songid) {
-				// Clear user's current vote, whatever it is.
+				// Clear user's current vote on the selected SONG, whatever it is.
 				// Create a new vote instance, attach it to the Playlist for this partyid.
 				
-				$this->ClearUserVote($partyid, $userid);
+				$this->ClearUserVote($partyid, $songid, $userid);
 				$this->RunQuery($this->_addVote,
 					[
 						"value"				=> $vote,
@@ -185,15 +188,23 @@
 				INNER JOIN party p
 				ON p.PartyID=:partyid
 				
+				INNER JOIN playlist pl
+				ON pl.PartyID=p.PartyID
+				
+				INNER JOIN song s
+				ON s.PlaylistID=pl.PlaylistID
+				
 				WHERE p.PartyID=:partyid1
 					AND v.UserID=:userid
+					AND s.SongID=:songid
 			";
-			public function ClearUserVote($partyid, $userid) {
+			public function ClearUserVote($partyid, $songid, $userid) {
 				$this->RunQuery($this->_clearVote,
 					[
 						"partyid"			=> $partyid,
 						"partyid1"			=> $partyid,
-						"userid"			=> $userid
+						"userid"			=> $userid,
+						"songid"			=> $songid
 					]);
 			}
 		}
