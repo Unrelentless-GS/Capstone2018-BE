@@ -36,7 +36,7 @@
 				$playlist = $this->GetPartyPlaylist($session["PartyID"]);
 				// Make a request to Spotify for info on this song.
 				
-				$json = $JUKE->GetRequest("https://api.spotify.com/v1/tracks/" . $spotify_track_id, "Authorization: Bearer " . $session["AuthAccessToken"]);
+				$json = $JUKE->GetRequest("https://api.spotify.com/v1/tracks/" . $spotify_track_id, array("Authorization: Bearer " . $session["AuthAccessToken"]));
 				$obj = json_decode($json, TRUE);
 				
 				// Currently will only display the first Artist.
@@ -44,11 +44,6 @@
 				$artist 	= $obj["artists"][0]["name"];
 				$album 		= $obj["album"]["name"];
 				$image		= $obj["album"]["images"][0]["url"];
-				
-				error_log("Name: " . $name);
-				error_log("Artists: " . $artist);
-				error_log("Album: " . $album);
-				error_log("Image: " . $image);
 				
 				$songid = $this->RunQuery_GetLastInsertID($this->_addSong,
 					[

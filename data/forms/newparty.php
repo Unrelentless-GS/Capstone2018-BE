@@ -87,9 +87,11 @@
 				$result = $JUKE->GetRequest(
 					"https://api.spotify.com/v1/me",
 					
-					"Accept: application/json\r\n"
-					  . "Content-Type: application/json\r\n"
-					  . "Authorization: Bearer " . $accessToken
+					array(
+						"Accept: application/json",
+						"Content-Type: application/json",
+						"Authorization: Bearer " . $accessToken
+					)
 				);
 				
 				$obj = json_decode($result, TRUE);

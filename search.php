@@ -76,8 +76,10 @@
 				
 				$JUKE->PostRequest(
 					"https://accounts.spotify.com/api/token",
-					"Content-type: application/x-www-form-urlencoded\r\n" .
-					"Authorization: Basic " . base64_encode(CLIENT_ID . ":" . CLIENT_SECRET),
+					array(
+						"Content-type: application/x-www-form-urlencoded",
+						"Authorization: Basic " . base64_encode(CLIENT_ID . ":" . CLIENT_SECRET)
+					),
 					array(
 						"grant_type"			=> "client_credentials"
 					), 
@@ -117,7 +119,7 @@
 				"?q=" . urlencode($term) . 
 				"&type=" . $type;
 				
-				$results = $JUKE->GetRequest($request, "Authorization: Bearer " . $token);
+				$results = $JUKE->GetRequest($request, array("Authorization: Bearer " . $token));
 				
 				print($results);
 			}

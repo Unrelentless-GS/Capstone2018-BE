@@ -24,6 +24,11 @@
 				$session = $PARTY->GetSessionInfo($userHash);
 				$songs = $PLAYLIST->GetPartySongs($session["PartyID"]);
 				
+				if(isset($_POST["btnPlay"])) {
+					$PARTY->ChangeSongForParty(
+						$_POST["PartyID"],
+						$_POST["SongSpotifyID"]);
+				}
 				?>
 				<!DOCTYPE html>
 				<html lang="en">
@@ -58,6 +63,7 @@
 													<td><strong>Artist</strong></td>
 													<td><strong>Votes</strong></td>
 													<td><strong>Vote</strong></td>
+													<td><strong>Play</strong></td>
 												</tr>
 												
 												<?php
@@ -99,7 +105,17 @@
 																		
 																		<button type="submit" name="btnVoteDown" id="btnVoteDown">▼</button>
 																	</form>
+																</td>
+
 																<td>
+																	<form action="" method="POST">
+																		<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
+																		<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+																		<input type="hidden" name="SongSpotifyID" id="SongSpotifyID" value="<?php print($song["SongSpotifyID"]); ?>">
+																		
+																		<button type="submit" name="btnPlay">Play</button>
+																	</form>
+																</td>
 															</tr>
 														<?php
 														}

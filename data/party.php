@@ -37,10 +37,13 @@
 				$row = $this->FindPartyWithID($partyid);
 				$JUKE->PutRequest(
 					"https://api.spotify.com/v1/me/player/play",
-					"Authorization:  " . $row["AuthID"],
-					array(
-						"uris"			=> json_encode(array($spotify_track_id))
-					), 
+					array( 
+						"Content-Type: application/json",
+						"Accept: application/json",
+						"Authorization: Bearer " . $row["AuthAccessToken"]
+					),
+					 json_encode(array("uris" => array("spotify:track:" . $spotify_track_id))),
+					NULL,
 					NULL
 				);
 			}
@@ -50,7 +53,14 @@
 			Summary
 			Locating a party row.
 			*/
-			private $_findPartyWithID = "SELECT * FROM party WHERE PartyID=:id";
+			private $_findPartyWithID = "SELECT a.*,
+												p.*
+										 FROM party p 
+										 
+										 INNER JOIN authentication a
+										 ON a.AuthID=p.AuthID
+										 
+										 WHERE PartyID=:id";
 			public function FindPartyWithID($id) {
 				$result = $this->RunQuery($this->_findPartyWithID,
 					[

@@ -65,14 +65,15 @@
 				if(time() > $this->_NET_SESSION["AuthExpires"]) {
 					global $JUKE;
 					
-					error_log("Token is NOT usable");
 					// Authorisation has expired.
 					// Request a new token.
 					
 					$JUKE->PostRequest(
 						"https://accounts.spotify.com/api/token",
-							"Content-type: application/x-www-form-urlencoded\r\n" .
-							"Authorization: Basic " . base64_encode(CLIENT_ID . ":" . CLIENT_SECRET),
+						array(
+							"Content-type: application/x-www-form-urlencoded",
+							"Authorization: Basic " . base64_encode(CLIENT_ID . ":" . CLIENT_SECRET)
+						),
 						array(
 							"grant_type"		=> "refresh_token",
 							"refresh_token"		=> $this->_NET_SESSION["AuthRefreshToken"]
@@ -96,8 +97,6 @@
 						
 						NULL
 					);
-				}else{
-					error_log("Token is usable");
 				}
 			}
 			

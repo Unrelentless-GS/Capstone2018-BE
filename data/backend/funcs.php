@@ -8,55 +8,62 @@
 	if(!class_exists("CJukeFunctions")) {
 		class CJukeFunctions {
 			/*
-			Trying to keep the solution native for now, but cURL is also
-			an option down the road, should the below become too minimal or redundant in features.
+				Parameter Summary:
+				url - String, the URL to connect to
+				headers - Array, an array containing headers
+				params - Array, an array containing k/v's
+				callback - Function(string, object) callback function
+				state - Object, a state object
 			*/
 			public function PostRequest($url, $headers, $params, $callback, $state) {
 				$data = http_build_query($params);
-
-				$options = array (
-						"http" => array (
-							"method" 			=> "POST",
-							"header"			=> $headers,
-							"content" 			=> $data
-							)
-						);
-
-				$ctx  = stream_context_create($options);
-				$result = file_get_contents($url, false, $ctx);
 				
+				$conn = curl_init($url);
+				curl_setopt($conn, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($conn, CURLOPT_CUSTOMREQUEST, "POST");
+				
+				curl_setopt($conn, CURLOPT_POSTFIELDS, $data);
+				curl_setopt($conn, CURLOPT_HTTPHEADER, $headers);
+				
+				$response = curl_exec($conn);
 				if($callback !== NULL)
-					$callback($result, $state);
+					$callback($response, $state);
 			}
 			
+			/*
+				Parameter Summary:
+				url - String, the URL to connect to
+				headers - Array, an array containing headers
+			*/
 			public function GetRequest($url, $headers) {
-				$options = array (
-						"http" => array (
-							"method" 			=> "GET",
-							"header"			=> $headers
-							)
-						);
-
-				$ctx  = stream_context_create($options);
-				return file_get_contents($url, false, $ctx);
+				$conn = curl_init($url);
+				curl_setopt($conn, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($conn, CURLOPT_CUSTOMREQUEST, "GET");
+				
+				curl_setopt($conn, CURLOPT_HTTPHEADER, $headers);
+				
+				return curl_exec($conn);
 			}
 			
-			public function PutRequest($url, $headers, $params, $callback, $state) {
-				$data = http_build_query($params);
-
-				$options = array (
-						"http" => array (
-							"method" 			=> "PUT",
-							"header"			=> $headers,
-							"data" 				=> $data
-							)
-						);
-
-				$ctx  = stream_context_create($options);
-				$result = file_get_contents($url, false, $ctx);
+			/*
+				Parameter Summary:
+				url - String, the URL to connect to
+				headers - Array, an array containing headers
+				data - A STRING, containing the body data
+				callback - Function(string, object) callback function
+				state - Object, a state object
+			*/
+			public function PutRequest($url, $headers, $data, $callback, $state) {
+				$conn = curl_init($url);
+				curl_setopt($conn, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($conn, CURLOPT_CUSTOMREQUEST, "PUT");
 				
+				curl_setopt($conn, CURLOPT_POSTFIELDS, $data);
+				curl_setopt($conn, CURLOPT_HTTPHEADER, $headers);
+				
+				$response = curl_exec($conn);
 				if($callback !== NULL)
-					$callback($result, $state);
+					$callback($response, $state);
 			}
 		}
 	}
