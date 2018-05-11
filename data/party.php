@@ -92,10 +92,10 @@
 				INNER JOIN authentication a
 				ON p.AuthID=a.AuthID
 				WHERE a.AuthSpotifyUserID=:id";
-			public function FindPartyWithHostID($userid) {
+			public function FindPartyWithHostID($spotify_user_id) {
 				$result = $this->RunQuery($this->_findPartyWithHostID,
 					[
-						"id"			=> $userid
+						"id"			=> $spotify_user_id
 					]);
 				
 				if($result === NULL || $result->rowCount() <= 0)

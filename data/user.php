@@ -14,8 +14,28 @@
 				parent::__construct("User");
 			}
 			
+			private $_updateUserHash = "
+				UPDATE user u
+				SET UserHash=:hash, 
+					Nickname=:nick
+				
+				WHERE u.PartyID=:partyid
+					AND u.IsHost=1
+			";
+			public function UpdateHostUserHash($partyid, $nickname) {
+				$userHash = md5($partyid . random_bytes(15) . $nickname);
+				
+				setcookie("JukeboxCookie", $userHash);
+				$this->RunQuery($this->_updateUserHash,	
+					[
+						"nick"			=> $nickname,
+						"partyid"		=> $partyid,
+						"hash"			=> $userHash
+					]);
+			}
+			
 			public function EnterNewUser($partyid, $nickname, $ishost) {
-				$userHash = md5($partyid . "[B;WLw@',2<76{CN" . $nickname);
+				$userHash = md5($partyid . random_bytes(15) . $nickname);
 				setcookie("JukeboxCookie", $userHash);
 				
 				// Now, finally, we can create a new user. and serve the existing info.

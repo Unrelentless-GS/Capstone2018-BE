@@ -49,6 +49,8 @@
 				}elseif(isset($_POST["btnGuest"])) {
 					// TODO.
 					return;
+				}else{
+					header("Location: index.php");
 				}
 			}
 			
@@ -99,23 +101,26 @@
 				$refreshToken 		= $_POST["txtRefreshToken"];
 				$userID				= $_POST["txtUserID"];
 				
+				$partyName 			= $_POST["txtPartyName"];
+				$nickname 			= $_POST["txtNickname"];
+				
 				/* 
 				TODO
-				This needs to be fixed.
-				This should stop a user currently with a party from starting a new one.
+				We need to define what 'expired' means.
+				For now, it'll bring the party back no matter how long its been inactive.
 				
-				If their party has expired, go ahead and delete it and let them create a new one.
+				This is still broken. But also out of scope.
 				*/
 				
 				/*$party = NULL;
 				if(($party = $PARTY->FindPartyWithHostID($userID) !== NULL)) {
 					// The host does exist, send them to their party.
-					$this->ServeExistingInfo();
+					$USER->UpdateHostUserHash($party["PartyID"], $nickname);
+					
+					header("Location: jukebox.php");
 					return;
 				}*/
 				
-				$partyName = $_POST["txtPartyName"];
-				$nickname = $_POST["txtNickname"];
 				$uniqueString = $PARTY->GenerateUniqueString($partyName, $nickname, time());
 
 				$authid = $AUTHORISATION->CreateAuthInstance($accessToken, $refreshToken, time() + $expiresIn, $userID);

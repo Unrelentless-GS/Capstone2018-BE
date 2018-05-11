@@ -165,9 +165,9 @@
 			";
 			public function UpdateUserVote($vote, $partyid, $userid, $songid) {
 				// Clear user's current vote on the selected SONG, whatever it is.
-				// Create a new vote instance, attach it to the Playlist for this partyid.
+				// Create a new vote instance, attach it to the song.
 				
-				$this->ClearUserVote($partyid, $songid, $userid);
+				$this->ClearUserVote($songid, $userid);
 				$this->RunQuery($this->_addVote,
 					[
 						"value"				=> $vote,
@@ -176,28 +176,20 @@
 					]);
 			}
 			
+			/*
+			- CREDIT FOR FIX -
+			Brendan greatly simplified and corrected this function.
+			*/
 			private $_clearVote = "
 				DELETE v.*
 				FROM vote v
-				
-				INNER JOIN party p
-				ON p.PartyID=:partyid
-				
-				INNER JOIN playlist pl
-				ON pl.PartyID=p.PartyID
-				
-				INNER JOIN song s
-				ON s.PlaylistID=pl.PlaylistID
-				
-				WHERE p.PartyID=:partyid1
-					AND v.UserID=:userid
-					AND s.SongID=:songid
+
+				WHERE v.UserID=:userid
+					AND v.SongID=:songid
 			";
-			public function ClearUserVote($partyid, $songid, $userid) {
+			public function ClearUserVote($songid, $userid) {
 				$this->RunQuery($this->_clearVote,
 					[
-						"partyid"			=> $partyid,
-						"partyid1"			=> $partyid,
 						"userid"			=> $userid,
 						"songid"			=> $songid
 					]);
