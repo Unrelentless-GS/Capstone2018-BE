@@ -57,6 +57,13 @@
 			private function ServeExistingInfo() {
 				$userHash = $_COOKIE["JukeboxCookie"];
 				
+				if($this->IsSessionValid() === FALSE) {
+					setcookie("JukeboxCookie", "");
+					header("Location: index.php");
+					
+					return;
+				}
+				
 				require_once("data/forms/party.php");
 				$party = new CPartyForm();
 				
@@ -107,19 +114,17 @@
 				/* 
 				TODO
 				We need to define what 'expired' means.
-				For now, it'll bring the party back no matter how long its been inactive.
-				
-				This is still broken. But also out of scope.
+				For now, it'll bring the party back no matter how long its been inactive, just under the new name and host nickname.
 				*/
 				
-				/*$party = NULL;
-				if(($party = $PARTY->FindPartyWithHostID($userID) !== NULL)) {
+				$party = $PARTY->FindPartyWithHostID($userID);
+				if($party !== NULL) {
 					// The host does exist, send them to their party.
 					$USER->UpdateHostUserHash($party["PartyID"], $nickname);
-					
+
 					header("Location: jukebox.php");
 					return;
-				}*/
+				}
 				
 				$uniqueString = $PARTY->GenerateUniqueString($partyName, $nickname, time());
 

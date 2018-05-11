@@ -16,8 +16,8 @@
 			
 			private $_updateUserHash = "
 				UPDATE user u
-				SET UserHash=:hash, 
-					Nickname=:nick
+				SET u.UserHash=:hash, 
+					u.Nickname=:nick
 				
 				WHERE u.PartyID=:partyid
 					AND u.IsHost=1

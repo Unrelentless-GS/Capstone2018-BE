@@ -15,6 +15,7 @@
 		class CNetwork extends CJukeboxDB {
 			private $_userAgent = ""; // The only user agent that should ever contact this script.
 			
+			private $_sessionAvailable = TRUE;
 			private $_queryValid = FALSE;
 			private $_receivedValues = NULL;
 			
@@ -31,6 +32,12 @@
 			
 			public function QueryValid() {
 				return $this->_queryValid;
+			}
+			
+			// Returns TRUE if the userhash stored as a cookie was able to retrieve the 
+			// user's session info. False if not.
+			public function IsSessionValid() {
+				return $this->_sessionAvailable === TRUE;
 			}
 			
 			public function GetValue($name) {
@@ -53,14 +60,17 @@
 				$this->_NET_SESSION = $this->GetSessionInfo($userHash);
 				if($this->_NET_SESSION === NULL)
 					return FALSE;
+				
 				return TRUE;
 			}
 
 			// TODO: Test this.
 			// Checks if the AuthAccessToken is valid, if not, requests a new one using refresh token.
 			private function CheckIfTokenIsUsable() {
-				if($this->_NET_SESSION === NULL && $this->SessionRequired() === FALSE)
+				if($this->SessionRequired() === FALSE) {
+					$this->_sessionAvailable = FALSE;
 					return;
+				}
 				
 				if(time() > $this->_NET_SESSION["AuthExpires"]) {
 					global $JUKE;
