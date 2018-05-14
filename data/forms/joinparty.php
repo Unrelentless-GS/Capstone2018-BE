@@ -11,64 +11,68 @@
 		<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 		<!-- Custom styles for this template-->
 		<link href="css/sb-admin.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
 	</head>
 
-	<body class="bg-dark">
-		<div class="container">
-			<div class="card  mx-auto mt-5">
-				<div class="card-header">Join a Party</div>
-				<div class="card-body">
-					<?php
-						/*
-						Summary
-						Provides a form for both getting the guest's username AND getting a guests target room ID.
-						Written by Alden Viljoen
-						*/
-						
-						require_once("data/backend/funcs.php");
-						require_once("data/party.php");
+	<body>
+		<?php
+			/*
+			Summary
+			Provides a form for both getting the guest's username AND getting a guests target room ID.
+			Written by Alden Viljoen
+			*/
+			
+			require_once("data/backend/funcs.php");
+			require_once("data/party.php");
 
-						if(!class_exists("CJoinParty")) {
-							class CJoinParty {
-								function __construct() {
-									
-								}
-								
-								public function GetUsername($party) {
-									// We already have the party the user wants to join,
-									// we just need their personal info now.
-									
-									?>
+			if(!class_exists("CJoinParty")) {
+				class CJoinParty {
+					function __construct() {
+						
+					}
+					
+					public function GetUsername($party) {
+						// We already have the party the user wants to join,
+						// we just need their personal info now.
+						
+						?>
+						<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+						<section class="cols-xs-12 login-content guest-login section">
+							<table class="login-choice guest-list">
+								<div class="formwrapper">
 									<form method="POST" action="join.php">
 										<input type="hidden" name="PartyID" value="<?php print($party["PartyID"]); ?>">
-										
-										<label for="txtNickname">Nickname: </label>
-										<input type="text" name="txtNickname" id="txtNickname">
-										
-										<button type="submit" name="btnJoin">Join</button>
+  										<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
+									 	<input type="submit" value="Join">
 									</form>
-									<?php
-								}
-								
-								public function RequestPartyID() {
-									// The user wants to join a party. Which one though?
-									
-									?>
+								</div>
+							</table>
+						</section>
+						<?php
+					}
+					
+					public function RequestPartyID() {
+						// The user wants to join a party. Which one though?
+						
+						?>
+						<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+						<section class="cols-xs-12 login-content guest-login section">
+							<table class="login-choice guest-list">
+								<div class="formwrapper">
 									<form method="GET" action="join.php">
-										<label for="ID">Party Unique ID: </label>
-										<input type="text" name="ID" id="ID">
-										
-										<button type="submit" name="btnJoin">Join</button>
+										<input type="hidden" name="PartyID" value="<?php print($party["PartyID"]); ?>">
+  										<input type="text" name="ID" id="ID" placeholder="Party Unique ID"> <br>
+									 	<input type="submit" name="btnJoin" value="Join">
 									</form>
-									<?php
-								}
-							}
-						}
-					?>
-				</div>
-			</div>
-		</div>
-		
+								</div>
+							</table>
+						</section>
+						<?php
+					}
+				}
+			}
+		?>
+
 		<!-- Bootstrap core JavaScript-->
 		<script src="vendor/jquery/jquery.min.js"></script>
 		<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

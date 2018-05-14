@@ -73,28 +73,3 @@ function sortTable()
 		}
 	}
 }
-
-/* ANTE's FUNCTIONS */
-$(document).ready(function() {
-	$(".logo-loginpage").click(function(){
-		$(".login-content:not(.login-selector)").fadeOut(-5000);
-		$(".button-hostlogin").fadeIn();
-		$(".button-guestlogin").fadeIn();
-	});
-});
-
-$(document).ready(function() {
-	$(".button-hostlogin").click(function(){
-		$(".button-hostlogin").fadeOut(-5000);
-		$(".button-guestlogin").fadeOut(-5000);
-		$(".host-login").fadeIn();
-	});
-});
-
-$(document).ready(function() {
-	$(".button-guestlogin").click(function(){
-		$(".button-hostlogin").fadeOut(-5000);
-		$(".button-guestlogin").fadeOut(-5000);
-		$(".guest-login").fadeIn();
-	});
-});

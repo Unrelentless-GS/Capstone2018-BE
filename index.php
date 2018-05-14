@@ -23,7 +23,6 @@
 
 	<!-- Latest compiled JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="js/spotifyJS.js?v=3"></script>
 	<link href="css/style.css" rel="stylesheet">
 </head>
 <body>
@@ -32,30 +31,16 @@
 		<section class="cols-xs-12 login-content login-selector section">
 			<table class="login-choice login-list">
 				<div>
-					<button type="button" class = "button-hostlogin">Host a party!</button>
+					<form method="POST" action="jukebox.php">
+						<input type="hidden" name="txtServeType" value="HTML">
+						<button type="submit" class = "button-hostlogin" name="btnHost" id="btnHost">Host a party!</button>
+					</form>
 				</div>
 				<br></br>
 				<div>
-					<button type="button" class = "button-guestlogin">Join a party!</button>
-				</div>
-			</table>
-		</section>
-		<section class="cols-xs-12 login-content host-login section">
-			<table class="login-choice host-list">
-				<div>
 					<form method="POST" action="jukebox.php">
 						<input type="hidden" name="txtServeType" value="HTML">
-						<button type="submit" class = "button-hostloginconfirm" name="btnHost" id="btnHost">Login</button>
-					</form>
-				</div>
-			</table>
-		</section>
-		<section class="cols-xs-12 login-content guest-login section">
-			<table class="login-choice guest-list">
-				<div>
-					<form method="POST" action="jukebox.php">
-						<input type="hidden" name="txtServeType" value="HTML">
-						<button type="submit" class = "button-hostloginconfirm" name="btnGuest" id="btnGuest">Login</button>
+						<button type="submit" class = "button-guestlogin" name="btnGuest" id="btnGuest">Join a party!</button>
 					</form>
 				</div>
 			</table>
