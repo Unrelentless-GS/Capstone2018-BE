@@ -57,10 +57,19 @@ function PerformQuery() {
 /*
 	Brendan changed Initialise to tigger AddSong on a search, instead of a button click.
 */
-function Initialise() {
-	var searchBox = null;
-	if((searchBox = document.getElementById("Term")) != null)
-		searchBox.onsearch = PerformQuery;
+function Initialise() 
+{
+	var input = document.getElementById("Term");
+	// Execute a function when the user releases a key on the keyboard
+	input.addEventListener("keyup", function(event){	
+		// Cancel the default action, if needed
+		event.preventDefault();
+		// Number 13 is the "Enter" key on the keyboard
+		if ((event.keyCode === 13) && (searchBox = document.getElementById("Term") != null))
+		{
+		 	PerformQuery();
+		}
+	});
 }
 
 Initialise();

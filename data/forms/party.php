@@ -49,7 +49,7 @@
 				
 					<!-- Latest compiled JavaScript -->
 					<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-					<script src="js/spotifyJS.js?v=1"></script>
+					<script src="js/spotifyJS.js?v=2"></script>
 					<link href="css/style.css" rel="stylesheet">
 				</head>
 				<body>
@@ -213,7 +213,7 @@
 					</div>
 
 					<!-- Include all compiled plugins (below), or include individual files as needed -->
-					<script src="js/jukebox.js?v=1"></script>
+					<script src="js/jukebox.js?v=29"></script>
 				</body>
 				</html>
 				<?php
