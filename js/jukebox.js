@@ -54,10 +54,13 @@ function PerformQuery() {
 	console.log("Querying...");
 }
 
+/*
+	Brendan changed Initialise to tigger AddSong on a search, instead of a button click.
+*/
 function Initialise() {
-	var btnSearch = null;
-	if((btnSearch = document.getElementById("btnAdd")) != null)
-		btnSearch.onclick = PerformQuery;
+	var searchBox = null;
+	if((searchBox = document.getElementById("Term")) != null)
+		searchBox.onsearch = PerformQuery;
 }
 
 Initialise();

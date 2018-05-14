@@ -117,7 +117,6 @@
 					) AS VoteCount
 					
 				FROM song s
-
 				INNER JOIN playlist p
 				ON s.PlaylistID=p.PlaylistID
 				
@@ -176,6 +175,7 @@
 					]);
 			}
 			
+
 			/*
 			- CREDIT FOR FIX -
 			Brendan greatly simplified and corrected this function.
@@ -183,16 +183,44 @@
 			private $_clearVote = "
 				DELETE v.*
 				FROM vote v
-
+				
 				WHERE v.UserID=:userid
 					AND v.SongID=:songid
 			";
 			public function ClearUserVote($songid, $userid) {
 				$this->RunQuery($this->_clearVote,
 					[
+						"songid"			=> $songid,
+						"userid"			=> $userid
+					]);
+			}
+
+			// Get Votes For a specific User
+			private $_userVotes = "
+				SELECT v.VoteValue
+				FROM vote v
+
+				WHERE v.UserID=:userid
+					AND v.SongID=:songid
+			";
+			public function GetVotesForUserForSong($userid,$songid) {
+				$result = $this->RunQuery($this->_userVotes,
+					[
 						"userid"			=> $userid,
 						"songid"			=> $songid
 					]);
+				
+				$votestate = 0;
+				while( $usersvote = $this->GetRow($result)) {
+					
+					if ($usersvote["VoteValue"] == 1) {
+						 $votestate=1;
+					}
+					else if ($usersvote["VoteValue"] == -1) {
+						 $votestate=-1;
+					}
+				}
+				return $votestate;
 			}
 		}
 	}
