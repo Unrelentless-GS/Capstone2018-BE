@@ -42,9 +42,9 @@ function PerformQuery() {
 	xhttp.onreadystatechange = function() {
 		if(this.readyState == 4 && this.status == 200) {
 			var tracks = JSON.parse(this.responseText).tracks.items;
+
+			tracks.forEach(AddToList)
 			
-			// Add the very first item to the list.
-			AddSong(tracks[0].id);
 		}
 	}
 	
@@ -52,6 +52,38 @@ function PerformQuery() {
 	xhttp.send();
 	
 	console.log("Querying...");
+}
+
+function AddToList(item, index)
+{
+	var tr = document.createElement("TR"); 
+
+	var title = document.createElement("td");
+	var t = document.createTextNode(item.name);
+	title.appendChild(t);
+	tr.appendChild(title);
+
+    var artist = document.createElement("td");
+    var t = document.createTextNode(item.artists[0].name);
+	artist.appendChild(t);
+	tr.appendChild(artist);
+
+	var id = item.id;
+
+    var button = document.createElement("td");
+    //button.setAttribute("onclick", "AddSong("+item.id+")");
+	button.onclick = function() 
+	{
+    	AddSong(id);
+	};
+    var buttoni = document.createElement("i");
+    buttoni.setAttribute("class", "fas fa-plus addSongBtn");
+
+    button.appendChild(buttoni);
+	tr.appendChild(button);
+
+    var searchresults = document.getElementById("search-results")
+    searchresults.appendChild(tr);
 }
 
 /*
@@ -65,7 +97,7 @@ function Initialise()
 		// Cancel the default action, if needed
 		event.preventDefault();
 		// Number 13 is the "Enter" key on the keyboard
-		if ((event.keyCode === 13) && (searchBox = document.getElementById("Term") != null))
+		if ((event.keyCode === 13) && (document.getElementById("Term") != null))
 		{
 		 	PerformQuery();
 		}

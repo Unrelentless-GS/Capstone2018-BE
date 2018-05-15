@@ -30,7 +30,22 @@
 			/*
 			Start a user's playback, given a spotify track URI and party ID.
 			Example track URI: spotify:track:2u9HkCJUIfofPGMyiEBh7C
+			Also, updates the party's playlist to point to the currently playing song.
 			*/
+				private $_updateCurrentlyPlaying = "
+				UPDATE playlist p
+				SET 
+					CurrentlyPlaying = 
+						(
+							SELECT s.SongID
+							FROM song s
+							WHERE s.SongSpotifyID=:songid
+							LIMIT 1
+						),
+					PlaybackStarted = UNIX_TIMESTAMP()
+					
+				WHERE p.PartyID=:partyid
+			";
 			public function ChangeSongForParty($partyid, $spotify_track_id) {
 				global $JUKE;
 				
@@ -46,6 +61,12 @@
 					NULL,
 					NULL
 				);
+
+				$this->RunQuery($this->_updateCurrentlyPlaying,
+					[
+						"partyid"		=> $partyid,
+						"songid"		=> $spotify_track_id
+					]);
 			}
 
 			/**----------------------------**

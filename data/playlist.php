@@ -23,9 +23,9 @@
 			// Parameter $session must be a session row returned by CParty::GetSessionInfo()
 			// This function is intended to be accessed by an endpoint.
 			private $_addSong = "
-				INSERT INTO song(SongID, SongName, SongArtists, SongAlbum, SongSpotifyID, SongImageLink, PlaylistID)
-				VALUES (NULL, :name, :artist, :album, :id, :image, :playlistid)
-			";
+				INSERT INTO song(SongID, SongName, SongArtists, SongAlbum, SongSpotifyID, SongImageLink, SongDuration, PlaylistID)
+				VALUES (NULL, :name, :artist, :album, :id, :image, :duration, :playlistid)
+ 			";
 			public function AddSong($session, $spotify_track_id) {
 				global $JUKE;
 				
@@ -44,6 +44,7 @@
 				$artist 	= $obj["artists"][0]["name"];
 				$album 		= $obj["album"]["name"];
 				$image		= $obj["album"]["images"][0]["url"];
+				$duration 	= $obj["duration_ms"];
 				
 				$songid = $this->RunQuery_GetLastInsertID($this->_addSong,
 					[
@@ -52,6 +53,7 @@
 						"album"			=> $album,
 						"id"			=> $spotify_track_id,
 						"image"			=> $image,
+						"duration"		=> (int)($duration / 1000),
 						"playlistid"	=> $playlist["PlaylistID"]
 					])["InsertID"];
 					

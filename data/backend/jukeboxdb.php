@@ -117,6 +117,7 @@
 				CREATE TABLE playlist(
 					PlaylistID 				INT 			AUTO_INCREMENT,
 					CurrentlyPlaying 		INT	 			NOT NULL,
+					PlaybackStarted 		BIGINT 			NOT NULL,
 					PartyID 				INT 			NOT NULL,
 					
 					PRIMARY KEY(PlaylistID)
@@ -131,6 +132,7 @@
 					SongAlbum 				VARCHAR(128) 	NOT NULL,
 					SongSpotifyID 			VARCHAR(128) 	NOT NULL,
 					SongImageLink 			VARCHAR(192) 	NOT NULL,
+					SongDuration 			BIGINT		 	NOT NULL,
 					PlaylistID 				INT 			NOT NULL,
 					
 					PRIMARY KEY(SongID)

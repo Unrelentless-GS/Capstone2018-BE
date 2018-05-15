@@ -32,24 +32,22 @@
 
 				?>
 				<!DOCTYPE html>
-				<html lang="en">
+				<html lang="en" data-ng-app="spotifyApp">
 				<head>
-					<meta charset="utf-8">
-					<meta http-equiv="X-UA-Compatible" content="IE=edge">
-					<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+					<meta charset="utf-8"/>
 					<title>Spotify Jukebox</title>
-
+					<!--Bootstrap-->
 					<!-- Latest compiled and minified CSS -->
 					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 				
-					<script src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+					<script src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"				></script>
 				
 					<!-- jQuery library -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 				
 					<!-- Latest compiled JavaScript -->
 					<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-					<script src="js/spotifyJS.js?v=2"></script>
+					<script src="js/spotifyJS.js?ver=3"></script>
 					<link href="css/style.css" rel="stylesheet">
 				</head>
 				<body>
@@ -61,126 +59,145 @@
 										<img class="logo" src="Spotify_Logo_RGB_Green.png" />
 									</div>
 									<div class="col-xs-10 searchbar section">
-										<div class="navbar-form" role="search">
-											<div class="input-group add-on">
-												<input type="hidden" name="Mode" id="Mode" value="AuthorisationCode">
-												<input type="hidden" name="Type" id="Type" value="track">
-												<input class="form-control" placeholder="Search..." name="Term" id="Term" type="search">
-											</div>
+										<input type="hidden" name="Mode" id="Mode" value="AuthorisationCode">
+										<input type="hidden" name="Type" id="Type" value="track">
+										<input class="form-control" placeholder="Search..." name="Term" id="Term" type="search">
+									</div>
+								</div>
+								<div class="row results-row display-hide">
+									<div class="col-xs-2">
+									</div>
+									<div class="col-xs-10 search-results">
+										<div class="table-responsive" >	
+											<table id="search-table" class="table search-list">
+												<tbody id="search-results">
+												</tbody>
+											</table>
 										</div>
 									</div>
 								</div>
 								<div class="row content-row">
 									<div class="col-xs-12 main-frame">
-										<!-- <iframe src="vote.html" class="main-content"></iframe> -->
 										<section class="cols-xs-12 playlist-content vote-selector section">
 											<h1 class="content-header">Party Playlist</h1>
-											<table id="vote-table" class="choice-list vote-list">
-												<tbody>
-													<?php
-														if($songs != NULL) {
-															while($song = $PLAYLIST->GetRow($songs)) {
-															?>
-																<tr class='song-select'>
-																	<td class="song">
-																		<?php
-																		print($song["SongName"]);
-																		?>
-																	</td>
-																	
-																	<td class="artist">
-																		<?php
-																		print($song["SongArtists"]);
-																		?>
-																	</td>
-
-																	<?php
-																	
-																	$votestate = $PLAYLIST->GetVotesForUserForSong($session["UserID"],$song["SongID"]);
-																	if ($votestate == 1)
-																	{
-																		?> <td class="upvote active-vote"> <?php
-																	}
-																	else
-																	{
-																		?> <td class="upvote"> <?php
-																	}
-																	?>
-																		<form id="frmVoteUp" method="POST" action="vote.php">
-																			<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
-																			<input type="hidden" name="Action" id="Action" value="Voting">
-																			<?php
-																			if ($votestate == 1)
-																			{
-																				?> <input type="hidden" name="Value" id="Value" value="0"> <?php
-																			}
-																			else
-																			{
-																				?> <input type="hidden" name="Value" id="Value" value="1"> <?php
-																			}
-																			?>
-																			<button type="submit" name="btnVoteUp" id="btnVoteUp"><i class="fas fa-arrow-up"></i></button>
-																		</form>
-																	</td>
 				
-																	<td class="voteCount">
-																		<?php
-																			print($song["VoteCount"]);
-																		?>
-																	</td>
-																	
-																	<?php
-																	if ($votestate == -1)
-																	{
-																		?> <td class="downvote active-vote"> <?php
-																	}
-																	else
-																	{
-																		?> <td class="downvote"> <?php
-																	}
-																	?>
-																		<form id="frmVoteDown" method="POST" action="vote.php">
-																			<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
-																			<input type="hidden" name="Action" id="Action" value="Voting">
+											<div class="table-responsive">	
+												<table id="vote-table" class="table choice-list vote-list">
+													<thead>
+														<tr>
+															<th>Track</th>
+															<th>Artist</th>
+															<th></th>
+															<th class="voteHeader">Vote</th>
+															<th></th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php
+															if($songs != NULL) {
+																while($song = $PLAYLIST->GetRow($songs)) {
+																?>
+																	<tr class='song-select'>
+																		<td class="song">
 																			<?php
-																			if ($votestate == -1)
-																			{
-																				?> <input type="hidden" name="Value" id="Value" value="0"> <?php
-																			}
-																			else
-																			{
-																				?> <input type="hidden" name="Value" id="Value" value="-1"> <?php
-																			}
+																			print($song["SongName"]);
 																			?>
-																			<button type="submit" name="btnVoteDown" id="btnVoteDown"><i class="fas fa-arrow-down"></i></button>
-																		</form>
-																	</td>
-
-																	<td>
-																		<form action="" method="POST">
-																			<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
-																			<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
-																			<input type="hidden" name="SongSpotifyID" id="SongSpotifyID" value="<?php print($song["SongSpotifyID"]); ?>">
-																			
-																			<button type="submit" name="btnPlay">Play</button>
-																		</form>
-																	</td>
-
-																</tr>
-															<?php
+																		</td>
+																		
+																		<td class="artist">
+																			<?php
+																			print($song["SongArtists"]);
+																			?>
+																		</td>
+				
+																		<?php
+																		
+																		$votestate = $PLAYLIST->GetVotesForUserForSong($session["UserID"],$song["SongID"]);
+																		if ($votestate == 1)
+																		{
+																			?> <td class="upvote active-vote"> <?php
+																		}
+																		else
+																		{
+																			?> <td class="upvote"> <?php
+																		}
+																		?>
+																			<form id="frmVoteUp" method="POST" action="vote.php">
+																				<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
+																				<input type="hidden" name="Action" id="Action" value="Voting">
+																				<?php
+																				if ($votestate == 1)
+																				{
+																					?> <input type="hidden" name="Value" id="Value" value="0"> <?php
+																				}
+																				else
+																				{
+																					?> <input type="hidden" name="Value" id="Value" value="1"> <?php
+																				}
+																				?>
+																				<button type="submit" name="btnVoteUp" id="btnVoteUp"><i class="fas fa-arrow-up"></i></button>
+																			</form>
+																		</td>
+								
+																		<td class="voteCount">
+																			<?php
+																				print($song["VoteCount"]);
+																			?>
+																		</td>
+																		
+																		<?php
+																		if ($votestate == -1)
+																		{
+																			?> <td class="downvote active-vote"> <?php
+																		}
+																		else
+																		{
+																			?> <td class="downvote"> <?php
+																		}
+																		?>
+																			<form id="frmVoteDown" method="POST" action="vote.php">
+																				<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
+																				<input type="hidden" name="Action" id="Action" value="Voting">
+																				<?php
+																				if ($votestate == -1)
+																				{
+																					?> <input type="hidden" name="Value" id="Value" value="0"> <?php
+																				}
+																				else
+																				{
+																					?> <input type="hidden" name="Value" id="Value" value="-1"> <?php
+																				}
+																				?>
+																				<button type="submit" name="btnVoteDown" id="btnVoteDown"><i class="fas fa-arrow-down"></i></button>
+																			</form>
+																		</td>
+				
+																		<td>
+																			<form action="" method="POST">
+																				<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
+																				<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+																				<input type="hidden" name="SongSpotifyID" id="SongSpotifyID" value="<?php print($song["SongSpotifyID"]); ?>">
+																				
+																				<button type="submit" name="btnPlay">Play</button>
+																			</form>
+																		</td>
+				
+																	</tr>
+																<?php
+																}
 															}
-														}
-													?>
-												</tbody>
-											</table>
+														?>
+													</tbody>
+												</table>
+											</div>
 										</section>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div>
-						<label for="lblUniqueLink">Give this to your friends: </label>
-							<label name="lblUniqueLink" id="lblUniqueLink">https://spotify-jukebox.viljoen.industries/join.php?ID=<?php print($session["PartyUniqueID"]); ?></label>
+						<!--<div>
+							<label for="lblUniqueLink">Give this to your friends: </label>
+							<label name="lblUniqueLink" id="lblUniqueLink">https://spotify-jukebox.viljoen.industries/join.php?ID=<?php print($session["PartyUniqueID"]); ?></label>-->
 						</div>
 						<div class="row">
 							<div class="col-xs-12 section current-music">
@@ -211,9 +228,11 @@
 							</div>
 						</div>
 					</div>
-
+				
+					<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+					<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 					<!-- Include all compiled plugins (below), or include individual files as needed -->
-					<script src="js/jukebox.js?v=29"></script>
+					<script src="js/jukebox.js?ver=26"></script>-->
 				</body>
 				</html>
 				<?php

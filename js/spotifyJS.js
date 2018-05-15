@@ -42,6 +42,12 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+	jQuery('.searchbar').on('keypress', function(){
+		jQuery('.searchbar.section').addClass('header-active');
+		jQuery('.main-frame').fadeOut();
+		jQuery('.results-row').fadeIn();
+	});
 });
 
 function sortTable()
@@ -55,7 +61,7 @@ function sortTable()
 	{
 		switching = false;
 		rows = table.getElementsByTagName("TR");
-		for (var i = 1, row1; row1 = table.rows[i]; i++) 
+		for (var i = 2, row1; row1 = table.rows[i]; i++) 
 		{
 			shouldSwitch = false;
 			x = rows[i - 1].getElementsByTagName("TD")[3];
