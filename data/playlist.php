@@ -23,8 +23,8 @@
 			// Parameter $session must be a session row returned by CParty::GetSessionInfo()
 			// This function is intended to be accessed by an endpoint.
 			private $_addSong = "
-				INSERT INTO song(SongID, SongName, SongArtists, SongAlbum, SongSpotifyID, SongImageLink, PlaylistID)
-				VALUES (NULL, :name, :artist, :album, :id, :image, :playlistid)
+				INSERT INTO song(SongID, SongName, SongArtists, SongAlbum, SongSpotifyID, SongImageLink, SongDuration, PlaylistID)
+				VALUES (NULL, :name, :artist, :album, :id, :image, :duration, :playlistid)
 			";
 			public function AddSong($session, $spotify_track_id) {
 				global $JUKE;
@@ -44,6 +44,7 @@
 				$artist 	= $obj["artists"][0]["name"];
 				$album 		= $obj["album"]["name"];
 				$image		= $obj["album"]["images"][0]["url"];
+				$duration 	= $obj["duration_ms"];
 				
 				$songid = $this->RunQuery_GetLastInsertID($this->_addSong,
 					[
@@ -52,6 +53,7 @@
 						"album"			=> $album,
 						"id"			=> $spotify_track_id,
 						"image"			=> $image,
+						"duration"		=> (int)($duration / 1000),
 						"playlistid"	=> $playlist["PlaylistID"]
 					])["InsertID"];
 					
@@ -117,7 +119,6 @@
 					) AS VoteCount
 					
 				FROM song s
-
 				INNER JOIN playlist p
 				ON s.PlaylistID=p.PlaylistID
 				
@@ -176,6 +177,7 @@
 					]);
 			}
 			
+
 			/*
 			- CREDIT FOR FIX -
 			Brendan greatly simplified and corrected this function.
@@ -183,16 +185,44 @@
 			private $_clearVote = "
 				DELETE v.*
 				FROM vote v
-
+				
 				WHERE v.UserID=:userid
 					AND v.SongID=:songid
 			";
 			public function ClearUserVote($songid, $userid) {
 				$this->RunQuery($this->_clearVote,
 					[
+						"songid"			=> $songid,
+						"userid"			=> $userid
+					]);
+			}
+
+			// Get Votes For a specific User
+			private $_userVotes = "
+				SELECT v.VoteValue
+				FROM vote v
+
+				WHERE v.UserID=:userid
+					AND v.SongID=:songid
+			";
+			public function GetVotesForUserForSong($userid,$songid) {
+				$result = $this->RunQuery($this->_userVotes,
+					[
 						"userid"			=> $userid,
 						"songid"			=> $songid
 					]);
+				
+				$votestate = 0;
+				while( $usersvote = $this->GetRow($result)) {
+					
+					if ($usersvote["VoteValue"] == 1) {
+						 $votestate=1;
+					}
+					else if ($usersvote["VoteValue"] == -1) {
+						 $votestate=-1;
+					}
+				}
+				return $votestate;
 			}
 		}
 	}

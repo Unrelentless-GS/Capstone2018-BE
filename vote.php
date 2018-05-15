@@ -59,8 +59,10 @@
 					$songid = $_POST["SongID"];
 					if($_POST["Value"] === "1") {
 						$this->Upvote($songid);
-					}elseif($_POST["Value"] === "0") {
+					}elseif($_POST["Value"] === "-1") {
 						$this->Downvote($songid);
+					}elseif($_POST["Value"] === "0") {
+						$this->RemoveVote($songid);
 					}
 					
 					header("Location: jukebox.php");
@@ -89,6 +91,15 @@
 				);
 				
 				// Some more downvote-related functionality here.
+			}
+ 			
+ 			//Brendan added ability to remove votes
+			private function RemoveVote($songid) {
+				global $PLAYLIST;
+				$PLAYLIST->ClearUserVote(
+					$songid, 
+					$this->_NET_SESSION["UserID"]
+				);
 			}
 		}
 	}
