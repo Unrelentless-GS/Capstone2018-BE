@@ -12,9 +12,11 @@
 	Written by Alden Viljoen
 	*/
 	
-	require_once("../backend/jukeboxdb.php");
-	require_once("../party.php");
-	require_once("../playlist.php");
+	set_include_path("/home/anubis/www/jukebox_viljoen_industries/public/data/");
+	
+	require_once("backend/jukeboxdb.php");
+	require_once("party.php");
+	require_once("playlist.php");
 	
 	if(!class_exists("CSongLoader")) {
 		class CSongLoader extends CJukeboxDB {
@@ -42,6 +44,7 @@
 				WHERE ((p1.PlaybackStarted + s.SongDuration) - UNIX_TIMESTAMP() <= 2)
 			";
 			private function CheckAllParties() {
+				error_log("Checking");
 				$results = $this->RunGetQuery($this->_getAllFinishingSongs);
 				
 				if($results === NULL || $results->rowCount() <= 0)
