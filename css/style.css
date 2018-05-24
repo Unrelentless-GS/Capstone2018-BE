@@ -77,15 +77,22 @@ body {
 
 html, body {
 	margin: 0; 
-	height: 100%; 
-	overflow: hidden;
+	height: 100%;
+}
+
+body::-webkit-scrollbar { 
+	width: 0 !important; 
 }
 
 ul {
   list-style-type: none;
 }
 
-.results-row {
+/*.results-row {
+	display: none;
+}*/
+
+.display-hide {
 	display: none;
 }
 
@@ -178,7 +185,7 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 }
 
 .main-row {
-	height: 100%;
+	height: 110%;
 }
 
 .searchbar {
@@ -209,11 +216,26 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 	color: #fff;
 	border: none;
 	font-size: 30px;
+	padding-left: 30px;
+	padding-right: 0;
 }
 
-.header-active {
+.searchbar.section {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.form-active {
 	background-color: #424242;
 }
+
+/*.form-control:focus {
+	background-color: #424242;
+}
+
+.form-control:active {
+	background-color: #424242;
+}*/
 
 .input-group.add-on {
 	width: 100%;
@@ -237,6 +259,8 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 .navbar-form {
 	height: 100%;
 	margin-top: 0;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .logo {
