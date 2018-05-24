@@ -47,7 +47,7 @@
 				
 					<!-- Latest compiled JavaScript -->
 					<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-					<script src="js/spotifyJS.js?ver=3"></script>
+					<script src="js/spotifyJS.js?ver=6"></script>
 					<link href="css/style.css" rel="stylesheet">
 				</head>
 				<body>
@@ -201,30 +201,60 @@
 						</div>
 						<div class="row">
 							<div class="col-xs-12 section current-music">
+								<?php
+									$current = $PLAYLIST->GetCurrentSong($session["PartyID"]);
+									while($csong = $PLAYLIST->GetRow($current)) {
+								?>
 								<div class="row current-row">
 									<div class="col-xs-6 artwork">
-										<i class="fas fa-music"></i>
+										<?php
+											$url = $csong["SongImageLink"];
+											$allow = ['gif', 'jpg', 'png'];  // allowed extensions
+											$img = file_get_contents($url);
+											$url_info = pathinfo($url);
+											
+											// if allowed extension
+											//if(in_array($url_info['extension'], $allow)) {
+											  // Format the image SRC:  data:{mime};base64,{img_data_base64};
+											  $src = 'data:image/jpg; base64,'. base64_encode($img);
+											
+											  // add the base64 image into a <img> to display it
+											  $re = '<img src="'. $src .'" height="45" width="45"/>';
+											//}
+											//else $re = 'Invalid extension: '. $url_info['extension'];
+											
+											echo $re;  // output $re data 
+										?>
 									</div>
 									<div class="col-xs-6 current-info">
 										<div class="row">
 											<div class="col-xs-12">
-												Current Song<br />
+												<?php
+													print($csong["SongName"]);
+												?>
+												<br />
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-xs-12">
-												Current Artist
+												<?php
+													print($csong["SongArtists"]);
+												?>
 											</div>
 										</div>
 									</div>
 								</div>
+
 								<div class="row progress-row">
 									<div class="col-xs-1"></div>
 									<div class="col-xs-10 total-progress-bar">
 										<div class="music-progress"></div>
 									</div>
 									<div class="col-xs-1"></div>
-								</div>	
+								</div>
+								<?php	
+									}
+								?>
 							</div>
 						</div>
 					</div>

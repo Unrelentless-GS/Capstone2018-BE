@@ -224,6 +224,28 @@
 				}
 				return $votestate;
 			}
+
+			// Gets Currently Playing Song
+			private $_currentSong = "
+				SELECT s.*
+				FROM song s
+
+				INNER JOIN playlist p
+				ON s.PlaylistID=p.PlaylistID
+				
+				WHERE s.SongID=p.CurrentlyPlaying
+					AND p.PartyID=:partyid
+			";
+			public function GetCurrentSong($partyid) {
+				$result = $this->RunQuery($this->_currentSong,
+					[
+						"partyid"			=> $partyid,
+					]);
+
+				if($result === NULL || $result->rowCount() <= 0)
+					return NULL;
+				return $result;
+			}
 		}
 	}
 	
