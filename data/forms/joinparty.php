@@ -36,13 +36,13 @@
 						// we just need their personal info now.
 						
 						?>
-						<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
 						<section class="cols-xs-12 login-content guest-login section">
+							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
 							<table class="login-choice guest-list">
 								<div class="formwrapper">
 									<form method="POST" action="join.php">
 										<input type="hidden" name="PartyID" value="<?php print($party["PartyID"]); ?>">
-  										<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
+										<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
 									 	<input type="submit" value="Join">
 									</form>
 								</div>
@@ -55,7 +55,7 @@
 						// The user wants to join a party. Which one though?
 						
 						?>
-						<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
 						<section class="cols-xs-12 login-content guest-login section">
 							<table class="login-choice guest-list">
 								<div class="formwrapper">

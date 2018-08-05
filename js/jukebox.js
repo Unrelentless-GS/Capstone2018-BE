@@ -43,6 +43,13 @@ function PerformQuery() {
 		if(this.readyState == 4 && this.status == 200) {
 			var tracks = JSON.parse(this.responseText).tracks.items;
 
+			//Clear list
+			var searchresults = document.getElementById("search-results")
+			while (searchresults.firstChild) {
+				searchresults.removeChild(searchresults.firstChild);
+			}
+
+			//Add to list
 			tracks.forEach(AddToList)
 			
 		}

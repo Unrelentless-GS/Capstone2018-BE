@@ -44,9 +44,9 @@
 						<link href="css/style.css" rel="stylesheet">
 					</head>
 
-					<body>
-						<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+					<body>	
 						<section class="cols-xs-12 login-content host-login section">
+							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
 							<table class="login-choice host-list">
 								<div class="formwrapper">
 									<form method="POST" action="jukebox.php">
@@ -56,8 +56,8 @@
 										<input type="hidden" name="txtUserID" value="<?php print($id); ?>">
 										
 										<input type="text" name="txtPartyName" id="txtPartyName" placeholder="Name your party.."> <br>
-  										<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
-  										<input type="submit" value="Create">
+										<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
+										<input type="submit" value="Create">
 									</form>
 								</div>
 							</table>

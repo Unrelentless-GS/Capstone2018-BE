@@ -88,14 +88,6 @@ ul {
   list-style-type: none;
 }
 
-/*.results-row {
-	display: none;
-}*/
-
-.display-hide {
-	display: none;
-}
-
 .search-results {
 	background-color: #424242;
 }
@@ -185,7 +177,7 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 }
 
 .main-row {
-	height: 110%;
+	height: 100%;
 }
 
 .searchbar {
@@ -201,6 +193,10 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 	height: 100%;
 	width: 45%;
 	color: green;
+}
+
+.display-hide {
+	display: none;
 }
 
 .form-control:focus {
@@ -229,14 +225,6 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 	background-color: #424242;
 }
 
-/*.form-control:focus {
-	background-color: #424242;
-}
-
-.form-control:active {
-	background-color: #424242;
-}*/
-
 .input-group.add-on {
 	width: 100%;
 	height: 100%;
@@ -264,7 +252,16 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 }
 
 .logo {
-	width: 70%;
+	height: 90%;
+	max-width: 90%;
+	margin-top: 5%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+.logo-containter {
+	height:100%;
+	padding:0;
 }
 
 .logo-row {
@@ -418,4 +415,8 @@ input {
     display: block;
     font-size: 16px;
     margin: 0 auto;
+}
+
+.host-login, .guest-login, .login-selector {
+    margin-top: 10%;
 }
