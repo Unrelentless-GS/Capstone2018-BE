@@ -25,7 +25,7 @@
 			private $_addSong = "
 				INSERT INTO song(SongID, SongName, SongArtists, SongAlbum, SongSpotifyID, SongImageLink, SongDuration, PlaylistID)
 				VALUES (NULL, :name, :artist, :album, :id, :image, :duration, :playlistid)
-			";
+ 			";
 			public function AddSong($session, $spotify_track_id) {
 				global $JUKE;
 				
@@ -223,6 +223,28 @@
 					}
 				}
 				return $votestate;
+			}
+
+			// Gets Currently Playing Song
+			private $_currentSong = "
+				SELECT s.*
+				FROM song s
+
+				INNER JOIN playlist p
+				ON s.PlaylistID=p.PlaylistID
+				
+				WHERE s.SongID=p.CurrentlyPlaying
+					AND p.PartyID=:partyid
+			";
+			public function GetCurrentSong($partyid) {
+				$result = $this->RunQuery($this->_currentSong,
+					[
+						"partyid"			=> $partyid,
+					]);
+
+				if($result === NULL || $result->rowCount() <= 0)
+					return NULL;
+				return $result;
 			}
 		}
 	}

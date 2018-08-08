@@ -47,7 +47,9 @@
 					// Serve the custom info screen.
 					$this->RequestPartyInfo();
 				}elseif(isset($_POST["btnGuest"])) {
-					// TODO.
+					// User wants to join a party as a guest
+					// Redirect them to join.php
+					header("Location: join.php");
 					return;
 				}else{
 					header("Location: index.php");

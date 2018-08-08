@@ -32,7 +32,7 @@
 			Example track URI: spotify:track:2u9HkCJUIfofPGMyiEBh7C
 			Also, updates the party's playlist to point to the currently playing song.
 			*/
-			private $_updateCurrentlyPlaying = "
+				private $_updateCurrentlyPlaying = "
 				UPDATE playlist p
 				SET 
 					CurrentlyPlaying = 
@@ -61,7 +61,7 @@
 					NULL,
 					NULL
 				);
-				
+
 				$this->RunQuery($this->_updateCurrentlyPlaying,
 					[
 						"partyid"		=> $partyid,

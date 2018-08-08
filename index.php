@@ -8,43 +8,43 @@
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>Spotify Jukebox</title>
-		<!-- Bootstrap core CSS-->
-		<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-		<!-- Custom fonts for this template-->
-		<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-		<!-- Custom styles for this template-->
-		<link href="css/sb-admin.css" rel="stylesheet">
-	</head>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Spotify Jukebox</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-	<body class="bg-dark">
-		<div class="container">
-			<div class="card  mx-auto mt-5">
-				<div class="card-header">Spotify Jukebox</div>
-				<div class="card-body">
+	<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<section class="cols-xs-12 login-content login-selector section">
+			<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+			<table class="login-choice login-list">
+				<div>
 					<form method="POST" action="jukebox.php">
 						<input type="hidden" name="txtServeType" value="HTML">
-						<button type="submit" name="btnHost" id="btnHost">Host</button>
-					</form>
-					
-					<br>
-					
-					<form method="POST" action="jukebox.php">
-						<input type="hidden" name="txtServeType" value="HTML">
-						<button type="submit" name="btnGuest" id="btnGuest">Guest</button>
+						<button type="submit" class = "button-hostlogin" name="btnHost" id="btnHost">Host a party!</button>
 					</form>
 				</div>
-			</div>
-		</div>
-		
-		<!-- Bootstrap core JavaScript-->
-		<script src="vendor/jquery/jquery.min.js"></script>
-		<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-		<!-- Core plugin JavaScript-->
-		<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-	</body>
+				<br></br>
+				<div>
+					<form method="POST" action="jukebox.php">
+						<input type="hidden" name="txtServeType" value="HTML">
+						<button type="submit" class = "button-guestlogin" name="btnGuest" id="btnGuest">Join a party!</button>
+					</form>
+				</div>
+			</table>
+		</section>
+	</div>
+</body>
 </html>

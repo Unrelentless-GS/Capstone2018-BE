@@ -41,30 +41,27 @@
 						<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 						<!-- Custom styles for this template-->
 						<link href="css/sb-admin.css" rel="stylesheet">
+						<link href="css/style.css" rel="stylesheet">
 					</head>
 
-					<body class="bg-dark">
-						<div class="container">
-							<div class="card  mx-auto mt-5">
-								<div class="card-header">Create a Party</div>
-								<div class="card-body">
+					<body>	
+						<section class="cols-xs-12 login-content host-login section">
+							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+							<table class="login-choice host-list">
+								<div class="formwrapper">
 									<form method="POST" action="jukebox.php">
 										<input type="hidden" name="txtAccessToken" value="<?php print($accessToken); ?>">
 										<input type="hidden" name="txtExpiresIn" value="<?php print($expiresIn); ?>">
 										<input type="hidden" name="txtRefreshToken" value="<?php print($refreshToken); ?>">
 										<input type="hidden" name="txtUserID" value="<?php print($id); ?>">
 										
-										<label for="txtPartyName">Party Name: </label>
-										<input type="text" name="txtPartyName" id="txtPartyName">
-										
-										<label for="txtNickname">Your Nickname: </label>
-										<input type="text" name="txtNickname" id="txtNickname">
-										
-										<button type="submit">Create</button>
+										<input type="text" name="txtPartyName" id="txtPartyName" placeholder="Name your party.."> <br>
+										<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
+										<input type="submit" value="Create">
 									</form>
 								</div>
-							</div>
-						</div>
+							</table>
+						</section>
 						
 						<!-- Bootstrap core JavaScript-->
 						<script src="vendor/jquery/jquery.min.js"></script>
