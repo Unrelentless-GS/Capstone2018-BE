@@ -43,7 +43,7 @@ function PerformQuery() {
 		if(this.readyState == 4 && this.status == 200) {
 			var tracks = JSON.parse(this.responseText).tracks.items;
 
-			//Clear list
+			//Clears previous results before displaying new one's. - Brendan
 			var searchresults = document.getElementById("search-results")
 			while (searchresults.firstChild) {
 				searchresults.removeChild(searchresults.firstChild);
@@ -93,20 +93,31 @@ function AddToList(item, index)
     searchresults.appendChild(tr);
 }
 
-/*
-	Brendan changed Initialise to tigger AddSong on a search, instead of a button click.
-*/
 function Initialise() 
 {
 	var input = document.getElementById("Term");
 	// Execute a function when the user releases a key on the keyboard
-	input.addEventListener("keyup", function(event){	
+	var timer;
+	input.addEventListener("keyup", function(event)
+	{	
 		// Cancel the default action, if needed
 		event.preventDefault();
-		// Number 13 is the "Enter" key on the keyboard
-		if ((event.keyCode === 13) && (document.getElementById("Term") != null))
-		{
-		 	PerformQuery();
+		// Reset timer
+		clearTimeout(timer);
+		// If term is not empty
+		if(jQuery('.form-control').val().length > 0){
+			//If key == enter, search immediately
+			if (event.keyCode === 13)
+			{
+				PerformQuery()
+			}
+			else
+			{
+				//Else Set timer for 2 seconds
+    			timer = setTimeout(function (event){
+        			PerformQuery()
+   				}, 2000);
+			}
 		}
 	});
 }

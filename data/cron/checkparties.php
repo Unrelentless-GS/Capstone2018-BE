@@ -58,11 +58,12 @@
 			// Determine the song with the next highest votes and play it.
 			// Don't play the same one.
 			// In fact, maybe remove the old one.
+			// FIXED to remove NULL results - Brendan
 			private $_getNextHighestVoted = "
 				SELECT s.SongID,
 						s.SongSpotifyID,
 						(
-							SELECT SUM(v.VoteValue)
+							SELECT COALESCE(SUM(v.VoteValue),0) As Val
 							FROM vote v
 							WHERE v.SongID=s.SongID
 						) AS Value
@@ -97,7 +98,7 @@
 				}
 							
 				// Fine to remove the current song.
-				$PLAYLIST->RemoveSong($currentSongID, $currentSongSpotifyID);
+				$PLAYLIST->RemoveSong($currentSongID);
 				
 				// Play the next song.
 				$nextSongRow = $this->GetRow($nextSong);

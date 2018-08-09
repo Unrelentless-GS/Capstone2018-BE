@@ -47,7 +47,7 @@
 				
 					<!-- Latest compiled JavaScript -->
 					<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-					<script src="js/spotifyJS.js?v=1"></script>
+					<script src="js/spotifyJS.js?v=2"></script>
 					<link href="css/style.css?v=2" rel="stylesheet">
 				</head>
 				<body>
@@ -61,7 +61,7 @@
 									<div class="col-xs-10 searchbar section">
 										<input type="hidden" name="Mode" id="Mode" value="AuthorisationCode">
 										<input type="hidden" name="Type" id="Type" value="track">
-										<input class="form-control actualsearchbar" placeholder="Search..." name="Term" id="Term" type="search">
+										<input class="form-control" placeholder="Search..." name="Term" id="Term" type="search">
 									</div>
 								</div>
 								<div class="row results-row display-hide">
@@ -202,6 +202,9 @@
 							<div class="col-xs-12 section current-music">
 								<?php
 									$current = $PLAYLIST->GetCurrentSong($session["PartyID"]);
+									// If there is no current song, don't try to call current song
+									// If there is a current song, display the current song\
+									// - Brendan
 									if ($current === NULL)
 									{
 										?>
@@ -237,6 +240,7 @@
 											<div class="row current-row">
 												<div class="col-xs-6 artwork">
 													<?php
+														//Display song image
 														$url = $csong["SongImageLink"];
 														$allow = ['gif', 'jpg', 'png'];  // allowed extensions
 														$img = file_get_contents($url);
@@ -259,6 +263,7 @@
 													<div class="row">
 														<div class="col-xs-12">
 															<?php
+																//Display song name
 																print($csong["SongName"]);
 															?>
 															<br />
@@ -267,6 +272,7 @@
 													<div class="row">
 														<div class="col-xs-12">
 															<?php
+																//Display artist name
 																print($csong["SongArtists"]);
 															?>
 														</div>
@@ -291,7 +297,7 @@
 					<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 					<!-- Include all compiled plugins (below), or include individual files as needed -->
-					<script src="js/jukebox.js?v=1"></script>-->
+					<script src="js/jukebox.js?v=18"></script>-->
 				</body>
 				</html>
 				<?php

@@ -135,28 +135,31 @@
 					return NULL;
 				return $result;
 			}
-			
-			// Removes a track from the playlist for this party.
-			// This doesn't require a userid, since it'll be the Jukebox system removing songs,
-			// after they've been played.
-			private $_deleteSong = "
-				DELETE s.*, v.*
-				FROM song s
-				
-				INNER JOIN vote v
-				ON s.SongID=v.SongID
-				
-				INNER JOIN playlist p
-				ON p.PlaylistID=s.PlaylistID
-				
-				WHERE s.SongSpotifyID=:track_id
-					AND p.PartyID=:partyid
+
+			// Removes all the votes for a song, prior to the song being delted. - Brendan
+			private $_removeVotesForSong = "
+				DELETE v.*
+				FROM vote v
+				WHERE v.SongID=:songid
 			";
-			public function RemoveSong($partyid, $spotify_track_uri) {
+			public function RemoveVotesForSong($songid) {
+				$this->RunQuery($this->_clearVote,
+					[
+						"songid"			=> $songid,
+					]);
+			}
+			
+			// Remove a song from the database. - Brendan
+			private $_deleteSong = "
+				DELETE s.*
+				FROM song s
+				WHERE s.SongID=:songid
+			";
+			public function RemoveSong($songid) {
+				RemoveVotesForSong($songid);
 				$this->RunQuery($this->_deleteSong,
 					[
-						"track_id"			=> $spotify_track_uri,
-						"partyid"			=> $partyid
+						"songid"			=> $songid,
 					]);
 			}
 			
@@ -177,7 +180,6 @@
 					]);
 			}
 			
-
 			/*
 			- CREDIT FOR FIX -
 			Brendan greatly simplified and corrected this function.
