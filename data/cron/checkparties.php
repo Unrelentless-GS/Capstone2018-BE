@@ -20,11 +20,18 @@
 	
 	if(!class_exists("CSongLoader")) {
 		class CSongLoader extends CJukeboxDB {
+			private $_started = 0;
+			
 			function __construct() {
 				parent::__construct("SongLoader");
+				$this->_started = time();
 				
 				while(true) {
 					$this->CheckAllParties();
+					
+					if($this->_started + 60 < time()){
+						exit();
+					}
 					sleep(2);
 				}
 			}
