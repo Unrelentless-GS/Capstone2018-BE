@@ -143,7 +143,7 @@
 				WHERE v.SongID=:songid
 			";
 			public function RemoveVotesForSong($songid) {
-				$this->RunQuery($this->_clearVote,
+				$this->RunQuery($this->_removeVotesForSong,
 					[
 						"songid"			=> $songid,
 					]);
@@ -156,7 +156,7 @@
 				WHERE s.SongID=:songid
 			";
 			public function RemoveSong($songid) {
-				RemoveVotesForSong($songid);
+				$this->RemoveVotesForSong($songid);
 				$this->RunQuery($this->_deleteSong,
 					[
 						"songid"			=> $songid,
