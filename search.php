@@ -117,7 +117,8 @@
 				$request = 
 				"https://api.spotify.com/v1/search" .
 				"?q=" . urlencode($term) . 
-				"&type=" . $type;
+				"&type=" . $type . 
+				"&limit=" . 10;
 				
 				$results = $JUKE->GetRequest($request, array("Authorization: Bearer " . $token));
 				
