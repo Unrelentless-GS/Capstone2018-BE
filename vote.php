@@ -56,7 +56,28 @@
 					case "Updates":
 						$this->HandleUpdates();
 						break;
+
+					case "UpdateCP":
+						$this->HandleUpdateCP();
+						break;
 				}
+			}
+
+			private function HandleUpdateCP() 
+			{
+				global $PLAYLIST;
+				$result = $PLAYLIST->GetCurrentSong($_GET["PartyID"]);
+				if ($result != null)
+				{
+					$result = $this->GetRow($result);
+					$json = json_encode($result);
+					print($json);
+				}
+				else
+				{
+					print("null");
+				}
+				
 			}
 			
 			private function HandleUpdates() 
@@ -64,6 +85,8 @@
 				$_getSongs = "
 					SELECT 
 						s.SongID,
+						s.SongName,
+						s.SongArtists,
 						(
 							SELECT COALESCE(SUM(v.VoteValue),0)
 							FROM vote v

@@ -215,7 +215,7 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 	width:25%;
 }
 
-.artistname{
+.currentArtistName{
 	color:#949494;
 }
 
@@ -362,7 +362,7 @@ a:focus, a:hover {
 }
 
 .table-responsive {
-    height: 80%;
+    height: 100%;
     overflow-x: hidden;
 }
 

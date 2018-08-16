@@ -24,12 +24,6 @@
 				$session = $PARTY->GetSessionInfo($userHash);
 				$songs = $PLAYLIST->GetPartySongs($session["PartyID"]);
 
-				//if(isset($_POST["btnPlay"])) {
-				//	$PARTY->ChangeSongForParty(
-				//		$_POST["PartyID"],
-				//		$_POST["SongSpotifyID"]);
-				//}
-
 				?>
 				<!DOCTYPE html>
 				<html lang="en" data-ng-app="spotifyApp">
@@ -48,7 +42,7 @@
 					<!-- Latest compiled JavaScript -->
 					<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 					<script src="js/spotifyJS.js?v=2"></script>
-					<link href="css/style.css?v=2" rel="stylesheet">
+					<link href="css/style.css?v=4" rel="stylesheet">
 				</head>
 				<body>
 					<input type="hidden" class="party-id" value="<?php print($session["PartyID"]); ?>">
@@ -98,7 +92,7 @@
 															<th></th>
 														</tr>
 													</thead>
-													<tbody>
+													<tbody id="vote-table-attach-point">
 														<?php
 															if($songs != NULL) {
 																while($song = $PLAYLIST->GetRow($songs)) {
@@ -177,17 +171,6 @@
 																				<button type="submit" name="btnVoteDown" id="btnVoteDown"><i class="fas fa-arrow-down"></i></button>
 																			</form>
 																		</td>
-				
-																		<!--<td>
-																			<form action="" method="POST">
-																				<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
-																				<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
-																				<input type="hidden" name="SongSpotifyID" id="SongSpotifyID" value="<?php print($song["SongSpotifyID"]); ?>">
-																				
-																				<button type="submit" name="btnPlay">Play</button>
-																			</form>
-																		</td>-->
-				
 																	</tr>
 																<?php
 																}
@@ -202,89 +185,30 @@
 							</div>
 							<div class="row">
 								<div class="col-xs-12 section current-music">
-									<?php
-										$current = $PLAYLIST->GetCurrentSong($session["PartyID"]);
-										// If there is no current song, don't try to call current song
-										// If there is a current song, display the current song
-										// - Brendan
-										if ($current == NULL)
-										{
-											?>
-											<div class="row current-row">
-												<div class="col-xs-6 artwork">
-												</div>
-												<div class="col-xs-6 current-info">
-												</div>
-												<div class="player">
-													<div class="playpause">
-														<form action="player.php" method="POST">
-															<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
-															<button type="submit" name="btnPlayPause">Play/Pause</button>
-														</form>
-													</div>
+									<!--Display current song info, filled in by jukebox.js - Brendan-->
+									<div class="row current-row">
+										<div class="col-xs-6 artwork" id="artworkparent">
+											<div></div>
+										</div>
+										<div class="col-xs-6 current-info">
+											<div class="row">
+												<div class="col-xs-12 currentSongName">
 												</div>
 											</div>
-											<?php
-										}
-										else
-										{
-											while($csong = $PLAYLIST->GetRow($current)) 
-											{
-												?>
-												<div class="row current-row">
-													<div class="col-xs-6 artwork">
-														<?php
-															//Display song image
-															$url = $csong["SongImageLink"];
-															$allow = ['gif', 'jpg', 'png'];  // allowed extensions
-															$img = file_get_contents($url);
-															$url_info = pathinfo($url);
-															
-															// if allowed extension
-															//if(in_array($url_info['extension'], $allow)) {
-															  // Format the image SRC:  data:{mime};base64,{img_data_base64};
-															  $src = 'data:image/jpg; base64,'. base64_encode($img);
-															
-															  // add the base64 image into a <img> to display it
-															  $re = '<img src="'. $src .'" height="64" width="64"/>';
-															//}
-															//else $re = 'Invalid extension: '. $url_info['extension'];
-															
-															echo $re;  // output $re data 
-														?>
-													</div>
-													<div class="col-xs-6 current-info">
-														<div class="row">
-															<div class="col-xs-12">
-																<?php
-																	//Display song name
-																	print($csong["SongName"]);
-																?>
-																<br />
-															</div>
-														</div>
-														<div class="row">
-															<div class="col-xs-12 artistname">
-																<?php
-																	//Display artist name
-																	print($csong["SongArtists"]);
-																?>
-															</div>
-														</div>
-													</div>
-													<div class="player">
-														<div class="playpause">
-															<form action="player.php" method="POST">
-																<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
-																<button type="submit" name="btnPlayPause">Play/Pause</button>
-															</form>
-														</div>
-													</div>
+											<div class="row">
+												<div class="col-xs-12 currentArtistName">
 												</div>
-												<?php	
-											}
-										}
-									?>
+											</div>
+										</div>
+										<div class="player">
+											<div class="playpause">
+												<form action="player.php" method="POST">
+													<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+													<button type="submit" name="btnPlayPause">Play/Pause</button>
+												</form>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -292,7 +216,7 @@
 					<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 					<!-- Include all compiled plugins (below), or include individual files as needed -->
-					<script src="js/jukebox.js?v=18"></script>
+					<script src="js/jukebox.js?v=19"></script>
 				</body>
 				</html>
 				<?php
