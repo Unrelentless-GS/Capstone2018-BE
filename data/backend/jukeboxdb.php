@@ -93,7 +93,6 @@
 			private $_partyTable = "
 				CREATE TABLE party(
 					PartyID 				INT 			AUTO_INCREMENT,
-					PartyName 				VARCHAR(50) 	NOT NULL,
 					PartyUniqueID 			VARCHAR(128) 	NOT NULL,
 					AuthID					INT 			NOT NULL,
 					

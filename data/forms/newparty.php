@@ -54,8 +54,8 @@
 										<input type="hidden" name="txtExpiresIn" value="<?php print($expiresIn); ?>">
 										<input type="hidden" name="txtRefreshToken" value="<?php print($refreshToken); ?>">
 										<input type="hidden" name="txtUserID" value="<?php print($id); ?>">
+										<input type="hidden" name="txtFinishCreatingParty" value="">
 										
-										<input type="text" name="txtPartyName" id="txtPartyName" placeholder="Name your party.."> <br>
 										<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
 										<input type="submit" value="Create">
 									</form>

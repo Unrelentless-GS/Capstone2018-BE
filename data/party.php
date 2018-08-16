@@ -15,13 +15,12 @@
 			}
 			
 			private $_insertParty = "
-				INSERT INTO party(PartyID, PartyName, PartyUniqueID, AuthID)
-				VALUES (NULL, :name, :id, :authid)
+				INSERT INTO party(PartyID, PartyUniqueID, AuthID)
+				VALUES (NULL, :id, :authid)
 			";
-			public function CreateParty($authid, $partyName, $uniqueString) {
+			public function CreateParty($authid, $uniqueString) {
 				return $this->RunQuery_GetLastInsertID($this->_insertParty,
 					[
-						"name"			=> $partyName,
 						"id"			=> $uniqueString,
 						"authid"		=> $authid
 					])["InsertID"];
@@ -67,6 +66,32 @@
 						"partyid"		=> $partyid,
 						"songid"		=> $spotify_track_id
 					]);
+			}
+
+			/**----------------------------**
+			
+			Summary
+			Locating the host of a party
+			*/
+			private $_locateHost = "
+				SELECT u.*
+				FROM user u
+				
+				INNER JOIN party p
+				ON p.PartyID=u.PartyID
+				
+				WHERE p.PartyID=:partyid
+					AND u.IsHost=1
+			";
+			public function GetHostNickname($partyid) {
+				$result = $this->RunQuery($this->_locateHost,
+					[
+						"partyid"			=> $partyid
+					]);
+					
+				if($result === NULL || $result->rowCount() <= 0)
+					return NULL;
+				return $this->GetRow($result)["Nickname"];
 			}
 
 			/**----------------------------**
@@ -126,12 +151,12 @@
 			}
 			//**----------------------------**
 			
-			public function GenerateUniqueString($partyName, $nickname, $time) {
+			public function GenerateUniqueString($nickname, $time) {
 				$hash = NULL;
 				
 				while(true) {
 					$rand = random_bytes(10);
-					$hash = hash("adler32", $partyName . $nickname . $time . $rand);
+					$hash = hash("adler32",$nickname . $time . $rand);
 					
 					if($this->FindPartyWithUniqueString($hash) !== NULL){
 						continue;
@@ -148,14 +173,13 @@
 			Managing a party. Such as starting, ending etc
 			*/
 			private $_createParty = "
-				INSERT INTO party(PartyID, PartyName, PartyUniqueID, AuthID)
-				VALUES (NULL, :name, :uniqueid, :authid)
+				INSERT INTO party(PartyID, PartyUniqueID, AuthID)
+				VALUES (NULL, :uniqueid, :authid)
 			";
-			public function StartParty($party_name, $party_unique_id, $authid) {
+			public function StartParty($party_unique_id, $authid) {
 				// Inserts a party row and returns the newly created Party ID.
 				$id = $this->RunQuery($this->_createParty,
 					[
-						"name"			=> $party_name,
 						"uniqueid"		=> $party_unique_id,
 						"authid"		=> $authid
 					])["InsertID"];

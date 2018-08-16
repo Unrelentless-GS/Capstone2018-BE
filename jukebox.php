@@ -34,7 +34,7 @@
 
 				if(isset($_COOKIE["JukeboxCookie"])) {
 					$this->ServeExistingInfo();
-				}elseif(isset($_POST["txtPartyName"])) {
+				}elseif(isset($_POST["txtFinishCreatingParty"])) {
 					// User has filled out all their personal info about the party.
 					// Finish the setup.
 					$this->FinishCreatingParty();
@@ -110,7 +110,6 @@
 				$refreshToken 		= $_POST["txtRefreshToken"];
 				$userID				= $_POST["txtUserID"];
 				
-				$partyName 			= $_POST["txtPartyName"];
 				$nickname 			= $_POST["txtNickname"];
 				
 				/* 
@@ -128,10 +127,10 @@
 					return;
 				}
 				
-				$uniqueString = $PARTY->GenerateUniqueString($partyName, $nickname, time());
+				$uniqueString = $PARTY->GenerateUniqueString($nickname, time());
 
 				$authid = $AUTHORISATION->CreateAuthInstance($accessToken, $refreshToken, time() + $expiresIn, $userID);
-				$partyid = $PARTY->CreateParty($authid, $partyName, $uniqueString);
+				$partyid = $PARTY->CreateParty($authid, $uniqueString);
 				
 				$USER->EnterNewUser($partyid, $nickname, 1);
 				header("Location: jukebox.php");

@@ -123,6 +123,7 @@
 				ON s.PlaylistID=p.PlaylistID
 				
 				WHERE p.PartyID=:id
+				ORDER BY VoteCount DESC
 			";
 			public function GetPartySongs($partyid) {
 				$result = $this->RunQuery($this->_getSongs,

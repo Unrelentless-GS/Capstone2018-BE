@@ -24,11 +24,11 @@
 				$session = $PARTY->GetSessionInfo($userHash);
 				$songs = $PLAYLIST->GetPartySongs($session["PartyID"]);
 
-				if(isset($_POST["btnPlay"])) {
-					$PARTY->ChangeSongForParty(
-						$_POST["PartyID"],
-						$_POST["SongSpotifyID"]);
-				}
+				//if(isset($_POST["btnPlay"])) {
+				//	$PARTY->ChangeSongForParty(
+				//		$_POST["PartyID"],
+				//		$_POST["SongSpotifyID"]);
+				//}
 
 				?>
 				<!DOCTYPE html>
@@ -76,10 +76,16 @@
 										</div>
 									</div>
 								</div>
+								<!--Displays party name and room code, two options for room Code-->
+								<div class="header-row">
+									<?php $hostname = $PARTY->GetHostNickname($session["PartyID"]); ?>
+									<h1 class="party-header"><?php print($hostname)?>'s Playlist</h1>
+									<h1 class="join-header">Join : <?php print($session["PartyUniqueID"]); ?></h1>
+									<!--<h3 class="join-header">spotify-jukebox.viljoen.industries/join.php?ID=<?php print($session["PartyUniqueID"]); ?></h3>-->
+								</div>
 								<div class="row content-row">
 									<div class="col-xs-12 main-frame">
 										<section class="cols-xs-12 playlist-content vote-selector section">
-											<h1 class="content-header">Party Playlist</h1>
 											<div class="table-responsive">	
 												<table id="vote-table" class="table choice-list vote-list">
 													<thead>
@@ -171,7 +177,7 @@
 																			</form>
 																		</td>
 				
-																		<td>
+																		<!--<td>
 																			<form action="" method="POST">
 																				<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
 																				<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
@@ -179,7 +185,7 @@
 																				
 																				<button type="submit" name="btnPlay">Play</button>
 																			</form>
-																		</td>
+																		</td>-->
 				
 																	</tr>
 																<?php
@@ -194,45 +200,20 @@
 								</div>
 							</div>
 						</div>
-						<!--<div>
-							<label for="lblUniqueLink">Give this to your friends: </label>
-							<label name="lblUniqueLink" id="lblUniqueLink">https://spotify-jukebox.viljoen.industries/join.php?ID=<?php print($session["PartyUniqueID"]); ?></label>
-						</div>-->
 						<div class="row">
 							<div class="col-xs-12 section current-music">
+								<div>
+									<form action="player.php" method="POST">
+										<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+										<button type="submit" name="btnPlayPause">Play/Pause</button>
+									</form>
+								</div>
 								<?php
 									$current = $PLAYLIST->GetCurrentSong($session["PartyID"]);
 									// If there is no current song, don't try to call current song
-									// If there is a current song, display the current song\
+									// If there is a current song, display the current song
 									// - Brendan
-									if ($current === NULL)
-									{
-										?>
-										<div class="row current-row">
-											<div class="col-xs-6 artwork">
-											</div>
-											<div class="col-xs-6 current-info">
-												<div class="row">
-													<div class="col-xs-12">
-														<br />
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-xs-12">
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="row progress-row">
-											<div class="col-xs-1"></div>
-											<div class="col-xs-10 total-progress-bar">
-												<div class="music-progress"></div>
-											</div>
-											<div class="col-xs-1"></div>
-										</div>
-										<?php
-									}
-									else
+									if ($current != NULL)
 									{
 										while($csong = $PLAYLIST->GetRow($current)) 
 										{
@@ -279,13 +260,6 @@
 													</div>
 												</div>
 											</div>
-											<div class="row progress-row">
-												<div class="col-xs-1"></div>
-												<div class="col-xs-10 total-progress-bar">
-													<div class="music-progress"></div>
-												</div>
-												<div class="col-xs-1"></div>
-											</div>
 											<?php	
 										}
 									}
@@ -293,11 +267,10 @@
 							</div>
 						</div>
 					</div>
-				
 					<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 					<!-- Include all compiled plugins (below), or include individual files as needed -->
-					<script src="js/jukebox.js?v=18"></script>-->
+					<script src="js/jukebox.js?v=18"></script>
 				</body>
 				</html>
 				<?php
