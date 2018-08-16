@@ -28,9 +28,22 @@
 					return;
 				}
 				
-				if(!isset($_POST["Action"]))
-					return;
-				$action = $_POST["Action"];
+				if(isset($_POST["Action"]))
+				{
+					$action = $_POST["Action"];
+				}
+				else
+				{
+					if(isset($_GET["Action"]))
+					{
+						$action = $_GET["Action"];
+					}
+					else
+					{
+						return;
+					}
+				}
+				
 				switch($action) {
 					case "Voting":
 						$this->HandleVoting();
@@ -39,9 +52,53 @@
 					case "Songs":
 						$this->HandlePlaylist();
 						break;
+
+					case "Updates":
+						$this->HandleUpdates();
+						break;
 				}
 			}
 			
+			private function HandleUpdates() 
+			{
+				$_getSongs = "
+					SELECT 
+						s.SongID,
+						(
+							SELECT COALESCE(SUM(v.VoteValue),0)
+							FROM vote v
+							
+							INNER JOIN song s1
+							ON s1.SongID=v.SongID
+							
+							INNER JOIN playlist p
+							ON s1.PlaylistID=p.PlaylistID
+							
+							WHERE p.PartyID=:id
+								AND s.SongID=v.SongID
+						) AS VoteCount
+						
+					FROM song s
+					INNER JOIN playlist p
+					ON s.PlaylistID=p.PlaylistID
+					
+					WHERE p.PartyID=:partyid
+					ORDER BY VoteCount DESC
+				";
+
+				$result = $this->RunQuery($_getSongs,
+					[
+						"partyid"			=> $_GET["PartyID"],
+						"id"			=> $_GET["PartyID"]
+					]);
+					
+				if($result === NULL || $result->rowCount() <= 0)
+					print(NULL);
+				$result = $this->GetAllResults($result);
+				$json = json_encode($result);
+				print($json);
+			}
+
 			private function HandlePlaylist() {
 				global $PLAYLIST;
 				

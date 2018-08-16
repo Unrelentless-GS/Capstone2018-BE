@@ -51,6 +51,7 @@
 					<link href="css/style.css?v=2" rel="stylesheet">
 				</head>
 				<body>
+					<input type="hidden" class="party-id" value="<?php print($session["PartyID"]); ?>">
 					<div class="container">
 						<div class="row main-section">
 							<div class="col-xs-12 main-row">
@@ -199,71 +200,92 @@
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-xs-12 section current-music">
-								<div>
-									<form action="player.php" method="POST">
-										<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
-										<button type="submit" name="btnPlayPause">Play/Pause</button>
-									</form>
-								</div>
-								<?php
-									$current = $PLAYLIST->GetCurrentSong($session["PartyID"]);
-									// If there is no current song, don't try to call current song
-									// If there is a current song, display the current song
-									// - Brendan
-									if ($current != NULL)
-									{
-										while($csong = $PLAYLIST->GetRow($current)) 
+							<div class="row">
+								<div class="col-xs-12 section current-music">
+									<?php
+										$current = $PLAYLIST->GetCurrentSong($session["PartyID"]);
+										// If there is no current song, don't try to call current song
+										// If there is a current song, display the current song
+										// - Brendan
+										if ($current == NULL)
 										{
 											?>
 											<div class="row current-row">
 												<div class="col-xs-6 artwork">
-													<?php
-														//Display song image
-														$url = $csong["SongImageLink"];
-														$allow = ['gif', 'jpg', 'png'];  // allowed extensions
-														$img = file_get_contents($url);
-														$url_info = pathinfo($url);
-														
-														// if allowed extension
-														//if(in_array($url_info['extension'], $allow)) {
-														  // Format the image SRC:  data:{mime};base64,{img_data_base64};
-														  $src = 'data:image/jpg; base64,'. base64_encode($img);
-														
-														  // add the base64 image into a <img> to display it
-														  $re = '<img src="'. $src .'" height="45" width="45"/>';
-														//}
-														//else $re = 'Invalid extension: '. $url_info['extension'];
-														
-														echo $re;  // output $re data 
-													?>
 												</div>
 												<div class="col-xs-6 current-info">
-													<div class="row">
-														<div class="col-xs-12">
-															<?php
-																//Display song name
-																print($csong["SongName"]);
-															?>
-															<br />
-														</div>
-													</div>
-													<div class="row">
-														<div class="col-xs-12">
-															<?php
-																//Display artist name
-																print($csong["SongArtists"]);
-															?>
-														</div>
+												</div>
+												<div class="player">
+													<div class="playpause">
+														<form action="player.php" method="POST">
+															<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+															<button type="submit" name="btnPlayPause">Play/Pause</button>
+														</form>
 													</div>
 												</div>
 											</div>
-											<?php	
+											<?php
 										}
-									}
-								?>
+										else
+										{
+											while($csong = $PLAYLIST->GetRow($current)) 
+											{
+												?>
+												<div class="row current-row">
+													<div class="col-xs-6 artwork">
+														<?php
+															//Display song image
+															$url = $csong["SongImageLink"];
+															$allow = ['gif', 'jpg', 'png'];  // allowed extensions
+															$img = file_get_contents($url);
+															$url_info = pathinfo($url);
+															
+															// if allowed extension
+															//if(in_array($url_info['extension'], $allow)) {
+															  // Format the image SRC:  data:{mime};base64,{img_data_base64};
+															  $src = 'data:image/jpg; base64,'. base64_encode($img);
+															
+															  // add the base64 image into a <img> to display it
+															  $re = '<img src="'. $src .'" height="64" width="64"/>';
+															//}
+															//else $re = 'Invalid extension: '. $url_info['extension'];
+															
+															echo $re;  // output $re data 
+														?>
+													</div>
+													<div class="col-xs-6 current-info">
+														<div class="row">
+															<div class="col-xs-12">
+																<?php
+																	//Display song name
+																	print($csong["SongName"]);
+																?>
+																<br />
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-xs-12 artistname">
+																<?php
+																	//Display artist name
+																	print($csong["SongArtists"]);
+																?>
+															</div>
+														</div>
+													</div>
+													<div class="player">
+														<div class="playpause">
+															<form action="player.php" method="POST">
+																<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+																<button type="submit" name="btnPlayPause">Play/Pause</button>
+															</form>
+														</div>
+													</div>
+												</div>
+												<?php	
+											}
+										}
+									?>
+								</div>
 							</div>
 						</div>
 					</div>

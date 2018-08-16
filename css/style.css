@@ -144,6 +144,15 @@ ul {
 	margin-bottom: 1%;
 }
 
+.player {
+	width: 50%;
+	float:left;
+}
+
+.playpause {
+	text-align: center;
+}
+
 .choice-list {
 	font-size: 18px;
 	width: 95%;
@@ -160,6 +169,7 @@ ul {
 
 .artwork {
 	text-align: right;
+	width:25%;
 }
 
 svg.svg-inline--fa.fa-music.fa-w-16 {
@@ -192,22 +202,21 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 }
 
 .main-row {
-	height: 100%;
+	height: 90%;
 }
 
 .searchbar {
 	height: 100%;
 }
 
-.total-progress-bar {
-	height: 10px;
-	background-color: #1ED760;
+.current-info {
+	font-size:18px;
+	line-height: 28px;
+	width:25%;
 }
 
-.music-progress {
-	height: 100%;
-	width: 45%;
-	color: green;
+.artistname{
+	color:#949494;
 }
 
 .display-hide {

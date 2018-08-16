@@ -52,10 +52,4 @@ $(document).ready(function() {
 			jQuery('.results-row').addClass('display-hide');
 		}
 	});
-
-	setInterval(function() 
-	{
-  		location.reload();
-	}, 5000);
-
 });

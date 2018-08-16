@@ -14,6 +14,89 @@ if(DEBUG == true) {
 	SITE = "https://spotify-jukebox.viljoen.industries/";
 }
 
+//GetVoteCountForSongID
+function GetVoteCount(item,songID)
+{
+	//If is song ID, return vote value
+	if (songID == item.SongID)
+	{
+		return item.VoteCount;
+	}
+	return null;
+}
+
+//Updates votes - Brendan
+function UpdateVotes() 
+{
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function()
+	{
+		if(this.readyState == 4 && this.status == 200) 
+		{
+			var songData = JSON.parse(this.responseText);
+			//alert(songData[0].SongID);
+			//alert(songData[0].VoteCount);
+
+			jQuery('.song-select').each(
+			function(index) 
+			{
+				var songID = jQuery(this).find('input[name="SongID"]').val()
+				for (var i = songData.length - 1; i >= 0; i--) 
+				{
+					var newVoteCount = GetVoteCount(songData[i],songID);
+					if (newVoteCount != null)
+					{
+						jQuery(this).find('.voteCount').text(newVoteCount);
+						return;
+					}
+				}
+				jQuery(this).remove()
+			});
+			sortTable();
+		}
+	}
+	var partyID = jQuery('.party-id').val();
+	xhttp.open("GET", SITE + "vote.php?Action=Updates&PartyID=" + partyID, true);
+	xhttp.send();
+	
+	console.log("Updating Votes...");
+}
+
+//Timer for UpdateVotes
+setInterval(function(){UpdateVotes();}, 3000);
+
+
+//Sorts songs
+function sortTable()
+{
+	//Written by Sam
+	//Modified to work properly by Brendan
+	var table, rows, switching, i, x, y, shouldSwitch;
+	table = document.getElementById("vote-table");
+	switching = true;
+	while (switching) 
+	{
+		switching = false;
+		rows = table.getElementsByTagName("TR");
+		for (var i = 2, row1; row1 = table.rows[i]; i++) 
+		{
+			shouldSwitch = false;
+			x = rows[i - 1].getElementsByTagName("TD")[3];
+			y = rows[i].getElementsByTagName("TD")[3];
+			if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) 
+		  	{
+				shouldSwitch= true;
+				break;
+			}
+		}
+		if (shouldSwitch) 
+		{
+			rows[i].parentNode.insertBefore(rows[i], rows[i-1]);
+			switching = true;
+		}
+	}
+}
+
 /*
 	Summary
 	Adding and searching for songs section
@@ -78,7 +161,7 @@ function AddToList(item, index)
 	var id = item.id;
 
     var button = document.createElement("td");
-    //button.setAttribute("onclick", "AddSong("+item.id+")");
+
 	button.onclick = function() 
 	{
     	AddSong(id);
