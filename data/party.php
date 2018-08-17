@@ -187,6 +187,14 @@
 				return $id;
 			}
 			
+			public function LeaveParty($party_id, $user_id) {
+				// Delete all votes for user.
+				$this->RunQuery("DELETE v.* FROM vote v INNER JOIN user u ON u.UserID=v.UserID WHERE u.PartyID=:id AND u.UserID=:uid", [ "id"	=> $party_id , "uid"	=> $user_id ]);
+				
+				// Delete user.
+				$this->RunQuery("DELETE u.* FROM user u INNER JOIN party p ON p.PartyID=u.PartyID WHERE u.PartyID=:id AND u.UserID=:uid", [ "id"	=> $party_id , "uid"	=> $user_id ]);
+			}
+			
 			public function EndParty($party_id) {
 				// Delete all votes.
 				$this->RunQuery("DELETE v.* FROM vote v INNER JOIN user u ON u.UserID=v.UserID WHERE u.PartyID=:id", [ "id"	=> $party_id ]);

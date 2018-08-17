@@ -144,11 +144,6 @@ ul {
 	margin-bottom: 1%;
 }
 
-.player {
-	width: 50%;
-	float:left;
-}
-
 .playpause {
 	text-align: center;
 }
@@ -162,14 +157,8 @@ ul {
 	position: relative;
 }
 
-
 .upvote, .downvote, .voteCount {
 	text-align: center;
-}
-
-.artwork {
-	text-align: right;
-	width:25%;
 }
 
 svg.svg-inline--fa.fa-music.fa-w-16 {
@@ -207,16 +196,6 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 
 .searchbar {
 	height: 100%;
-}
-
-.current-info {
-	font-size:18px;
-	line-height: 28px;
-	width:25%;
-}
-
-.currentArtistName{
-	color:#949494;
 }
 
 .display-hide {
@@ -443,4 +422,61 @@ input {
 
 .host-login, .guest-login, .login-selector {
     margin-top: 10%;
+}
+
+
+/*Current Song / Player / Admin Options*/
+
+.currentArtistName{
+	color:#949494;
+}
+
+
+/*Host*/
+.artwork {
+	text-align: right;
+	width:20%;
+}
+
+.current-info {
+	font-size:18px;
+	line-height: 28px;
+	width:20%;
+}
+
+.player {
+	width: 20%;
+	float:left;
+	text-align: center;
+}
+
+.chooseDevice {
+	width: 25%;
+	float:left;
+	text-align: right;
+}
+
+.disbandParty {
+	width: 15%;
+	float:left;
+	text-align: center;
+}
+
+
+/*Guest*/
+.guestArtwork {
+	text-align: right;
+	width:50%;
+}
+
+.guest-current-info {
+	font-size:18px;
+	line-height: 28px;
+	width:35%;
+}
+
+.guestLeaveParty {
+	width: 15%;
+	float:left;
+	text-align: center;
 }

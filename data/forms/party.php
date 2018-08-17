@@ -42,7 +42,7 @@
 					<!-- Latest compiled JavaScript -->
 					<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 					<script src="js/spotifyJS.js?v=2"></script>
-					<link href="css/style.css?v=4" rel="stylesheet">
+					<link href="css/style.css?v=5" rel="stylesheet">
 				</head>
 				<body>
 					<input type="hidden" class="party-id" value="<?php print($session["PartyID"]); ?>">
@@ -183,31 +183,82 @@
 									</div>
 								</div>
 							</div>
-							<div class="row">
+							<div>
 								<div class="col-xs-12 section current-music">
-									<!--Display current song info, filled in by jukebox.js - Brendan-->
+									<!--Display current song info, filled in by jukebox.js
+									Shows different things depending on if the user is a guest or the host - Brendan-->
 									<div class="row current-row">
-										<div class="col-xs-6 artwork" id="artworkparent">
-											<div></div>
-										</div>
-										<div class="col-xs-6 current-info">
-											<div class="row">
-												<div class="col-xs-12 currentSongName">
+										<?php
+										if ($session["IsHost"] == 1)
+										{
+											?>
+											<div class="col-xs-6 artwork" id="artworkparent">
+												<div></div>
+											</div>
+											<div class="col-xs-6 current-info">
+												<div class="row">
+													<div class="col-xs-12 currentSongName">
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12 currentArtistName">
+													</div>
 												</div>
 											</div>
-											<div class="row">
-												<div class="col-xs-12 currentArtistName">
+											<div class="player">
+												<div class="playpause">
+													<form action="player.php" method="POST">
+														<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+														<button type="submit" name="btnPlayPause">Play/Pause</button>
+													</form>
 												</div>
 											</div>
-										</div>
-										<div class="player">
-											<div class="playpause">
-												<form action="player.php" method="POST">
-													<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
-													<button type="submit" name="btnPlayPause">Play/Pause</button>
-												</form>
+											<div class="chooseDevice">
+												<div class="chooseDevice2">
+													<form action="" method="POST">
+														<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+														<button type="submit" name="btnPlayPause">Choose Device</button>
+													</form>
+												</div>
 											</div>
-										</div>
+											<div class="disbandParty">
+												<div class="disbandParty2">
+													<form action="index.php" method="POST">
+														<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+														<button type="submit" name="endParty">Disband Party</button>
+													</form>
+												</div>
+											</div>
+											<?php
+										}
+										else
+										{
+											?>
+											<div class="col-xs-6 guestArtwork" id="artworkparent">
+												<div></div>
+											</div>
+											<div class="col-xs-6 guest-current-info">
+												<div class="row">
+													<div class="col-xs-12 currentSongName">
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-12 currentArtistName">
+													</div>
+												</div>
+											</div>
+											<div class="guestLeaveParty">
+												<div class="leaveParty2">
+													<form action="index.php" method="POST">
+														<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
+														<input type="hidden" name="UserID" id="UserID" value="<?php print($session["UserID"]); ?>">
+														<button type="submit" name="leaveParty">Leave Party</button>
+													</form>
+												</div>
+											</div>
+											<?php
+										}
+										?>
 									</div>
 								</div>
 							</div>

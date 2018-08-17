@@ -4,6 +4,17 @@
 	*/
 	
 	require_once("data/auth.php");
+	require_once("data/party.php");
+
+	//Ends party
+	if(isset($_POST["endParty"])) {
+		$PARTY->EndParty($_POST["PartyID"]);
+	}
+
+	//Removes user from party
+	if(isset($_POST["leaveParty"])) {
+		$PARTY->LeaveParty($_POST["PartyID"],$_POST["UserID"]);
+	}
 ?>
 
 <!DOCTYPE html>

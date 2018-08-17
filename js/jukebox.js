@@ -22,7 +22,6 @@ function UpdateCurrentlyPlaying()
 	{
 		if(this.readyState == 4 && this.status == 200) 
 		{
-			console.log(this.responseText);
 			if (this.responseText != "null")
 			{
 				var result = JSON.parse(this.responseText);
