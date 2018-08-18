@@ -354,6 +354,149 @@ function AddToList(item, index)
     searchresults.appendChild(tr);
 }
 
+//Appears if songs need to be added to playlist
+function AddSongsError()
+{
+	var device = document.createElement("p");
+	text = document.createTextNode("Need to add songs to playlist.");
+	device.appendChild(text);
+	modalCon.appendChild(device);
+	modal.style.display = "block";
+}
+
+//Choice Device Code - Brendan
+
+// Get the button that opens the modal
+var btn = document.getElementById("chooseDeviceModalBtn");
+//Get the modal
+var modal = document.getElementById('chooseDeviceModal');
+//Get the modal-content div
+var modalCon = document.getElementById('modal-content');
+
+// When the user clicks on the button
+btn.onclick = function() 
+{
+	OpenModal();
+}
+
+function OpenModal()
+{
+	//Make XHTTP Query
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if(this.readyState == 4 && this.status == 200) 
+		{
+			var results = JSON.parse(this.responseText);
+			console.log(results.devices);
+
+			if (results.devices.length < 1)
+			{
+				var device = document.createElement("p");
+				text = document.createTextNode("No Spotify devices found.");
+				device.appendChild(text);
+				modalCon.appendChild(device);
+			}
+			else
+			{
+				var device = document.createElement("p");
+				text = document.createTextNode("Select a device to play through.");
+				device.appendChild(text);
+				modalCon.appendChild(device);
+			}
+
+			//Create item for each device that isn't restricted.
+			for (i in results.devices) 
+			{
+				if (results.devices[i].is_restricted == false)
+				{
+					if (results.devices[i].is_active == true)
+					{
+						var device = document.createElement("p");
+						device.setAttribute("class", "device-active");
+					}
+					else
+					{
+						var device = document.createElement("button");
+
+						//Needed to warp onclick function to preserve the scope of i
+						device.onclick = (function(i){
+							return function(){
+								//Change's device to selected device.
+								ChangeDevice(results.devices[i].id);
+							};
+						})(i);
+					}
+					
+					text = document.createTextNode(results.devices[i].name);
+					device.appendChild(text);
+					modalCon.appendChild(device);
+				}
+			}
+
+			//Display modal
+			modal.style.display = "block";
+		}
+	}
+	
+	var partyID = jQuery('.party-id').val();
+	xhttp.open("GET", SITE + "device.php?Action=GetDevices&PartyID=" + partyID, true);
+	xhttp.send();
+	
+	console.log("Fetching Devices..");
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        ExitModal();
+    }
+}
+
+//Remove everthing from Modal and close it
+function ExitModal ()
+{
+	//Clears Modal
+	while (modalCon.firstChild) {
+		modalCon.removeChild(modalCon.firstChild);
+	}
+
+	//Make the modal disappear
+	modal.style.display = "none";
+}
+
+function ChangeDevice($deviceID)
+{
+	console.log($deviceID);
+	//Make XHTTP Query
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if(this.readyState == 4 && this.status == 200) 
+		{
+			console.log(this.responseText);
+			ExitModal();
+		}
+	}
+	
+	var partyID = jQuery('.party-id').val();
+	xhttp.open("GET", SITE + "device.php?Action=PlayOnDevice&PartyID=" + partyID + "&DeviceID=" + $deviceID, true);
+	xhttp.send();
+	
+	console.log("Changing Device..");
+}
+
+//Credit to Nathan of TechnicalOverload.com for the getParameter Function
+function getParameter(theParameter) { 
+  var params = window.location.search.substr(1).split('&');
+ 
+  for (var i = 0; i < params.length; i++) {
+    var p=params[i].split('=');
+	if (p[0] == theParameter) {
+	  return decodeURIComponent(p[1]);
+	}
+  }
+  return false;
+}
+
 function Initialise() 
 {
 	var input = document.getElementById("Term");
@@ -383,6 +526,14 @@ function Initialise()
 	});
 
 	UpdateCurrentlyPlaying();
+	if (getParameter("choosedevice") != false)
+	{
+		OpenModal();
+	}
+	if (getParameter("needtoaddsongs") != false)
+	{
+		AddSongsError();
+	}
 }
 
 Initialise();

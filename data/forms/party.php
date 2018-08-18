@@ -42,7 +42,7 @@
 					<!-- Latest compiled JavaScript -->
 					<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 					<script src="js/spotifyJS.js?v=2"></script>
-					<link href="css/style.css?v=5" rel="stylesheet">
+					<link href="css/style.css?v=7" rel="stylesheet">
 				</head>
 				<body>
 					<input type="hidden" class="party-id" value="<?php print($session["PartyID"]); ?>">
@@ -214,12 +214,8 @@
 												</div>
 											</div>
 											<div class="chooseDevice">
-												<div class="chooseDevice2">
-													<form action="" method="POST">
-														<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
-														<button type="submit" name="btnPlayPause">Choose Device</button>
-													</form>
-												</div>
+												<!-- Trigger/Open The Modal -->
+												<button id="chooseDeviceModalBtn">Choose Device</button>
 											</div>
 											<div class="disbandParty">
 												<div class="disbandParty2">
@@ -263,11 +259,18 @@
 								</div>
 							</div>
 						</div>
+						<!-- The Modal -->
+						<div id="chooseDeviceModal">
+							<!-- Modal content -->
+							<div id="modal-content">
+							  <!--<span class="exit">Close</span>-->
+							</div>
+						</div>
 					</div>
 					<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 					<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 					<!-- Include all compiled plugins (below), or include individual files as needed -->
-					<script src="js/jukebox.js?v=19"></script>
+					<script src="js/jukebox.js?v=21"></script>
 				</body>
 				</html>
 				<?php

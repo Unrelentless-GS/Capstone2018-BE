@@ -23,9 +23,62 @@
 					print("No session");
 					return;
 				}
+
 				$partyid = $_POST["PartyID"];
+
+				//If no active spotify device, return to jukebox and open the devicechoice modal
+				$noActiveDevice = $this->checkActiveSpotifyDevice($partyid);
+				if ($noActiveDevice)
+				{
+					header("Location: jukebox.php?choosedevice");
+					return;
+				}
+
 				$this->TogglePause($partyid);
 				header("Location: jukebox.php");
+			}
+
+			/**----------------------------**
+			Returns all connected devices
+			*/
+			private function GetDevices($partyid) {
+				global $JUKE;
+			
+				global $PARTY;
+				$row = $PARTY->FindPartyWithID($partyid);
+				
+				$result = $JUKE->GetRequest(
+					"https://api.spotify.com/v1/me/player/devices",
+					array( 
+						"Content-Type: application/json",
+						"Accept: application/json",
+						"Authorization: Bearer " . $row["AuthAccessToken"]
+					),
+					NULL,
+					NULL,
+					NULL
+				);
+				return $result;
+			}
+			
+			/**----------------------------**
+			Returns true if there are no active spotify devices
+			*/
+			private function checkActiveSpotifyDevice($partyid) {
+				$results = $this->GetDevices($partyid);
+				$resultsObj = json_decode($results, TRUE);
+				$noActiveDeviceFound = TRUE;
+				print($results);
+			
+				foreach ($resultsObj["devices"] as $dev) 
+				{
+					if ($dev["is_active"] == 1)
+					{
+						$noActiveDeviceFound = FALSE;
+					}
+				}
+			
+				return $noActiveDeviceFound;
 			}
 			
 			/**----------------------------**
@@ -89,10 +142,9 @@
 						
 					if($nextSong === NULL || $nextSong->rowCount() <= 0) 
 					{
-						//If no songs in playlist, Play this song 
-						//(which will then loop till something is added to the playlist)
-						$PARTY->ChangeSongForParty($partyid, '0dYN5MqKzCfdpDb1bgvdsm');
-						return;
+						//If no songs in playlist, display an error
+						header("Location: jukebox.php?needtoaddsongs");
+						exit;
 					}
 
 					// Play the top song.
