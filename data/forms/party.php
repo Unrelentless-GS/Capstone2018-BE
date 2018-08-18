@@ -74,7 +74,7 @@
 								<!--Displays party name and room code, two options for room Code-->
 								<div class="header-row">
 									<?php $hostname = $PARTY->GetHostNickname($session["PartyID"]); ?>
-									<h1 class="party-header"><?php print($hostname)?>'s Playlist</h1>
+									<h1 class="party-header"><?php print($this->ReturnHostname($hostname)); ?> Playlist</h1>
 									<h1 class="join-header">Join : <?php print($session["PartyUniqueID"]); ?></h1>
 									<!--<h3 class="join-header">spotify-jukebox.viljoen.industries/join.php?ID=<?php print($session["PartyUniqueID"]); ?></h3>-->
 								</div>
@@ -271,6 +271,14 @@
 				</body>
 				</html>
 				<?php
+			}
+			
+			private function ReturnHostname($raw_hostname) {
+				if(substr($raw_hostname, strlen($raw_hostname) - 1, 1) === "s") {
+					return $raw_hostname . "'";
+				}else{
+					return $raw_hostname . "'s";
+				}
 			}
 		}
 	}

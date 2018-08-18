@@ -10,10 +10,21 @@
 	If this is the case, the calculated 'next in line' song is decided and sent to 'party' for change.
 	
 	Written by Alden Viljoen
+	
+	* Update 18/08/2018 *
+	Problem: Song duration statically calculcated using saved time of song start and song duration.
+	This causes problems when the host scrolls through the song on another device.
+	
+	Solution:
+	Dynamically request the current progress of a playing song for Spotify.
 	*/
+	
+	// Set to true for the script to run just once whenever its called.
+	define("DEBUG_CRON", FALSE);
 	
 	set_include_path("/home/anubis/www/jukebox_viljoen_industries/public/data/");
 	
+	require_once("backend/funcs.php");
 	require_once("backend/jukeboxdb.php");
 	require_once("party.php");
 	require_once("playlist.php");
@@ -29,6 +40,9 @@
 				while(true) {
 					$this->CheckAllParties();
 					
+					if(DEBUG_CRON === TRUE)
+						exit();
+					
 					if($this->_started + 60 < time()){
 						exit();
 					}
@@ -36,10 +50,11 @@
 				}
 			}
 			
-			private $_getAllFinishingSongs = "
+			private $_getAllPlayingSongs = "
 				SELECT  p.*,
 						p1.*,
-						s.*
+						s.*,
+						a.*
 				FROM party p
 
 				INNER JOIN playlist p1
@@ -48,16 +63,59 @@
 				INNER JOIN song s
 				ON p1.CurrentlyPlaying=s.SongID
 				
-				WHERE ((p1.PlaybackStarted + s.SongDuration) - UNIX_TIMESTAMP() <= 2)
+				INNER JOIN authentication a
+				ON a.AuthID=p.AuthID
 			";
 			private function CheckAllParties() {
-				error_log("Checking");
-				$results = $this->RunGetQuery($this->_getAllFinishingSongs);
+				$results = $this->RunGetQuery($this->_getAllPlayingSongs);
 				
 				if($results === NULL || $results->rowCount() <= 0)
 					return;
 				
 				while($row = $this->GetRow($results)) {
+					$this->CheckSongEnding($row);
+				}
+			}
+			
+			/* Summary:
+			Makes a request to Spotify API to request the current status of the host's playback.
+			Checks that the song playing is the song stored in the database as the one playing.
+			Checks that the song is ending within 2 seconds. If so, play the next one, otherwise do nothing.
+			*/
+			private function CheckSongEnding($row) {
+				global $JUKE;
+				
+				$json = $JUKE->GetRequest("https://api.spotify.com/v1/me/player/currently-playing",
+					array("Authorization: Bearer " . $row["AuthAccessToken"]));
+					
+				if($json === FALSE || $json === NULL) {
+					print("Failed to discover any info for song; " . $row["SongID"] . " in party " . $row["PartyID"] . "<br>");
+					return;
+				}
+				
+				$obj = json_decode($json, TRUE);
+				$id = $obj["item"]["id"];
+				$is_playing = $obj["is_playing"];
+				
+				if($is_playing != TRUE) {
+					print("Song in party " . $row["PartyID"] . " is currently not playing." . "<br>");
+					return;
+				}
+				
+				if($id !== $row["SongSpotifyID"]) {
+					print("Failed to discover any info for song; " . $row["SongID"] . " in party " . $row["PartyID"] . " (id mismatch)<br>" . $id . " vs " . $row["SongSpotifyID"] . "<br>");
+					return;
+				}
+				
+				$duration = $obj["item"]["duration_ms"] / 1000;
+				$elapsed = $obj["progress_ms"] / 1000;
+				
+				// Uncomment for diagnoses.
+				//print("Song is " . $duration . " seconds long, " . $elapsed . " seconds through." . "<br>");
+				
+				if($duration - $elapsed <= 4) {
+					//print("Song is ready to be changed." . "<br>");
+					// Song is ready to be changed.
 					$this->UpdateSong($row);
 				}
 			}
