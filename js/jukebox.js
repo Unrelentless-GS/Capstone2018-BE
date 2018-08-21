@@ -287,7 +287,7 @@ function AddSong(spotify_track_id) {
 	xhttp.onreadystatechange = function() {
 		if(this.readyState == 4 && this.status == 200) {
 			// Reload the page or required controls.
-			window.location.reload();
+			window.location = window.location.pathname;
 		}
 	}
 	
@@ -373,10 +373,18 @@ var modal = document.getElementById('chooseDeviceModal');
 //Get the modal-content div
 var modalCon = document.getElementById('modal-content');
 
-// When the user clicks on the button
-btn.onclick = function() 
+//If btn extists (if host)
+if (btn !=  null)
 {
-	OpenModal();
+	// When the user clicks on the button
+	btn.onclick = function() 
+	{
+		if (!modalOpen)
+		{
+			modalOpen = true;
+			OpenModal();
+		}
+	}
 }
 
 function OpenModal()
@@ -462,6 +470,7 @@ function ExitModal ()
 
 	//Make the modal disappear
 	modal.style.display = "none";
+	modalOpen = false;
 }
 
 function ChangeDevice($deviceID)
@@ -520,20 +529,27 @@ function Initialise()
 				//Else Set timer for 2 seconds
     			timer = setTimeout(function (event){
         			PerformQuery()
-   				}, 2000);
+   				}, 1200);
 			}
 		}
 	});
 
 	UpdateCurrentlyPlaying();
-	if (getParameter("choosedevice") != false)
+
+	//If btn extists (if host)
+	if (btn !=  null)
 	{
-		OpenModal();
-	}
-	if (getParameter("needtoaddsongs") != false)
-	{
-		AddSongsError();
+		if (getParameter("choosedevice") != false)
+		{
+			OpenModal();		
+		}
+		if (getParameter("needtoaddsongs") != false)
+		{
+			AddSongsError();
+		}
 	}
 }
+
+var modalOpen = false;
 
 Initialise();

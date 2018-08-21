@@ -9,11 +9,15 @@
 	//Ends party
 	if(isset($_POST["endParty"])) {
 		$PARTY->EndParty($_POST["PartyID"]);
+		setcookie("JukeboxCookie", "");
+		header("Location: index.php");
 	}
 
 	//Removes user from party
 	if(isset($_POST["leaveParty"])) {
 		$PARTY->LeaveParty($_POST["PartyID"],$_POST["UserID"]);
+		setcookie("JukeboxCookie", "");
+		header("Location: index.php");
 	}
 ?>
 
