@@ -350,12 +350,25 @@ a:focus, a:hover {
 }
 
 button {
+	background-color:#4CAF50;
+    cursor:pointer;
+   	border-radius:32px;
+   	font-size:18px;
+   	outline: none;
+   	border: none;
+   	padding: 7px 14px;
+}
+
+svg {
+	cursor:pointer;
+}
+
+.song-select button {
     background-color: Transparent;
-    background-repeat:no-repeat;
     border: none;
     cursor:pointer;
-    overflow: hidden;
     outline:none;
+    padding:0px;
 }
 
 /* ERIC's CSS */
@@ -422,6 +435,12 @@ input {
 
 .host-login, .guest-login, .login-selector {
     margin-top: 10%;
+}
+
+.noSongsErrorMessage{
+	text-align: center;
+	font-size: 30px;
+	margin-top:50%;
 }
 
 

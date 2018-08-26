@@ -24,18 +24,32 @@
 					return;
 				}
 
-				$partyid = $_POST["PartyID"];
-
-				//If no active spotify device, return to jukebox and open the devicechoice modal
-				$noActiveDevice = $this->checkActiveSpotifyDevice($partyid);
-				if ($noActiveDevice)
+				if(isset($_POST["PartyID"])) 
 				{
-					header("Location: jukebox.php?choosedevice");
-					return;
+					$partyid = $_POST["PartyID"];
+					//If no active spotify device, return to jukebox and open the devicechoice modal
+					$noActiveDevice = $this->checkActiveSpotifyDevice($partyid);
+					if ($noActiveDevice)
+					{
+						header("Location: jukebox.php?choosedevice");
+						return;
+					}
+	
+					$this->TogglePause($partyid);
+					header("Location: jukebox.php");
 				}
-
-				$this->TogglePause($partyid);
-				header("Location: jukebox.php");
+				else if(isset($_GET["PartyID"])) 
+				{
+					$partyid = $_GET["PartyID"];
+					if(isset($_GET["TP"]))
+					{
+						$this->TogglePause($partyid);
+					}
+					else
+					{
+						$this->spotifyCurrentlyPlaying($partyid);
+					}
+				}
 			}
 
 			/**----------------------------**
@@ -79,6 +93,16 @@
 				}
 			
 				return $noActiveDeviceFound;
+			}
+
+			/**----------------------------**
+			Returns true or false to the question: Is spotify currently playing?
+			*/
+			private function spotifyCurrentlyPlaying($partyid) {
+				global $PARTY;
+				$row = $PARTY->FindPartyWithID($partyid);
+				$playing = $this->GetPlayer($row["AuthAccessToken"]);
+				print($playing["is_playing"] == 1);
 			}
 			
 			/**----------------------------**

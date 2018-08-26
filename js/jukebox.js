@@ -49,9 +49,6 @@ function UpdateCurrentlyPlaying()
 	console.log("Updating CurrentlyPlayingInfo...");
 }
 
-//Timer for UpdateVotes
-setInterval(function(){UpdateCurrentlyPlaying();}, 5000);
-
 var tempSongArray = [];
 
 //GetVoteCountForSongID
@@ -77,6 +74,9 @@ function UpdateVotes()
 			//If not null
 			if (songData != null)
 			{
+				//If addSongMessage exists, delete it
+				jQuery('.noSongsErrorMessage').remove();
+
 				//Update votes and remove songs that have been deleted
 				jQuery('.song-select').each(
 				function(index) 
@@ -241,9 +241,6 @@ function UpdateVotes()
 	console.log("Updating Votes...");
 }
 
-//Timer for UpdateVotes
-setInterval(function(){UpdateVotes();}, 3000);
-
 //Sorts songs
 function sortTable()
 {
@@ -382,20 +379,21 @@ if (btn !=  null)
 		if (!modalOpen)
 		{
 			modalOpen = true;
-			OpenModal();
+			OpenModal(false);
 		}
 	}
 }
 
-function OpenModal()
+function OpenModal($playsong)
 {
 	//Make XHTTP Query
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if(this.readyState == 4 && this.status == 200) 
 		{
+			//console.log(this.responseText);
 			var results = JSON.parse(this.responseText);
-			console.log(results.devices);
+			//console.log(results.devices);
 
 			if (results.devices.length < 1)
 			{
@@ -430,7 +428,7 @@ function OpenModal()
 						device.onclick = (function(i){
 							return function(){
 								//Change's device to selected device.
-								ChangeDevice(results.devices[i].id);
+								ChangeDevice(results.devices[i].id, $playsong);
 							};
 						})(i);
 					}
@@ -473,16 +471,22 @@ function ExitModal ()
 	modalOpen = false;
 }
 
-function ChangeDevice($deviceID)
+function ChangeDevice($deviceID, $playsong)
 {
-	console.log($deviceID);
+	//console.log($deviceID);
 	//Make XHTTP Query
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if(this.readyState == 4 && this.status == 200) 
 		{
-			console.log(this.responseText);
-			ExitModal();
+			if ($playsong == true)
+			{
+				Play();
+			}
+			else
+			{
+				ExitModal();
+			}
 		}
 	}
 	
@@ -491,6 +495,24 @@ function ChangeDevice($deviceID)
 	xhttp.send();
 	
 	console.log("Changing Device..");
+}
+
+function Play()
+{
+	//Make XHTTP Query
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if(this.readyState == 4 && this.status == 200) 
+		{
+			ExitModal();
+		}
+	}
+	
+	var partyID = jQuery('.party-id').val();
+	xhttp.open("GET", SITE + "player.php?PartyID=" + partyID + "&TP=''", true);
+	xhttp.send();
+	
+	console.log("Playing Song After Device Set..");
 }
 
 //Credit to Nathan of TechnicalOverload.com for the getParameter Function
@@ -506,8 +528,38 @@ function getParameter(theParameter) {
   return false;
 }
 
+function UpdatePlayer()
+{	
+	//Make XHTTP Query
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if(this.readyState == 4 && this.status == 200) 
+		{
+			$playing = this.responseText;
+			var attach = document.getElementById("playButtonAttach");
+			if ($playing)
+			{
+				jQuery('.playButton').text("Pause");
+			}
+			else
+			{
+				jQuery('.playButton').text("Resume");
+			}
+		}
+	}
+	
+	var partyID = jQuery('.party-id').val();
+	xhttp.open("GET", SITE + "player.php?PartyID=" + partyID, true);
+	xhttp.send();
+
+	console.log("Updating Player...");
+}
+
 function Initialise() 
 {
+	UpdatePlayer();
+	UpdateCurrentlyPlaying();
+
 	var input = document.getElementById("Term");
 	// Execute a function when the user releases a key on the keyboard
 	var timer;
@@ -529,25 +581,31 @@ function Initialise()
 				//Else Set timer for 2 seconds
     			timer = setTimeout(function (event){
         			PerformQuery()
-   				}, 1200);
+   				}, 1000);
 			}
 		}
 	});
-
-	UpdateCurrentlyPlaying();
 
 	//If btn extists (if host)
 	if (btn !=  null)
 	{
 		if (getParameter("choosedevice") != false)
 		{
-			OpenModal();		
+			//Pass true, "pressing" play after the device is selected.
+			OpenModal(true);
 		}
 		if (getParameter("needtoaddsongs") != false)
 		{
 			AddSongsError();
 		}
 	}
+
+	//Timer for UpdateCurrentlyPlaying
+	setInterval(function(){UpdateCurrentlyPlaying();}, 6000);
+	//Timer for UpdateVotes
+	setInterval(function(){UpdateVotes();}, 3000);
+	//Timer for UpdatePlayer
+	setInterval(function(){UpdatePlayer();}, 2000);
 }
 
 var modalOpen = false;

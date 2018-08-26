@@ -28,10 +28,6 @@
 				{
 					$action = $_GET["Action"];
 				}
-				else
-				{
-					return;
-				}
 			
 				switch($action) {
 					case "GetDevices":
@@ -90,8 +86,7 @@
 					NULL,
 					NULL
 				);
-				print(  json_encode(array("device_ids" => array($deviceid)))  );
-				print(  $result  );
+				print($result);
 			}
 		}
 	}

@@ -157,6 +157,10 @@
 				while(true) {
 					$rand = random_bytes(10);
 					$hash = hash("adler32",$nickname . $time . $rand);
+					$hash = substr($hash, 0, -4);
+					$hash = strtoupper($hash);
+
+					echo("<script>console.log('".$hash."');</script>");
 					
 					if($this->FindPartyWithUniqueString($hash) !== NULL){
 						continue;

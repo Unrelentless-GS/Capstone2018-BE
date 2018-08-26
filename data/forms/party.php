@@ -175,6 +175,12 @@
 																<?php
 																}
 															}
+															else
+															{
+																?>
+																<tr class="noSongsErrorMessage"><td>Your party is empty, try adding some songs using the search bar.</td></tr>
+																<?php
+															}
 														?>
 													</tbody>
 												</table>
@@ -209,7 +215,22 @@
 												<div class="playpause">
 													<form action="player.php" method="POST">
 														<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
-														<button type="submit" name="btnPlayPause">Play/Pause</button>
+														<?php 
+															$currentSong = $PLAYLIST->GetCurrentSong($session["PartyID"]);
+															if ($currentSong == null)
+															{
+																?>
+																<button type="submit" name="btnPlayPause">Start Party</button>
+																<?php
+															}
+															else
+															{
+																?>
+																<button class="playButton" type="submit" name="btnPlayPause">Resume</button>
+																<?php
+															}
+														?>
+														<!--<button type="submit" name="btnPlayPause">Play/Pause</button>-->
 													</form>
 												</div>
 											</div>

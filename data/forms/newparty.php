@@ -49,16 +49,34 @@
 							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
 							<table class="login-choice host-list">
 								<div class="formwrapper">
-									<form method="POST" action="jukebox.php">
-										<input type="hidden" name="txtAccessToken" value="<?php print($accessToken); ?>">
-										<input type="hidden" name="txtExpiresIn" value="<?php print($expiresIn); ?>">
-										<input type="hidden" name="txtRefreshToken" value="<?php print($refreshToken); ?>">
-										<input type="hidden" name="txtUserID" value="<?php print($id); ?>">
-										<input type="hidden" name="txtFinishCreatingParty" value="">
-										
-										<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
-										<input type="submit" value="Create">
-									</form>
+									<?php
+										//They're blocked from creating a party if they aren't using a 
+										// Spotify Premium Account
+										if ($id == null)
+										{
+											?>
+											<h4>Spotify Premium is required to Host a party.</h4>
+											<form method="POST" action="index.php">
+												<input type="submit" value="Return Home">
+											</form>
+											<?php
+										}
+										else
+										{
+											?>
+											<form method="POST" action="jukebox.php">
+												<input type="hidden" name="txtAccessToken" value="<?php print($accessToken); ?>">
+												<input type="hidden" name="txtExpiresIn" value="<?php print($expiresIn); ?>">
+												<input type="hidden" name="txtRefreshToken" value="<?php print($refreshToken); ?>">
+												<input type="hidden" name="txtUserID" value="<?php print($id); ?>">
+												<input type="hidden" name="txtFinishCreatingParty" value="">
+												
+												<input type="text" name="txtNickname" id="txtNickname" placeholder="Your nickname.."> <br>
+												<input type="submit" value="Create">
+											</form>
+											<?php
+										}
+									?>
 								</div>
 							</table>
 						</section>
@@ -77,6 +95,7 @@
 			Summary
 			Requests the user's ID from Spotify Web API.
 			This is to properly enter the user into an ongoing party, should one be existing.
+			Also verifies the user has a premium spotify account.
 			*/
 			private function GetUserID($accessToken) {
 				global $JUKE;
@@ -92,7 +111,14 @@
 				);
 				
 				$obj = json_decode($result, TRUE);
-				return $obj["id"];
+				if ($obj["product"] == "premium")
+				{
+					return $obj["id"];
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 	}

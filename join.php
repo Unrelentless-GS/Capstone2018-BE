@@ -24,7 +24,7 @@
 					$this->CompletePartyJoin();
 				}elseif(isset($_GET["ID"])) {
 					global $PARTY;
-					$partyRow = $PARTY->FindPartyWithUniqueString($_GET["ID"]);
+					$partyRow = $PARTY->FindPartyWithUniqueString(strtoupper($_GET["ID"]));
 					
 					if($partyRow === NULL){
 						$this->RequestPartyID();
