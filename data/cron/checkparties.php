@@ -85,25 +85,35 @@
 			private function CheckSongEnding($row) {
 				global $JUKE;
 				
-				$json = $JUKE->GetRequest("https://api.spotify.com/v1/me/player/currently-playing",
+				$json = $JUKE->GetRequest("https://api.spotify.com/v1/me/player/currently-playing?market=AU",
 					array("Authorization: Bearer " . $row["AuthAccessToken"]));
-					
-				if($json === FALSE || $json === NULL) {
-					print("Failed to discover any info for song; " . $row["SongID"] . " in party " . $row["PartyID"] . "<br>");
+				if($json == FALSE || $json == NULL) {
+					print("Failed to discover any info for song; " . $row["SongID"] . " in party " . $row["PartyID"] . "\n");
 					return;
 				}
-				
+
 				$obj = json_decode($json, TRUE);
+
+				//Detects error ebjects sent by spotify - Brendan
+				if(isset($obj["error"]))
+				{
+					if($obj["error"] !== null)
+					{
+						print("Error in Party " . $row["PartyID"] . " | Status: " . $obj["error"]["status"] . " | Message: " . $obj["error"]["message"] . "\n");
+						return;
+					}
+				}
+				
 				$id = $obj["item"]["id"];
 				$is_playing = $obj["is_playing"];
 				
 				if($is_playing != TRUE) {
-					print("Song in party " . $row["PartyID"] . " is currently not playing." . "<br>");
+					print("Song in party " . $row["PartyID"] . " is currently not playing." . "\n");
 					return;
 				}
 				
 				if($id !== $row["SongSpotifyID"]) {
-					print("Failed to discover any info for song; " . $row["SongID"] . " in party " . $row["PartyID"] . " (id mismatch)<br>" . $id . " vs " . $row["SongSpotifyID"] . "<br>");
+					print("Failed to discover any info for song; " . $row["SongID"] . " in party " . $row["PartyID"] . " (id mismatch)\n" . $id . " vs " . $row["SongSpotifyID"] . "\n");
 					return;
 				}
 				
@@ -111,10 +121,10 @@
 				$elapsed = $obj["progress_ms"] / 1000;
 				
 				// Uncomment for diagnoses.
-				//print("Song is " . $duration . " seconds long, " . $elapsed . " seconds through." . "<br>");
+				//print("Song is " . $duration . " seconds long, " . $elapsed . " seconds through." . "\n");
 				
 				if($duration - $elapsed <= 4) {
-					//print("Song is ready to be changed." . "<br>");
+					//print("Song is ready to be changed." . "\n");
 					// Song is ready to be changed.
 					$this->UpdateSong($row);
 				}
