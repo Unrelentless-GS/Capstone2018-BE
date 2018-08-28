@@ -2,7 +2,7 @@
 	/*
 	An endpoint for handling device commands.
 	
-	Written by Brendan based of designs by Alden Viljoen
+	Written by Brendan based off designs by Alden Viljoen
 	*/
 	
 	require_once("data/backend/srvr_info.php");

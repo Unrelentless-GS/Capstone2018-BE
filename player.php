@@ -2,7 +2,7 @@
 	/*
 	An endpoint for handling player commands.
 	
-	Written by Brendan based of designs by Alden Viljoen
+	Written by Brendan based off designs by Alden Viljoen
 	*/
 	
 	require_once("data/backend/srvr_info.php");
@@ -102,7 +102,12 @@
 				global $PARTY;
 				$row = $PARTY->FindPartyWithID($partyid);
 				$playing = $this->GetPlayer($row["AuthAccessToken"]);
-				print($playing["is_playing"] == 1);
+
+				//Checks that authorization has not expired.
+				if(isset($playing["is_playing"]))
+				{
+					print($playing["is_playing"] == 1);
+				}
 			}
 			
 			/**----------------------------**
@@ -178,35 +183,38 @@
 				else
 				{
 					global $JUKE;
-					if ($playing["is_playing"] == 1)
+					if(isset($playing["is_playing"]))
 					{
-						$JUKE->PutRequest
-						(
-							"https://api.spotify.com/v1/me/player/pause",
-							array( 
-								"Content-Type: application/json",
-								"Accept: application/json",
-								"Authorization: Bearer " . $row["AuthAccessToken"]
-							),
-							NULL,
-							NULL,
-							NULL
-						);
-					}
-					else
-					{
-						$JUKE->PutRequest
-						(
-							"https://api.spotify.com/v1/me/player/play",
-							array( 
-								"Content-Type: application/json",
-								"Accept: application/json",
-								"Authorization: Bearer " . $row["AuthAccessToken"]
-							),
-							NULL,
-							NULL,
-							NULL
-						);
+						if ($playing["is_playing"] == 1)
+						{
+							$JUKE->PutRequest
+							(
+								"https://api.spotify.com/v1/me/player/pause",
+								array( 
+									"Content-Type: application/json",
+									"Accept: application/json",
+									"Authorization: Bearer " . $row["AuthAccessToken"]
+								),
+								NULL,
+								NULL,
+								NULL
+							);
+						}
+						else
+						{
+							$JUKE->PutRequest
+							(
+								"https://api.spotify.com/v1/me/player/play",
+								array( 
+									"Content-Type: application/json",
+									"Accept: application/json",
+									"Authorization: Bearer " . $row["AuthAccessToken"]
+								),
+								NULL,
+								NULL,
+								NULL
+							);
+						}
 					}
 				}
 			}

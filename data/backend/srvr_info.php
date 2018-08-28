@@ -23,7 +23,7 @@
 
 	define("CLIENT_ID", "-snip-");
 	define("CLIENT_SECRET", "-snip-");
-	define("STATE", "This is a cool project!");
+	define("STATE", "Thisisacoolproject");
 
 	define("CHECKTABLES_ENABLED", "1");
 ?>

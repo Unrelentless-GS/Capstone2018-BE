@@ -94,14 +94,11 @@
 
 				$obj = json_decode($json, TRUE);
 
-				//Detects error ebjects sent by spotify - Brendan
+				//Detects error objects sent by spotify - Brendan
 				if(isset($obj["error"]))
 				{
-					if($obj["error"] !== null)
-					{
-						print("Error in Party " . $row["PartyID"] . " | Status: " . $obj["error"]["status"] . " | Message: " . $obj["error"]["message"] . "\n");
-						return;
-					}
+					print("Error in Party " . $row["PartyID"] . " | Status: " . $obj["error"]["status"] . " | Message: " . $obj["error"]["message"] . "\n");
+					return;
 				}
 				
 				$id = $obj["item"]["id"];

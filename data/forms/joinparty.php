@@ -60,7 +60,6 @@
 							<table class="login-choice guest-list">
 								<div class="formwrapper">
 									<form method="GET" action="join.php">
-										<input type="hidden" name="PartyID" value="<?php print($party["PartyID"]); ?>">
   										<input type="text" name="ID" id="ID" placeholder="Party Unique ID"> <br>
 									 	<input type="submit" name="btnJoin" value="Join">
 									</form>
