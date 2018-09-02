@@ -114,10 +114,36 @@
 					print("ID Mismatch for song; " . $row["SongID"] . " in party " . $row["PartyID"] . " (id mismatch)\n" . $id . " vs " . $row["SongSpotifyID"] . "\n");
 					print("Replacing Currently Playing with new song in party  " . $row["PartyID"] . "\n");
 
+					//Get Authentication
+					$_getSession = "
+						SELECT 
+							a.AuthAccessToken, a.AuthRefreshToken, a.AuthExpires,
+							p.*,
+							u.*
+						FROM user u
+						
+						INNER JOIN party p
+						ON p.PartyID=u.PartyID
+						
+						INNER JOIN authentication a
+						ON a.AuthID=p.AuthID
+
+						WHERE u.PartyID=:partyid
+					";
+					$result = $this->RunQuery($_getSession,
+						[
+							"partyid"		=> $row["PartyID"]
+						]);
+						
+					if($result === NULL || $result->rowCount() <= 0)
+						return;
+					
+					$result = $this->GetRow($result);
+
 					//Add the new song to the database
 					global $PLAYLIST;
 					$newSongSpotifyId = $id;
-					$newSongSongId = $PLAYLIST->AddSong($this->GetSessionInfo($_COOKIE["JukeboxCookie"]), $newSongSpotifyId);
+					$newSongSongId = $PLAYLIST->AddSong($result, $newSongSpotifyId);
 
 					global $PARTY;
 					//Song is already playing, so it only changes the song for the database.
