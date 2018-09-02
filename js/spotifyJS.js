@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-	jQuery('.upvote').each(function(index, element){
+	jQuery('#btnVoteUp').each(function(index, element){
 		jQuery(element).on('click', function(){
 
 			if(!jQuery(element).hasClass('active-vote'))
@@ -19,7 +19,7 @@ $(document).ready(function() {
 		});
 	});
 
-	jQuery('.downvote').each(function(index, element){
+	jQuery('#btnVoteDown').each(function(index, element){
 		jQuery(element).on('click', function(){	
 
 			if(!jQuery(element).hasClass('active-vote'))
