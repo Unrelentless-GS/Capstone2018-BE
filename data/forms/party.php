@@ -60,8 +60,6 @@
 									</div>
 								</div>
 								<div class="row results-row display-hide">
-									<div class="col-xs-2">
-									</div>
 									<div class="col-xs-10 search-results">
 										<div class="table-responsive" >	
 											<table id="search-table" class="table search-list">
@@ -93,9 +91,38 @@
 														</tr>
 													</thead>
 													<tbody id="vote-table-attach-point">
+														<!--Currently Playing Song-->
 														<?php
+														$currentSong = $PLAYLIST->GetCurrentSong($session["PartyID"]);
+														if ($currentSong != null)
+														{
+															?>
+															<tr class='currently-playing'>
+																<td class="currentSongName">
+																</td>
+																
+																<td class="currentArtistName">
+																</td>
+
+																<td>
+																</td>
+
+																<td>
+																</td>
+
+																<td>
+																</td>
+															</tr>
+														<?php
+														}
 															if($songs != NULL) {
 																while($song = $PLAYLIST->GetRow($songs)) {
+
+																if ($song["SongID"] == $currentSong["SongID"])
+																{
+																	continue;
+																}
+
 																?>
 																	<tr class='song-select'>
 																		<td class="song">
@@ -178,7 +205,7 @@
 															else
 															{
 																?>
-																<tr class="noSongsErrorMessage"><td>Your party is empty, try adding some songs using the search bar.</td></tr>
+																<tr class="noSongsErrorMessage"><td>The playlist is empty, try adding some songs using the search bar.</td><td class="focusSearchBar"><button>Search for Songs</button></td></tr>
 																<?php
 															}
 														?>
@@ -207,7 +234,7 @@
 													</div>
 												</div>
 												<div class="row">
-													<div class="col-xs-12 currentArtistName">
+													<div class="col-xs-12 currentArtistName darkerArtistName">
 													</div>
 												</div>
 											</div>
@@ -216,7 +243,6 @@
 													<form action="player.php" method="POST">
 														<input type="hidden" name="PartyID" id="PartyID" value="<?php print($session["PartyID"]); ?>">
 														<?php 
-															$currentSong = $PLAYLIST->GetCurrentSong($session["PartyID"]);
 															if ($currentSong == null)
 															{
 																?>
@@ -226,7 +252,7 @@
 															else
 															{
 																?>
-																<button class="playButton" type="submit" name="btnPlayPause">Resume</button>
+																<button class="playButton" type="submit" name="btnPlayPause">Pause</button>
 																<?php
 															}
 														?>
@@ -260,7 +286,7 @@
 													</div>
 												</div>
 												<div class="row">
-													<div class="col-xs-12 currentArtistName">
+													<div class="col-xs-12 currentArtistName darkerArtistName">
 													</div>
 												</div>
 											</div>

@@ -41,12 +41,12 @@ $(document).ready(function() {
 	jQuery('.form-control').on('keyup', function(){
 		if(jQuery('.form-control').val().length > 0) {
 			jQuery('.form-control').addClass('form-active');
-			jQuery('.main-frame').addClass('display-hide');
+			jQuery('.content-row').addClass('display-hide');
 			jQuery('.header-row').addClass('display-hide');
 			jQuery('.results-row').removeClass('display-hide');
 		} else {
 			jQuery('.form-control').removeClass('form-active');
-			jQuery('.main-frame').removeClass('display-hide');
+			jQuery('.content-row').removeClass('display-hide');
 			jQuery('.header-row').removeClass('display-hide');
 			jQuery('.results-row').addClass('display-hide');
 		}

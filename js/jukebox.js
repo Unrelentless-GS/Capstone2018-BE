@@ -14,6 +14,8 @@ if(DEBUG == true) {
 	SITE = "https://spotify-jukebox.viljoen.industries/";
 }
 
+var CurrentlyPlayingID = -10;
+
 //Updates Currently Playing Song Information - Brendan
 function UpdateCurrentlyPlaying()
 {
@@ -38,6 +40,13 @@ function UpdateCurrentlyPlaying()
 				img.setAttribute("width", "64");
 				var imgParent = document.getElementById("artworkparent");
 				imgParent.replaceChild(img, imgParent.firstChild);
+
+				//Set CurrentlyPlayingID
+				CurrentlyPlayingID = result.SongID;
+
+				//Call Updates Votes
+				// Do it this way so that when currently playing is changed, the old song is imediately deleted, so its not in the list twice.
+				UpdateVotes();
 			}
 		}
 	}
@@ -82,6 +91,14 @@ function UpdateVotes()
 				function(index) 
 				{
 					var songID = jQuery(this).find('input[name="SongID"]').val()
+
+					//Checks to see if it's the currently playing song, if so, deletes it
+					if (songID == CurrentlyPlayingID)
+					{
+						jQuery(this).remove();
+					}
+
+					//Updates votes and removes songs that have been deleted
 					for (var i = songData.length - 1; i >= 0; i--) 
 					{
 						var newVoteCount = GetVoteCount(songData[i],songID);
@@ -91,7 +108,7 @@ function UpdateVotes()
 							return;
 						}
 					}
-					jQuery(this).remove()
+					jQuery(this).remove();
 				});
 	
 				//Add new songs
@@ -116,6 +133,12 @@ function UpdateVotes()
 						{
 							alreadyExists = true;
 						} 
+					}
+
+					//Check it isn't the currently playing song
+					if (songData[i].SongID == CurrentlyPlayingID)
+					{
+						alreadyExists = true;
 					}
 	
 					if (!alreadyExists)
@@ -252,18 +275,19 @@ function sortTable()
 	while (switching) 
 	{
 		switching = false;
-		rows = table.getElementsByTagName("TR");
-		for (var i = 2, row1; row1 = table.rows[i]; i++) 
-		{
-			shouldSwitch = false;
-			x = rows[i - 1].getElementsByTagName("TD")[3];
-			y = rows[i].getElementsByTagName("TD")[3];
-			if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) 
+		rows = table.getElementsByClassName("song-select");
+		for (i = 1; i < rows.length; i++) 
+		{ 
+		    shouldSwitch = false;
+			x = parseInt(rows[i-1].getElementsByTagName("TD")[3].innerHTML);
+			y = parseInt(rows[i].getElementsByTagName("TD")[3].innerHTML);
+			if (x < y) 
 		  	{
 				shouldSwitch= true;
 				break;
 			}
 		}
+
 		if (shouldSwitch) 
 		{
 			rows[i].parentNode.insertBefore(rows[i], rows[i-1]);
@@ -283,8 +307,15 @@ function AddSong(spotify_track_id) {
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.onreadystatechange = function() {
 		if(this.readyState == 4 && this.status == 200) {
-			// Reload the page or required controls.
-			window.location = window.location.pathname;
+			//Reset forms and css
+			jQuery('.form-control').val("");
+			jQuery('.form-control').removeClass('form-active');
+			jQuery('.content-row').removeClass('display-hide');
+			jQuery('.header-row').removeClass('display-hide');
+			jQuery('.results-row').addClass('display-hide');
+
+			//Updates Votes and Songs
+			UpdateVotes();
 		}
 	}
 	
@@ -321,34 +352,28 @@ function PerformQuery() {
 
 function AddToList(item, index)
 {
-	var tr = document.createElement("TR"); 
+	var button = document.createElement("TR");
+	button.setAttribute("class", "addSongButton");
+
+	var id = item.id;
+
+	button.onclick = function() 
+	{
+		AddSong(id);
+	};
 
 	var title = document.createElement("td");
 	var t = document.createTextNode(item.name);
 	title.appendChild(t);
-	tr.appendChild(title);
+	button.appendChild(title);
 
     var artist = document.createElement("td");
     var t = document.createTextNode(item.artists[0].name);
 	artist.appendChild(t);
-	tr.appendChild(artist);
-
-	var id = item.id;
-
-    var button = document.createElement("td");
-
-	button.onclick = function() 
-	{
-    	AddSong(id);
-	};
-    var buttoni = document.createElement("i");
-    buttoni.setAttribute("class", "fas fa-plus addSongBtn");
-
-    button.appendChild(buttoni);
-	tr.appendChild(button);
+	button.appendChild(artist);
 
     var searchresults = document.getElementById("search-results")
-    searchresults.appendChild(tr);
+    searchresults.appendChild(button);
 }
 
 //Appears if songs need to be added to playlist
@@ -598,12 +623,20 @@ function Initialise()
 		{
 			AddSongsError();
 		}
+
+		jQuery(".focusSearchBar").click(function() 
+		{
+			jQuery(".form-control").focus();
+			jQuery('.form-control').addClass('form-active');
+			jQuery('.content-row').addClass('display-hide');
+			jQuery('.header-row').addClass('display-hide');
+			jQuery('.results-row').removeClass('display-hide');
+		});
+
 	}
 
-	//Timer for UpdateCurrentlyPlaying
-	setInterval(function(){UpdateCurrentlyPlaying();}, 6000);
-	//Timer for UpdateVotes
-	setInterval(function(){UpdateVotes();}, 3000);
+	//Timer for UpdateCurrentlyPlaying, which then calls UpdateVotes
+	setInterval(function(){UpdateCurrentlyPlaying();}, 4000);
 	//Timer for UpdatePlayer
 	setInterval(function(){UpdatePlayer();}, 2000);
 }

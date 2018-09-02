@@ -69,7 +69,6 @@
 				$result = $PLAYLIST->GetCurrentSong($_GET["PartyID"]);
 				if ($result != null)
 				{
-					$result = $this->GetRow($result);
 					$json = json_encode($result);
 					print($json);
 				}
@@ -129,8 +128,6 @@
 				if(isset($_POST["SpotifySongID"])) {
 					$spotify_id = $_POST["SpotifySongID"];
 					$songid = $PLAYLIST->AddSong($this->_NET_SESSION, $spotify_id);
-					
-					// Do something here, like tell the user to update their songlist.
 				}
 			}
 			

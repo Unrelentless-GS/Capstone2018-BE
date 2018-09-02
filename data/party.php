@@ -31,20 +31,6 @@
 			Example track URI: spotify:track:2u9HkCJUIfofPGMyiEBh7C
 			Also, updates the party's playlist to point to the currently playing song.
 			*/
-				private $_updateCurrentlyPlaying = "
-				UPDATE playlist p
-				SET 
-					CurrentlyPlaying = 
-						(
-							SELECT s.SongID
-							FROM song s
-							WHERE s.SongSpotifyID=:songid
-							LIMIT 1
-						),
-					PlaybackStarted = UNIX_TIMESTAMP()
-					
-				WHERE p.PartyID=:partyid
-			";
 			public function ChangeSongForParty($partyid, $spotify_track_id) {
 				global $JUKE;
 				
@@ -61,6 +47,26 @@
 					NULL
 				);
 
+				$this->ChangeSongForDatabase($partyid, $spotify_track_id);
+			}
+
+			//Updates the party's playlist to point to the currently playing song.
+				private $_updateCurrentlyPlaying = "
+				UPDATE playlist p
+				SET 
+					CurrentlyPlaying = 
+						(
+							SELECT s.SongID
+							FROM song s
+							WHERE s.SongSpotifyID=:songid
+							LIMIT 1
+						),
+					PlaybackStarted = UNIX_TIMESTAMP()
+					
+				WHERE p.PartyID=:partyid
+			";
+			public function ChangeSongForDatabase($partyid, $spotify_track_id)
+			{
 				$this->RunQuery($this->_updateCurrentlyPlaying,
 					[
 						"partyid"		=> $partyid,

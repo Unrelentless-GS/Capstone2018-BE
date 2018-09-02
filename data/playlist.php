@@ -163,6 +163,20 @@
 						"songid"			=> $songid,
 					]);
 			}
+
+			// Convert to songID and then delete song. - Brendan
+			private $_getSongID = "
+				SELECT s.SongID
+				FROM song s
+				WHERE s.SongSpotifyID=:songspotifyid
+			";
+			public function RemoveSongBySpotifyID($songSpotifyId) {
+				$result = $this->RunQuery($this->_getSongID,
+					[
+						"songspotifyid"			=> $songSpotifyId,
+					]);
+				$this->RemoveSong($this->GetRow($result)["SongID"]);
+			}
 			
 			private $_addVote = "
 				INSERT INTO vote(VoteID, VoteValue, SongID, UserID)
@@ -247,6 +261,7 @@
 
 				if($result === NULL || $result->rowCount() <= 0)
 					return NULL;
+				$result = $this->GetRow($result);
 				return $result;
 			}
 		}

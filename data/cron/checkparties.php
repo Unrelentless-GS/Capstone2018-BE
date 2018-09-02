@@ -109,8 +109,23 @@
 					return;
 				}
 				
+				//SongID Mismatch - Add other song to party.
 				if($id !== $row["SongSpotifyID"]) {
-					print("Failed to discover any info for song; " . $row["SongID"] . " in party " . $row["PartyID"] . " (id mismatch)\n" . $id . " vs " . $row["SongSpotifyID"] . "\n");
+					print("ID Mismatch for song; " . $row["SongID"] . " in party " . $row["PartyID"] . " (id mismatch)\n" . $id . " vs " . $row["SongSpotifyID"] . "\n");
+					print("Replacing Currently Playing with new song in party  " . $row["PartyID"] . "\n");
+
+					//Add the new song to the database
+					global $PLAYLIST;
+					$newSongSpotifyId = $id;
+					$newSongSongId = $PLAYLIST->AddSong($this->GetSessionInfo($_COOKIE["JukeboxCookie"]), $newSongSpotifyId);
+
+					global $PARTY;
+					//Song is already playing, so it only changes the song for the database.
+					$PARTY->ChangeSongForDatabase($row["PartyID"],$newSongSpotifyId);
+
+					//Delete old song from the playlist, they obviously didn't want to listen to it
+					$PLAYLIST->RemoveSongBySpotifyID($row["SongSpotifyID"]);
+
 					return;
 				}
 				

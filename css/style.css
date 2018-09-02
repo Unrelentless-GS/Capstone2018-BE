@@ -90,6 +90,7 @@ ul {
 
 .search-results {
 	background-color: #424242;
+	float:right;
 }
 
 .section-visible {
@@ -153,17 +154,12 @@ ul {
 	width: 95%;
 	margin-left: 50px;
 	margin-right: 50px;
-	top: 50px;
+	top: 20px;
 	position: relative;
 }
 
 .upvote, .downvote, .voteCount {
 	text-align: center;
-}
-
-svg.svg-inline--fa.fa-music.fa-w-16 {
-	height: 35px;
-	width: 35px;
 }
 
 .upvote, .downvote {
@@ -213,15 +209,23 @@ svg.svg-inline--fa.fa-music.fa-w-16 {
 	height: 100%;
 	background-color: transparent;
 	color: #fff;
-	border: none;
 	font-size: 30px;
 	padding-left: 30px;
 	padding-right: 0;
+	border-color: #4CAF50;
+	border-style: none;
+	border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.results-row{
+	margin-right: -11px;
+	margin-left: -9px;
 }
 
 .searchbar.section {
-	padding-right: 0;
-	padding-left: 0;
+	padding-right: 4px;
+	padding-left: 4px;
 }
 
 .form-active {
@@ -359,8 +363,15 @@ button {
    	padding: 7px 14px;
 }
 
-svg {
+.addSongButton {
 	cursor:pointer;
+	transition-duration: 0.2s;
+	-webkit-transition-duration: 0.2s; /* Safari */
+}
+
+.addSongButton:hover {
+	background-color: rgb(76, 175, 80); /* Fallback color */
+	background-color: rgba(76, 175, 80, 0.5); /* With 80% opacity */
 }
 
 .song-select button {
@@ -439,17 +450,15 @@ input {
 
 .noSongsErrorMessage{
 	text-align: center;
-	font-size: 30px;
-	margin-top:50%;
+	font-size: 20px;
 }
 
 
 /*Current Song / Player / Admin Options*/
 
-.currentArtistName{
+.darkerArtistName{
 	color:#949494;
 }
-
 
 /*Host*/
 .artwork {
@@ -500,8 +509,6 @@ input {
 	text-align: center;
 }
 
-
-
 /*Choose Device // Modal*/
 
 /* The Modal (background) */
@@ -536,3 +543,11 @@ input {
 
 .device-active{
 	color:green;
+}
+
+/*Currently Playing Song Row*/
+
+.currently-playing{
+	background-color: rgb(76, 175, 80); /* Fallback color */
+	background-color: rgba(76, 175, 80, 0.5); /* With 80% opacity */
+}
