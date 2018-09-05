@@ -165,7 +165,7 @@
 			
 			private function EnumeratePostValues() {
 				$input = file_get_contents("php://input");
-				if($input == "") {
+				if($input == "" || !$this->IsClientMobile()) {
 					return;
 				}
 				
@@ -179,8 +179,11 @@
 					error_log("Failed to mb_parse_str received tables! " . $plaintext);
 					return;
 				}
+				error_log("Enumerating post values");
 				
-				$_POST = $this->_receivedValues;
+				if($this->_receivedValues !== NULL && count($this->_receivedValues) !== 0) {
+					$_POST = $this->_receivedValues;
+				}
 			}
 			
 			private function MakeURLSafe($text) {
