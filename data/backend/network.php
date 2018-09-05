@@ -63,10 +63,8 @@
 				
 				$userHash = NULL;
 				if(isset($_COOKIE["JukeboxCookie"])) {
-					$this->_isMobile = FALSE;
 					$userHash = $_COOKIE["JukeboxCookie"];
 				}elseif(isset($_POST["JukeboxCookie"])) {
-					$this->_isMobile = TRUE;
 					$userHash = $_POST["JukeboxCookie"];
 				}
 				
@@ -165,7 +163,7 @@
 			
 			private function EnumeratePostValues() {
 				$input = file_get_contents("php://input");
-				if($input == "" || !$this->IsClientMobile()) {
+				if($input == "") {
 					return;
 				}
 				
@@ -177,13 +175,15 @@
 				// Now the data is in raw POST format, it can be parsed.
 				if(mb_parse_str($plaintext, $this->_receivedValues) === FALSE) {
 					error_log("Failed to mb_parse_str received tables! " . $plaintext);
+					$this->_receivedValues = NULL;
+				}
+				
+				// Check if we're mobile.
+				if($this->_receivedValues === NULL || !isset($this->_receivedValues["ImMobile"])) {
 					return;
 				}
-				error_log("Enumerating post values");
 				
-				if($this->_receivedValues !== NULL && count($this->_receivedValues) !== 0) {
-					$_POST = $this->_receivedValues;
-				}
+				$_POST = $this->_receivedValues;
 			}
 			
 			private function MakeURLSafe($text) {
