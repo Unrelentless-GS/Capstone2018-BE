@@ -81,18 +81,23 @@
 				}
 				
 				if(isset($_GET["code"])) {
-					$this->ProcessSuccessful($state, $successCallback);
+					$this->ProcessSuccessful($_GET["code"], $state, $successCallback);
 				}elseif(isset($_GET["error"])) {
 					$this->ProcessFailure($state, $failureCallback);
 				}
 			}
 			
+			// An addon function to neatly handle the intersection of mobile.
+			// I didn't want to make ProcessSuccessful public, to avoid confusion and encourage code reuse.
+			// A.V.
+			public function CompleteMobileAuthorisation($code, $state, $success) {
+				$this->ProcessSuccessful($code, $state, $success);
+			}
+			
 			// Internal code, finalises a user authorisation request.
-			private function ProcessSuccessful($state, $success) {
+			// Edited to always accept code as a parameter.
+			private function ProcessSuccessful($code, $state, $success) {
 				global $JUKE;
-				
-				// This can be exchanged for an access/refresh token.
-				$code = $_GET["code"];
 				
 				$JUKE->PostRequest(
 					"https://accounts.spotify.com/api/token",
@@ -106,7 +111,7 @@
 						"redirect_uri"			=> $this->_redirectURI
 					), 
 					$success,
-					NULL
+					$state
 				);
 			}
 			

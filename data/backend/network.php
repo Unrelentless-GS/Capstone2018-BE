@@ -15,6 +15,7 @@
 		class CNetwork extends CJukeboxDB {
 			private $_userAgent = ""; // The only user agent that should ever contact this script.
 			
+			private $_isMobile = FALSE;
 			private $_sessionAvailable = TRUE;
 			private $_queryValid = FALSE;
 			private $_receivedValues = NULL;
@@ -25,6 +26,7 @@
 				parent::__construct($name);
 				
 				$this->_receivedValues = array();
+				$this->EnumeratePostValues();
 				$this->_userAgent = $user_agent;
 				
 				$this->CheckIfTokenIsUsable();
@@ -34,10 +36,15 @@
 				return $this->_queryValid;
 			}
 			
-			// Returns TRUE if the userhash stored as a cookie was able to retrieve the 
+			// Returns TRUE if the userhash stored as a cookie or sent by a client was able to retrieve the 
 			// user's session info. False if not.
 			public function IsSessionValid() {
 				return $this->_sessionAvailable === TRUE;
+			}
+			
+			// Returns true if the request is being performed from a mobile app.
+			public function IsClientMobile() {
+				return $this->_isMobile;
 			}
 			
 			public function GetValue($name) {
@@ -47,11 +54,22 @@
 				return $this->_receivedValues[$name];
 			}
 			
+			// Edit:
+			// Modified to be compatible with mobile devices performing POST requests.
+			// Alden Viljoen
 			protected function SessionRequired() {
-				if(!isset($_COOKIE["JukeboxCookie"]))
+				if(!isset($_COOKIE["JukeboxCookie"]) && !isset($_POST["JukeboxCookie"]))
 					return FALSE;
 				
-				$userHash = $_COOKIE["JukeboxCookie"];
+				$userHash = NULL;
+				if(isset($_COOKIE["JukeboxCookie"])) {
+					$this->_isMobile = FALSE;
+					$userHash = $_COOKIE["JukeboxCookie"];
+				}elseif(isset($_POST["JukeboxCookie"])) {
+					$this->_isMobile = TRUE;
+					$userHash = $_POST["JukeboxCookie"];
+				}
+				
 				if($userHash == NULL) {
 					print("no presence");
 					return;
@@ -62,6 +80,18 @@
 					return FALSE;
 				
 				return TRUE;
+			}
+			
+			// params is an associative array.
+			// A.V.
+			protected function DropNetMessage($params, $return = FALSE) {
+				$msg = json_encode(array("JUKE_MSG" => $params));
+				// Can save message for debugging here.
+				
+				if($return == TRUE)
+					return $msg;
+				else
+					print($msg);
 			}
 
 			// TODO: Test this.
@@ -131,6 +161,26 @@
 						"expires"			=> $expiresAt,
 						"partyid"			=> $partyid
 					]);
+			}
+			
+			private function EnumeratePostValues() {
+				$input = file_get_contents("php://input");
+				if($input == "") {
+					return;
+				}
+				
+				$input = str_replace("-", "+", $input);
+				$input = str_replace("_", "/", $input);
+				
+				$plaintext = base64_decode($input);
+				
+				// Now the data is in raw POST format, it can be parsed.
+				if(mb_parse_str($plaintext, $this->_receivedValues) === FALSE) {
+					error_log("Failed to mb_parse_str received tables! " . $plaintext);
+					return;
+				}
+				
+				$_POST = $this->_receivedValues;
 			}
 			
 			private function MakeURLSafe($text) {

@@ -34,7 +34,7 @@
 
 				if(isset($_COOKIE["JukeboxCookie"])) {
 					$this->ServeExistingInfo();
-				}elseif(isset($_POST["txtFinishCreatingParty"])) {
+				}elseif(isset($_POST["txtPartyName"])) {
 					// User has filled out all their personal info about the party.
 					// Finish the setup.
 					$this->FinishCreatingParty();
@@ -46,12 +46,17 @@
 					// User has given us permission.
 					// Serve the custom info screen.
 					$this->RequestPartyInfo();
+				}elseif(isset($_POST["Code"]) && isset($_POST["PartyName"]) && isset($_POST["HostNickname"])) { // <-- CREATE PARTY FROM MOBILE.
+					// This is a create party request from a mobile device.
+					// The user has authorised our app to use their Spotify. Our app informs us of their intent,
+					// from here we will inform Spotify on their behalf that this is a secure connection, and create the party.
+					error_log("Creating party mobile");
+					$this->CreatePartyMobile();
 				}elseif(isset($_POST["btnGuest"])) {
-					// User wants to join a party as a guest
-					// Redirect them to join.php
-					header("Location: join.php");
+					// TODO.
 					return;
 				}else{
+					error_log("OTHER!");
 					header("Location: index.php");
 				}
 			}
@@ -100,7 +105,7 @@
 				);
 			}
 			
-			private function FinishCreatingParty() {
+			private function FinishCreatingParty($REDIRECT = TRUE) {
 				global $PARTY;
 				global $AUTHORISATION;
 				global $USER;
@@ -110,6 +115,7 @@
 				$refreshToken 		= $_POST["txtRefreshToken"];
 				$userID				= $_POST["txtUserID"];
 				
+				$partyName 			= $_POST["txtPartyName"];
 				$nickname 			= $_POST["txtNickname"];
 				
 				/* 
@@ -121,19 +127,63 @@
 				$party = $PARTY->FindPartyWithHostID($userID);
 				if($party !== NULL) {
 					// The host does exist, send them to their party.
-					$USER->UpdateHostUserHash($party["PartyID"], $nickname);
-
-					header("Location: jukebox.php");
-					return;
+					// Modified to return the new userhash (compatibility for mobile) A.V.
+					$userhash = $USER->UpdateHostUserHash($party["PartyID"], $nickname);
+					
+					if($REDIRECT == TRUE)
+						header("Location: jukebox.php");
+					return $userhash;
 				}
 				
-				$uniqueString = $PARTY->GenerateUniqueString($nickname, time());
+				$uniqueString = $PARTY->GenerateUniqueString($partyName, $nickname, time());
 
 				$authid = $AUTHORISATION->CreateAuthInstance($accessToken, $refreshToken, time() + $expiresIn, $userID);
-				$partyid = $PARTY->CreateParty($authid, $uniqueString);
+				$partyid = $PARTY->CreateParty($authid, $partyName, $uniqueString);
 				
-				$USER->EnterNewUser($partyid, $nickname, 1);
-				header("Location: jukebox.php");
+				$userhash = $USER->EnterNewUser($partyid, $nickname, 1);
+				
+				if($REDIRECT == TRUE)
+					header("Location: jukebox.php");
+				
+				return $userhash;
+			}
+			
+			private function CreatePartyMobile() {
+				global $AUTHORISATION;
+				
+				$hostNickname 	= $_POST["HostNickname"];
+				$partyName 		= $_POST["PartyName"];
+				
+				$code 			= $_POST["Code"];
+				
+				// Immediately request a refresh token - make this authorisation official.
+				$AUTHORISATION->CompleteMobileAuthorisation($code, array( "Nick"=>$hostNickname, "PartyName"=>$partyName ),
+					function($response, $state) {
+						global $USER;
+						
+						$json = json_decode($response, TRUE);
+						$userID = $USER->GetUserID($json["access_token"]);
+						
+						// I don't really want to rewrite the logic for determining if we already have a party - so I'll just do this.
+						// A.V.
+						$_POST["txtAccessToken"] 		= $json["access_token"];
+						$_POST["txtExpiresIn"] 			= $json["expires_in"];
+						$_POST["txtRefreshToken"] 		= $json["refresh_token"];
+						$_POST["txtUserID"]				= $userID;
+						
+						$_POST["txtPartyName"]			= $state["PartyName"];
+						$_POST["txtNickname"]			= $state["Nick"];
+						
+						// We'll call finishcreatingparty,
+						// this logic will in turn create a party or return the user's existing one.
+						$userhash = $this->FinishCreatingParty(FALSE);
+						
+						// The userhash is the key to the party, so we'll give it to the user.
+						// Also, this is where we'd attach existing data, such as current playlist.
+						
+						$this->DropNetMessage(array( "UserHash"		=> 		$userhash ));
+					}
+				);
 			}
 		}
 	}
