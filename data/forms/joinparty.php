@@ -55,8 +55,8 @@
 						// The user wants to join a party. Which one though?
 						
 						?>
-							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
 						<section class="cols-xs-12 login-content guest-login section">
+							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
 							<table class="login-choice guest-list">
 								<div class="formwrapper">
 									<form method="GET" action="join.php">

@@ -244,14 +244,19 @@
 
 			// Gets Currently Playing Song
 			private $_currentSong = "
-				SELECT s.*
+				SELECT s.*,
+				(
+					SELECT COALESCE(SUM(v.VoteValue),0) As Val
+					FROM vote v
+					WHERE v.SongID=s.SongID
+				) AS Value
 				FROM song s
 
 				INNER JOIN playlist p
 				ON s.PlaylistID=p.PlaylistID
 				
 				WHERE s.SongID=p.CurrentlyPlaying
-					AND p.PartyID=:partyid
+				AND p.PartyID=:partyid
 			";
 			public function GetCurrentSong($partyid) {
 				$result = $this->RunQuery($this->_currentSong,

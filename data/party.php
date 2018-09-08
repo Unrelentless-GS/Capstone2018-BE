@@ -60,8 +60,7 @@
 							FROM song s
 							WHERE s.SongSpotifyID=:songid
 							LIMIT 1
-						),
-					PlaybackStarted = UNIX_TIMESTAMP()
+						)
 					
 				WHERE p.PartyID=:partyid
 			";

@@ -107,107 +107,129 @@
 																<td>
 																</td>
 
-																<td>
+																<td class="currentSongValue voteCount">
 																</td>
 
 																<td>
 																</td>
 															</tr>
-														<?php
+															<?php
 														}
-															if($songs != NULL) {
-																while($song = $PLAYLIST->GetRow($songs)) {
+														else
+														{
+															?>
+															<tr class='currently-playing display-hide'>
+																<td class="currentSongName">
+																</td>
+																
+																<td class="currentArtistName">
+																</td>
 
-																if ($song["SongID"] == $currentSong["SongID"])
-																{
-																	continue;
-																}
+																<td>
+																</td>
 
-																?>
-																	<tr class='song-select'>
-																		<td class="song">
-																			<?php
-																			print($song["SongName"]);
-																			?>
-																		</td>
-																		
-																		<td class="artist">
-																			<?php
-																			print($song["SongArtists"]);
-																			?>
-																		</td>
-				
-																		<?php
-																		
-																		$votestate = $PLAYLIST->GetVotesForUserForSong($session["UserID"],$song["SongID"]);
-																		if ($votestate == 1)
-																		{
-																			?> <td class="upvote active-vote"> <?php
-																		}
-																		else
-																		{
-																			?> <td class="upvote"> <?php
-																		}
-																		?>
-																			<form id="frmVoteUp" method="POST" action="vote.php">
-																				<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
-																				<input type="hidden" name="Action" id="Action" value="Voting">
-																				<?php
-																				if ($votestate == 1)
-																				{
-																					?> <input type="hidden" name="Value" id="Value" value="0"> <?php
-																				}
-																				else
-																				{
-																					?> <input type="hidden" name="Value" id="Value" value="1"> <?php
-																				}
-																				?>
-																				<button type="submit" name="btnVoteUp" id="btnVoteUp"><i class="fas fa-arrow-up"></i></button>
-																			</form>
-																		</td>
-								
-																		<td class="voteCount">
-																			<?php
-																				print($song["VoteCount"]);
-																			?>
-																		</td>
-																		
-																		<?php
-																		if ($votestate == -1)
-																		{
-																			?> <td class="downvote active-vote"> <?php
-																		}
-																		else
-																		{
-																			?> <td class="downvote"> <?php
-																		}
-																		?>
-																			<form id="frmVoteDown" method="POST" action="vote.php">
-																				<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
-																				<input type="hidden" name="Action" id="Action" value="Voting">
-																				<?php
-																				if ($votestate == -1)
-																				{
-																					?> <input type="hidden" name="Value" id="Value" value="0"> <?php
-																				}
-																				else
-																				{
-																					?> <input type="hidden" name="Value" id="Value" value="-1"> <?php
-																				}
-																				?>
-																				<button type="submit" name="btnVoteDown" id="btnVoteDown"><i class="fas fa-arrow-down"></i></button>
-																			</form>
-																		</td>
-																	</tr>
-																<?php
-																}
-															}
-															else
+																<td class="currentSongValue voteCount">
+																</td>
+
+																<td>
+																</td>
+															</tr>
+															<?php
+														}
+														
+														if($songs != NULL) {
+															while($song = $PLAYLIST->GetRow($songs)) {
+
+															if ($song["SongID"] == $currentSong["SongID"])
 															{
-																?>
-																<tr class="noSongsErrorMessage"><td>The playlist is empty, try adding some songs using the search bar.</td><td class="focusSearchBar"><button>Search for Songs</button></td></tr>
-																<?php
+																continue;
 															}
+
+															?>
+																<tr class='song-select'>
+																	<td class="song">
+																		<?php
+																		print($song["SongName"]);
+																		?>
+																	</td>
+																	
+																	<td class="artist">
+																		<?php
+																		print($song["SongArtists"]);
+																		?>
+																	</td>
+				
+																	<?php
+																	
+																	$votestate = $PLAYLIST->GetVotesForUserForSong($session["UserID"],$song["SongID"]);
+																	if ($votestate == 1)
+																	{
+																		?> <td class="upvote active-vote"> <?php
+																	}
+																	else
+																	{
+																		?> <td class="upvote"> <?php
+																	}
+																	?>
+																		<form id="frmVoteUp" method="POST" action="vote.php">
+																			<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
+																			<input type="hidden" name="Action" id="Action" value="Voting">
+																			<?php
+																			if ($votestate == 1)
+																			{
+																				?> <input type="hidden" name="Value" id="Value" value="0"> <?php
+																			}
+																			else
+																			{
+																				?> <input type="hidden" name="Value" id="Value" value="1"> <?php
+																			}
+																			?>
+																			<button type="submit" name="btnVoteUp" id="btnVoteUp"><i class="fas fa-arrow-up"></i></button>
+																		</form>
+																	</td>
+								
+																	<td class="voteCount">
+																		<?php
+																			print($song["VoteCount"]);
+																		?>
+																	</td>
+																	
+																	<?php
+																	if ($votestate == -1)
+																	{
+																		?> <td class="downvote active-vote"> <?php
+																	}
+																	else
+																	{
+																		?> <td class="downvote"> <?php
+																	}
+																	?>
+																		<form id="frmVoteDown" method="POST" action="vote.php">
+																			<input type="hidden" name="SongID" id="SongID" value="<?php print($song["SongID"]); ?>">
+																			<input type="hidden" name="Action" id="Action" value="Voting">
+																			<?php
+																			if ($votestate == -1)
+																			{
+																				?> <input type="hidden" name="Value" id="Value" value="0"> <?php
+																			}
+																			else
+																			{
+																				?> <input type="hidden" name="Value" id="Value" value="-1"> <?php
+																			}
+																			?>
+																			<button type="submit" name="btnVoteDown" id="btnVoteDown"><i class="fas fa-arrow-down"></i></button>
+																		</form>
+																	</td>
+																</tr>
+															<?php
+															}
+														}
+														else
+														{
+															?>
+															<tr class="noSongsErrorMessage"><td>The playlist is empty, try adding some songs using the search bar.</td><td class="focusSearchBar"><button>Search for Songs</button></td></tr>
+															<?php
+														}
 														?>
 													</tbody>
 												</table>

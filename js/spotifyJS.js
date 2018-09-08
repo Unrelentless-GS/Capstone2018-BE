@@ -38,6 +38,7 @@ $(document).ready(function() {
 		});
 	});
 
+	// When the user deletes all the letters in the search bar or starts typing again, toggle the css.
 	jQuery('.form-control').on('keyup', function(){
 		if(jQuery('.form-control').val().length > 0) {
 			jQuery('.form-control').addClass('form-active');
@@ -51,4 +52,23 @@ $(document).ready(function() {
 			jQuery('.results-row').addClass('display-hide');
 		}
 	});
+
+	// When the user click on or off the searchbar, toggle the css.
+	window.onclick = function(event) 
+	{
+	    if (jQuery('.form-control').is(":focus") == true)
+	    {
+			jQuery('.form-control').addClass('form-active');
+			jQuery('.content-row').addClass('display-hide');
+			jQuery('.header-row').addClass('display-hide');
+			jQuery('.results-row').removeClass('display-hide');
+		}
+		else
+		{
+			jQuery('.form-control').removeClass('form-active');
+			jQuery('.content-row').removeClass('display-hide');
+			jQuery('.header-row').removeClass('display-hide');
+			jQuery('.results-row').addClass('display-hide');
+		}
+	}
 });

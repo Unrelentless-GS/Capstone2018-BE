@@ -139,6 +139,8 @@ ul {
 	position: fixed;
 	bottom: 0;
 	height: 10vh;
+	background-color: #424242;
+	padding-top: 1%;
 }
 
 .current-row {

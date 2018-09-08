@@ -116,7 +116,6 @@
 				CREATE TABLE playlist(
 					PlaylistID 				INT 			AUTO_INCREMENT,
 					CurrentlyPlaying 		INT	 			NOT NULL,
-					PlaybackStarted 		BIGINT 			NOT NULL,
 					PartyID 				INT 			NOT NULL,
 					
 					PRIMARY KEY(PlaylistID)

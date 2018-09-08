@@ -53,7 +53,9 @@
 					error_log("Creating party mobile");
 					$this->CreatePartyMobile();
 				}elseif(isset($_POST["btnGuest"])) {
-					// TODO.
+					// User wants to join a party as a guest
+					// Redirect them to join.php
+					header("Location: join.php");
 					return;
 				}else{
 					error_log("OTHER!");

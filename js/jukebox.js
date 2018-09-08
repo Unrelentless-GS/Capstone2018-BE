@@ -24,13 +24,33 @@ function UpdateCurrentlyPlaying()
 	{
 		if(this.readyState == 4 && this.status == 200) 
 		{
-			if (this.responseText != "null")
+			if (this.responseText == "No session")
+			{
+				var element = document.createElement("p");
+				element.setAttribute("id", "partyClosedErrorMessageText");
+				modalCon.appendChild(element);
+				modal.style.display = "block";
+				jQuery('#partyClosedErrorMessageText').text('Party has been closed by the host, redirecting...');
+
+				setTimeout(function () 
+				{
+   					location.reload();
+   				}, 10000);
+			}
+			else if (this.responseText == "null")
+			{
+
+			}
+			else
 			{
 				var result = JSON.parse(this.responseText);
 	
 				//Update Song Name and Artist
 				jQuery('.currentSongName').text(result.SongName);
 				jQuery('.currentArtistName').text(result.SongArtists);
+				jQuery('.currentSongValue').text(result.Value);
+				// Ensure current-song row is showing
+				jQuery('.currently-playing').removeClass('display-hide');
 	
 				//Update picture
 				var src = result.SongImageLink;
@@ -43,11 +63,10 @@ function UpdateCurrentlyPlaying()
 
 				//Set CurrentlyPlayingID
 				CurrentlyPlayingID = result.SongID;
-
-				//Call Updates Votes
-				// Do it this way so that when currently playing is changed, the old song is imediately deleted, so its not in the list twice.
-				UpdateVotes();
 			}
+			//Call Updates Votes
+			// Do it this way so that when currently playing is changed, the old song is imediately deleted, so its not in the list twice.
+			UpdateVotes();
 		}
 	}
 

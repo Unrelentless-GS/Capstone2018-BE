@@ -158,7 +158,7 @@
 				$duration = $obj["item"]["duration_ms"] / 1000;
 				$elapsed = $obj["progress_ms"] / 1000;
 				
-				// Uncomment for diagnoses.
+				// Uncomment for diagnosis.
 				//print("Song is " . $duration . " seconds long, " . $elapsed . " seconds through." . "\n");
 				
 				if($duration - $elapsed <= 4) {
