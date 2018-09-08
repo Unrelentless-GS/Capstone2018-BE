@@ -500,6 +500,21 @@ window.onclick = function(event) {
     if (event.target == modal) {
         ExitModal();
     }
+
+    if (jQuery('.form-control').is(":focus") == true)
+	{
+		jQuery('.form-control').addClass('form-active');
+		jQuery('.content-row').addClass('display-hide');
+		jQuery('.header-row').addClass('display-hide');
+		jQuery('.results-row').removeClass('display-hide');
+	}
+	else
+	{
+		jQuery('.form-control').removeClass('form-active');
+		jQuery('.content-row').removeClass('display-hide');
+		jQuery('.header-row').removeClass('display-hide');
+		jQuery('.results-row').addClass('display-hide');
+	}
 }
 
 //Remove everthing from Modal and close it
