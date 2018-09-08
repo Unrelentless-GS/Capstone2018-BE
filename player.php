@@ -103,10 +103,26 @@
 				$row = $PARTY->FindPartyWithID($partyid);
 				$playing = $this->GetPlayer($row["AuthAccessToken"]);
 
-				//Checks that authorization has not expired.
-				if(isset($playing["is_playing"]))
+				//Checks if party has started
+				global $PLAYLIST;
+				$currentSong = $PLAYLIST->GetCurrentSong($partyid);
+				if ($currentSong == null)
 				{
-					print($playing["is_playing"] == 1);
+					print(-1);
+				}
+				else
+				{
+					if(isset($playing["is_playing"]))
+					{
+						if ($playing["is_playing"]==1)
+						{
+							print(1);
+						}
+						else 
+						{
+							print(0);
+						}
+					}
 				}
 			}
 			

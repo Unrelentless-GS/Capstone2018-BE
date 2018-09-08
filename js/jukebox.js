@@ -596,13 +596,17 @@ function UpdatePlayer()
 		{
 			$playing = this.responseText;
 			var attach = document.getElementById("playButtonAttach");
-			if ($playing)
+			if ($playing == 1)
 			{
 				jQuery('.playButton').text("Pause");
 			}
-			else
+			else if ($playing == 0)
 			{
 				jQuery('.playButton').text("Resume");
+			}
+			else
+			{
+				jQuery('.playButton').text("Start Party");
 			}
 		}
 	}
