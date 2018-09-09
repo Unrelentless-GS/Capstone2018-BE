@@ -91,7 +91,6 @@
 				$songArray = $this->GetAllResults($songs);
 				
 				$userhash = $this->CompletePartyJoin();
-				$userhash = "USERHASH";
 				
 				// TODO: Insert currently playing here.
 				$this->DropNetMessage(array( "UserHash" 	=> $userhash,
