@@ -77,6 +77,7 @@ function UpdateCurrentlyPlaying()
 	console.log("Updating CurrentlyPlayingInfo...");
 }
 
+//Array of songs that only exist as dom elements, added using javascript.
 var tempSongArray = [];
 
 //GetVoteCountForSongID
@@ -405,7 +406,7 @@ function AddSongsError()
 	modal.style.display = "block";
 }
 
-//Choice Device Code - Brendan
+//Choose Device Code - Brendan
 
 // Get the button that opens the modal
 var btn = document.getElementById("chooseDeviceModalBtn");
@@ -495,12 +496,14 @@ function OpenModal($playsong)
 	console.log("Fetching Devices..");
 }
 
-// When the user clicks anywhere outside of the modal, close it
+
 window.onclick = function(event) {
+	// When the user clicks anywhere outside of the modal, close it
     if (event.target == modal) {
         ExitModal();
     }
 
+    //Toggle searchbar css when its clicked on or clicked away from
     if (jQuery('.form-control').is(":focus") == true)
 	{
 		jQuery('.form-control').addClass('form-active');
@@ -532,7 +535,6 @@ function ExitModal ()
 
 function ChangeDevice($deviceID, $playsong)
 {
-	//console.log($deviceID);
 	//Make XHTTP Query
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -595,7 +597,6 @@ function UpdatePlayer()
 		if(this.readyState == 4 && this.status == 200) 
 		{
 			$playing = this.responseText;
-			var attach = document.getElementById("playButtonAttach");
 			if ($playing == 1)
 			{
 				jQuery('.playButton').text("Pause");

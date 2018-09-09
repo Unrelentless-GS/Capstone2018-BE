@@ -278,7 +278,6 @@
 																<?php
 															}
 														?>
-														<!--<button type="submit" name="btnPlayPause">Play/Pause</button>-->
 													</form>
 												</div>
 											</div>
@@ -332,7 +331,6 @@
 						<div id="chooseDeviceModal">
 							<!-- Modal content -->
 							<div id="modal-content">
-							  <!--<span class="exit">Close</span>-->
 							</div>
 						</div>
 					</div>
