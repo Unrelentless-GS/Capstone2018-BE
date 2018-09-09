@@ -51,7 +51,7 @@
 							<div class="col-xs-12 main-row">
 								<div class="row search-row">
 									<div class="col-xs-2 logo-containter">
-										<img class="logo" src="Spotify_Logo_RGB_Green.png" />
+										<img class="logo" src="iconAndName.png" />
 									</div>
 									<div class="col-xs-10 searchbar section">
 										<input type="hidden" name="Mode" id="Mode" value="AuthorisationCode">

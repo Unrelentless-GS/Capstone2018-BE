@@ -214,7 +214,7 @@ ul {
 	font-size: 30px;
 	padding-left: 30px;
 	padding-right: 0;
-	border-color: #4CAF50;
+	border-color: #ff9500;
 	border-style: none;
 	border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -264,8 +264,8 @@ ul {
 	height: 90%;
 	max-width: 90%;
 	margin-top: 5%;
-	margin-left: 5%;
-	margin-right: 5%;
+	margin-left: 10%;
+	margin-right: 10%;
 }
 
 .logo-containter {
@@ -356,7 +356,7 @@ a:focus, a:hover {
 }
 
 button {
-	background-color:#4CAF50;
+	background-color:#ff9500;
     cursor:pointer;
    	border-radius:32px;
    	font-size:18px;
@@ -372,8 +372,8 @@ button {
 }
 
 .addSongButton:hover {
-	background-color: rgb(76, 175, 80); /* Fallback color */
-	background-color: rgba(76, 175, 80, 0.5); /* With 80% opacity */
+	background-color: rgb(255,149,0); /* Fallback color */
+	background-color: rgba(255,149,0, 0.5); /* With 80% opacity */
 }
 
 .song-select button {
@@ -401,11 +401,11 @@ form
 }
 
 input {
-	border: 2px solid #3CBC8D;
+	border: 2px solid #ff9500;
 	border-radius: 4px;
     width: 25%;
     background-color: #FFFFFF;
-    color: #3CBC8D;
+    color: #ff9500;
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
@@ -423,7 +423,7 @@ input {
 }
 
 .button-hostlogin {
-    background-color: #4CAF50; /* Green */
+    background-color: #ff9500; 
     border: none;
     color: white;
     padding: 15px 32px;
@@ -435,7 +435,7 @@ input {
 }
 
 .button-guestlogin {
-    background-color: #4CAF50; /* Green */
+    background-color: #ff9500;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -544,12 +544,12 @@ input {
 }
 
 .device-active{
-	color:green;
+	color:#ff9500;
 }
 
 /*Currently Playing Song Row*/
 
 .currently-playing{
-	background-color: rgb(76, 175, 80); /* Fallback color */
-	background-color: rgba(76, 175, 80, 0.5); /* With 80% opacity */
+	background-color: rgb(255,149,0); /* Fallback color */
+	background-color: rgba(255,149,0, 0.5); /* With 80% opacity */
 }

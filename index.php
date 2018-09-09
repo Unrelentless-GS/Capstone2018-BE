@@ -43,7 +43,7 @@
 <body>
 	<div class="container">
 		<section class="cols-xs-12 login-content login-selector section">
-			<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+			<img class="logo-loginpage" src="iconAndName.png" />
 			<table class="login-choice login-list">
 				<div>
 					<form method="POST" action="jukebox.php">

@@ -46,7 +46,7 @@
 
 					<body>	
 						<section class="cols-xs-12 login-content host-login section">
-							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+							<img class="logo-loginpage" src="iconAndName.png" />
 							<table class="login-choice host-list">
 								<div class="formwrapper">
 									<?php

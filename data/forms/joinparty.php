@@ -37,7 +37,7 @@
 						
 						?>
 						<section class="cols-xs-12 login-content guest-login section">
-							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+							<img class="logo-loginpage" src="iconAndName.png" />
 							<table class="login-choice guest-list">
 								<div class="formwrapper">
 									<form method="POST" action="join.php">
@@ -56,7 +56,7 @@
 						
 						?>
 						<section class="cols-xs-12 login-content guest-login section">
-							<img class="logo-loginpage" src="Spotify_Logo_RGB_Green.png" />
+							<img class="logo-loginpage" src="iconAndName.png" />
 							<table class="login-choice guest-list">
 								<div class="formwrapper">
 									<form method="GET" action="join.php">
