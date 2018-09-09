@@ -5,8 +5,6 @@
 	Written by Alden Viljoen
 	*/
 	
-	require_once("data/forms/joinparty.php");
-	
 	require_once("data/backend/srvr_info.php");
 	require_once("data/backend/network.php");
 	require_once("data/backend/funcs.php");
@@ -14,6 +12,7 @@
 	require_once("data/auth.php");
 	require_once("data/party.php");
 	require_once("data/user.php");
+	require_once("data/playlist.php");
 	
 	if(!class_exists("CJoin")) {
 		class CJoin extends CNetwork {
@@ -32,6 +31,8 @@
 					}
 					
 					$this->AuthoriseUserIntoParty($partyRow);
+				}elseif($this->IsClientMobile() && isset($_POST["Nickname"]) && isset($_POST["PartyCode"])) {		// <-- Authorising a mobile client.
+					$this->AuthoriseMobileIntoParty();
 				}else{ 
 					$this->RequestPartyID();
 				}
@@ -41,25 +42,61 @@
 				global $USER;
 				
 				// Finalise everything. Create the userHash, set cookie and Location to jukebox.
-				$partyid = $_POST["PartyID"];
-				$nickname = $_POST["txtNickname"];
+				$partyid 	= $_POST["PartyID"];
+				$nickname 	= $_POST["txtNickname"];
 				
-				$USER->EnterNewUser($partyid, $nickname, 0);
+				// TODO: Test if the user exists.
+				// If the user does, return its existing userhash - like how the Host system works,
+				// because right now, there'll just be an endless number of a single user created if the user uses multiple devices, closes browsers etc.
+				$userhash = $USER->EnterNewUser($partyid, $nickname, 0);
 				
-				header("Location: jukebox.php");
+				if(!$this->IsClientMobile())
+					header("Location: jukebox.php");
+				else
+					return $userhash;
 			}
 			
 			private function AuthoriseUserIntoParty($party) {
 				// Apply join rules here.
 				// Party full etc.
+				require_once("data/forms/joinparty.php");
 				
 				$joinform = new CJoinParty();
 				$joinform->GetUsername($party);
 			}
 			
 			private function RequestPartyID() {
+				require_once("data/forms/joinparty.php");
+				
 				$joinform = new CJoinParty();
 				$joinform->RequestPartyID();
+			}
+			
+			private function AuthoriseMobileIntoParty() {
+				global $PLAYLIST;
+				global $PARTY;
+				
+				$party = $PARTY->FindPartyWithUniqueString(strtoupper($_POST["PartyCode"]));
+				
+				if($party === NULL){
+					$this->DropNetMessage(array( "JukeboxFault" => "NoSuchParty" ));
+					return;
+				}
+				
+				$_POST["txtNickname"]	= $_POST["Nickname"];
+				$_POST["PartyID"]		= $party["PartyID"];
+				
+				// Now collect data about the party.
+				$songs = $PLAYLIST->GetPartySongs($party["PartyID"]);
+				$songArray = $this->GetAllResults($songs);
+				
+				$userhash = $this->CompletePartyJoin();
+				$userhash = "USERHASH";
+				
+				// TODO: Insert currently playing here.
+				$this->DropNetMessage(array( "UserHash" 	=> $userhash,
+											 "Songs" 		=> $songArray
+									));
 			}
 		}
 	}

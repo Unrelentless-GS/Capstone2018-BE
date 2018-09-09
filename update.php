@@ -22,8 +22,13 @@
 			function __construct() {
 				parent::__construct("Update", "", "", array ());
 				
-				if(!$this->IsSessionValid() || !$this->IsClientMobile()) {
-					error_log("[WARNING] Mobile user either has invalid session or is NOT mobile. (userhash:" . $_POST["JukeboxCookie"] . ")");
+				if(!$this->IsSessionValid()) {
+					error_log("[WARNING] Mobile user has an invalid session. (userhash:" . $_POST["JukeboxCookie"] . ")");
+					return;
+				}
+				
+				if(!$this->IsClientMobile()) {
+					error_log("[WARNING] User attempting communication is NOT mobile.");
 					return;
 				}
 				
@@ -36,11 +41,15 @@
 					case "UpdatePlaylist":
 						$this->DropPlaylist();
 						break;
+						
+					case "CurrentlyPlaying":
+						$this->DropPlaybackInfo();
+						break; 
 				}
 			}
 			
 			private function DropPlaylist() {
-				$PLAYLIST = new CPlaylist;
+				global $PLAYLIST;
 				$songs = $PLAYLIST->GetPartySongs($this->_NET_SESSION["PartyID"]);
 				
 				// songs is a resource, fetch assoc array.
@@ -49,6 +58,10 @@
 				// can safely drop this.
 				// this can be processed exactly like in the party form, only with JSON on the mobile device.
 				$this->DropNetMessage($songArray);
+			}
+			
+			private function DropPlaybackInfo() {
+				// TODO: Drop playback info. What's currently playing; track name, artist, album, preview image, elapsed and song duration.
 			}
 		}
 	}

@@ -165,7 +165,7 @@
 					$hash = substr($hash, 0, -4);
 					$hash = strtoupper($hash);
 
-					echo("<script>console.log('".$hash."');</script>");
+					// error_log("<script>console.log('".$hash."');</script>");
 					
 					if($this->FindPartyWithUniqueString($hash) !== NULL){
 						continue;

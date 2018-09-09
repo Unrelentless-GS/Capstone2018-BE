@@ -50,7 +50,6 @@
 					// This is a create party request from a mobile device.
 					// The user has authorised our app to use their Spotify. Our app informs us of their intent,
 					// from here we will inform Spotify on their behalf that this is a secure connection, and create the party.
-					error_log("Creating party mobile");
 					$this->CreatePartyMobile();
 				}elseif(isset($_POST["btnGuest"])) {
 					// User wants to join a party as a guest
@@ -58,7 +57,6 @@
 					header("Location: join.php");
 					return;
 				}else{
-					error_log("OTHER!");
 					header("Location: index.php");
 				}
 			}
@@ -163,8 +161,14 @@
 						global $USER;
 						
 						$json = json_decode($response, TRUE);
-						$userID = $USER->GetUserID($json["access_token"]);
+						if(!isset($json["access_token"])) {
+							// TODO: Use the jukebox error case to signal back to the user (JukeboxFault)
+							error_log("Authorisation failed! Reason: " . $response);
+							return;
+						}
 						
+						$userID = $USER->GetUserID($json["access_token"]);
+
 						// I don't really want to rewrite the logic for determining if we already have a party - so I'll just do this.
 						// A.V.
 						$_POST["txtAccessToken"] 		= $json["access_token"];

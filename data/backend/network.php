@@ -15,18 +15,13 @@
 		class CNetwork extends CJukeboxDB {
 			private $_userAgent = ""; // The only user agent that should ever contact this script.
 			
-			private $_isMobile = FALSE;
 			private $_sessionAvailable = TRUE;
 			private $_queryValid = FALSE;
-			private $_receivedValues = NULL;
 			
 			protected $_NET_SESSION = NULL;
 			
 			function __construct($name, $user_agent, $key, $required_vars) {
 				parent::__construct($name);
-				
-				$this->_receivedValues = array();
-				$this->EnumeratePostValues();
 				$this->_userAgent = $user_agent;
 				
 				$this->CheckIfTokenIsUsable();
@@ -44,7 +39,7 @@
 			
 			// Returns true if the request is being performed from a mobile app.
 			public function IsClientMobile() {
-				return $this->_isMobile;
+				return isset($_POST["ImMobile"]);
 			}
 			
 			public function GetValue($name) {
@@ -159,31 +154,6 @@
 						"expires"			=> $expiresAt,
 						"partyid"			=> $partyid
 					]);
-			}
-			
-			private function EnumeratePostValues() {
-				$input = file_get_contents("php://input");
-				if($input == "") {
-					return;
-				}
-				
-				$input = str_replace("-", "+", $input);
-				$input = str_replace("_", "/", $input);
-				
-				$plaintext = base64_decode($input);
-				
-				// Now the data is in raw POST format, it can be parsed.
-				if(mb_parse_str($plaintext, $this->_receivedValues) === FALSE) {
-					error_log("Failed to mb_parse_str received tables! " . $plaintext);
-					$this->_receivedValues = NULL;
-				}
-				
-				// Check if we're mobile.
-				if($this->_receivedValues === NULL || !isset($this->_receivedValues["ImMobile"])) {
-					return;
-				}
-				
-				$_POST = $this->_receivedValues;
 			}
 			
 			private function MakeURLSafe($text) {
