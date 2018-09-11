@@ -186,7 +186,9 @@
 						// The userhash is the key to the party, so we'll give it to the user.
 						// Also, this is where we'd attach existing data, such as current playlist.
 						
-						$this->DropNetMessage(array( "UserHash"		=> 		$userhash ));
+						$this->DropNetMessage(array( "UserHash"		=> 		$userhash,
+													 "YourName"		=>		$state["Nick"],
+											  ));
 					}
 				);
 			}

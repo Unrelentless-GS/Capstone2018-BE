@@ -89,12 +89,14 @@
 				// Now collect data about the party.
 				$songs = $PLAYLIST->GetPartySongs($party["PartyID"]);
 				$songArray = $this->GetAllResults($songs);
+				$hostName = $PARTY->GetHostNickname($party["PartyID"]);
 				
 				$userhash = $this->CompletePartyJoin();
 				
 				// TODO: Insert currently playing here.
 				$this->DropNetMessage(array( "UserHash" 	=> $userhash,
-											 "Songs" 		=> $songArray
+											 "Songs" 		=> $songArray,
+											 "HostName"		=> $hostName
 									));
 			}
 		}

@@ -18,22 +18,22 @@
 			function __construct() {
 				parent::__construct("Search", "", "", array ());
 				
-				if(!isset($_GET["Term"])) {
+				if(!$this->GetParameter("Term")) {
 					print("No term");
 					return;
 				}
 				
-				$term = $_GET["Term"];
+				$term = $this->GetParameter("Term");
 				
 				$type = NULL;
-				if(isset($_GET["Type"]))
-					$type = $_GET["Type"];
+				if($this->GetParameter("Type"))
+					$type = $this->GetParameter("Type");
 				else
 					$type = "album,artist,playlist,track";
 				
 				$mode = NULL;
-				if(isset($_GET["Mode"]))
-					$mode = $_GET["Mode"];
+				if($this->GetParameter("Mode"))
+					$mode = $this->GetParameter("Mode");
 				else
 					$mode = "ImplicitGrant"; // ImplicitGrant or AuthorisationCode
 				
@@ -49,26 +49,12 @@
 				global $AUTHORISATION;
 				global $USER;
 				
-				$userHash = $_COOKIE["JukeboxCookie"] or NULL;
-				if($userHash == NULL) {
-					print("no presence");
+				if(!$this->IsSessionValid()) {
+					error_log("no user presence");
 					return;
 				}
 				
-				$userrow = $USER->FindUserWithUserHash($userHash);
-				if($userrow == NULL){
-					print("no user presence");
-					return;
-				}
-				
-				$authrow = $AUTHORISATION->GetAuthRowWithPartyID($userrow["PartyID"]);
-				if($authrow == NULL) {
-					print("no auth presence");
-					return;
-				}
-				
-				// Now we can perform a search, given the access token and the term and type.
-				$this->Search($term, $type, $authrow["AuthAccessToken"]);
+				$this->Search($term, $type, $this->_NET_SESSION["AuthAccessToken"]);
 			}
 			
 			private function AuthoriseAndSearch($term, $type) {
@@ -124,6 +110,15 @@
 				$results = $JUKE->GetRequest($request, array("Authorization: Bearer " . $token));
 				
 				print($results);
+			}
+			
+			private function GetParameter($name) {
+				if(isset($_GET[$name]))
+					return $_GET[$name];
+				elseif(isset($_POST[$name]))
+					return $_POST[$name];
+				else
+					return NULL;
 			}
 		}
 	}
