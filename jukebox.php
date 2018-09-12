@@ -46,7 +46,7 @@
 					// User has given us permission.
 					// Serve the custom info screen.
 					$this->RequestPartyInfo();
-				}elseif(isset($_POST["Code"]) && isset($_POST["PartyName"]) && isset($_POST["HostNickname"])) { // <-- CREATE PARTY FROM MOBILE.
+				}elseif(isset($_POST["Code"]) && isset($_POST["HostNickname"])) { // <-- CREATE PARTY FROM MOBILE.
 					// This is a create party request from a mobile device.
 					// The user has authorised our app to use their Spotify. Our app informs us of their intent,
 					// from here we will inform Spotify on their behalf that this is a secure connection, and create the party.
@@ -151,12 +151,11 @@
 				global $AUTHORISATION;
 				
 				$hostNickname 	= $_POST["HostNickname"];
-				$partyName 		= $_POST["PartyName"];
-				
 				$code 			= $_POST["Code"];
 				
+				
 				// Immediately request a refresh token - make this authorisation official.
-				$AUTHORISATION->CompleteMobileAuthorisation($code, array( "Nick"=>$hostNickname, "PartyName"=>$partyName ),
+				$AUTHORISATION->CompleteMobileAuthorisation($code, array( "Nick"=>$hostNickname ),
 					function($response, $state) {
 						global $USER;
 						
@@ -167,6 +166,7 @@
 							return;
 						}
 						
+						
 						$userID = $USER->GetUserID($json["access_token"]);
 
 						// I don't really want to rewrite the logic for determining if we already have a party - so I'll just do this.
@@ -175,8 +175,6 @@
 						$_POST["txtExpiresIn"] 			= $json["expires_in"];
 						$_POST["txtRefreshToken"] 		= $json["refresh_token"];
 						$_POST["txtUserID"]				= $userID;
-						
-						$_POST["txtPartyName"]			= $state["PartyName"];
 						$_POST["txtNickname"]			= $state["Nick"];
 						
 						// We'll call finishcreatingparty,

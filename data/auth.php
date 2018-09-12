@@ -91,13 +91,20 @@
 			// I didn't want to make ProcessSuccessful public, to avoid confusion and encourage code reuse.
 			// A.V.
 			public function CompleteMobileAuthorisation($code, $state, $success) {
-				$this->ProcessSuccessful($code, $state, $success);
+				$this->ProcessSuccessful($code, $state, $success, TRUE);
 			}
 			
 			// Internal code, finalises a user authorisation request.
 			// Edited to always accept code as a parameter.
-			private function ProcessSuccessful($code, $state, $success) {
+			private function ProcessSuccessful($code, $state, $success, $mobile = FALSE) {
 				global $JUKE;
+				
+				// iOS requires these deep redirects.
+				// Let's just make it a standard for all mobile devices.
+				$redirect = $this->_redirectURI;
+				if($mobile == TRUE) {
+					$redirect = "jukebox://";
+				}
 				
 				$JUKE->PostRequest(
 					"https://accounts.spotify.com/api/token",
@@ -108,7 +115,7 @@
 					array(
 						"grant_type"			=> "authorization_code",
 						"code"					=> $code,
-						"redirect_uri"			=> $this->_redirectURI
+						"redirect_uri"			=> $redirect
 					), 
 					$success,
 					$state
