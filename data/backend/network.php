@@ -87,7 +87,6 @@
 					print($msg);
 			}
 
-			// TODO: Test this.
 			// Checks if the AuthAccessToken is valid, if not, requests a new one using refresh token.
 			private function CheckIfTokenIsUsable() {
 				if($this->SessionRequired() === FALSE) {
@@ -95,7 +94,8 @@
 					return;
 				}
 				
-				if(time() > $this->_NET_SESSION["AuthExpires"]) {
+				//Renews auth token 120 seconds before it would expire
+				if((time() + 120) > $this->_NET_SESSION["AuthExpires"]) {
 					global $JUKE;
 					
 					// Authorisation has expired.

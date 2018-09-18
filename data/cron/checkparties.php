@@ -97,9 +97,22 @@
 				//Detects error objects sent by spotify - Brendan
 				if(isset($obj["error"]))
 				{
-					print("Error in Party " . $row["PartyID"] . " | Status: " . $obj["error"]["status"] . " | Message: " . $obj["error"]["message"] . "\n");
-					return;
+					if ($obj["error"]["message"] == "The access token expired")
+					{
+						print("Error in Party " . $row["PartyID"] . " | Status: " . $obj["error"]["status"] . " | Message: " . $obj["error"]["message"] . "\n");
+						print("Deleting Party " . $row["PartyID"] . " as no-one has even looked at it in the last hour" . "\n");
+						global $PARTY;
+						$PARTY->EndParty($row["PartyID"]);
+						return;
+					}
+					else
+					{
+						print("Error in Party " . $row["PartyID"] . " | Status: " . $obj["error"]["status"] . " | Message: " . $obj["error"]["message"] . "\n");
+						return;
+					}
 				}
+
+
 				
 				$id = $obj["item"]["id"];
 				$is_playing = $obj["is_playing"];

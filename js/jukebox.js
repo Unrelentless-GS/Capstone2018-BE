@@ -30,7 +30,7 @@ function UpdateCurrentlyPlaying()
 				element.setAttribute("id", "partyClosedErrorMessageText");
 				modalCon.appendChild(element);
 				modal.style.display = "block";
-				jQuery('#partyClosedErrorMessageText').text('Party has been closed by the host, redirecting...');
+				jQuery('#partyClosedErrorMessageText').text('Party has been closed, redirecting...');
 
 				setTimeout(function () 
 				{
