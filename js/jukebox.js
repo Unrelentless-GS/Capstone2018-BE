@@ -382,6 +382,16 @@ function AddToList(item, index)
 		AddSong(id);
 	};
 
+	var imagetd = document.createElement("td");
+	imagetd.setAttribute("class", "noPadding");
+	var albumIconUrl = item.album.images[2].url;
+	var resultImage = document.createElement('img');
+	resultImage.src = albumIconUrl;
+	resultImage.setAttribute("height", "37");
+	resultImage.setAttribute("width", "37");
+	imagetd.appendChild(resultImage);
+	button.appendChild(imagetd);
+
 	var title = document.createElement("td");
 	var t = document.createTextNode(item.name);
 	title.appendChild(t);

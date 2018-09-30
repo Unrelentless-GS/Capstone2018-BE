@@ -577,3 +577,8 @@ input {
 ::-webkit-scrollbar-thumb:hover {
     background: #707070; 
 }
+
+/* Removes Padding on Image in Search Results*/
+.noPadding{
+	padding: 0 !important;
+}
