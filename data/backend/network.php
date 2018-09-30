@@ -86,6 +86,10 @@
 				else
 					print($msg);
 			}
+			
+			protected function DropFault($faultName) {
+				$this->DropNetMessage(array("JukeboxFault" => $faultName));
+			}
 
 			// Checks if the AuthAccessToken is valid, if not, requests a new one using refresh token.
 			private function CheckIfTokenIsUsable() {

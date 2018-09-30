@@ -21,6 +21,7 @@
 		class CUpdate extends CNetwork {
 			function __construct() {
 				parent::__construct("Update", "", "", array ());
+				error_log("Hello");
 				
 				if(!$this->IsSessionValid()) {
 					error_log("[WARNING] Mobile user has an invalid session. (userhash:" . $_POST["JukeboxCookie"] . ")");
@@ -44,8 +45,24 @@
 						
 					case "CurrentlyPlaying":
 						$this->DropPlaybackInfo();
-						break; 
+						break;
+						
+					case "AddSong":
+						$this->AddSong();
+						break;
 				}
+			}
+			
+			private function AddSong() {
+				global $PLAYLIST;
+				
+				if(!isset($_POST["SongSpotifyID"])) {
+					$this->DropFault("NoSongSpotifyIDGiven");
+					return;
+				}
+				
+				$songid = $PLAYLIST->AddSong($this->_NET_SESSION, $_POST["SongSpotifyID"]);
+				$this->DropNetMessage(array( "Status" => "Success", "SongID" => $songid ));
 			}
 			
 			private function DropPlaylist() {
@@ -61,7 +78,15 @@
 			}
 			
 			private function DropPlaybackInfo() {
-				// TODO: Drop playback info. What's currently playing; track name, artist, album, preview image, elapsed and song duration.
+				global $PARTY;
+				
+				$json = $PARTY->GetCurrentPlaybackInfo($this->_NET_SESSION["PartyID"]);
+				if($json === NULL) {
+					$this->DropFault("UnableToFindParty");
+					return;
+				}
+				
+				$this->DropNetMessage($json);
 			}
 		}
 	}

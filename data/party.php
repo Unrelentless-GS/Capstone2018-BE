@@ -6,12 +6,27 @@
 	Written by Alden Viljoen
 	*/
 	
+	require_once("backend/funcs.php");
 	require_once("backend/jukeboxdb.php");
 	
 	if(!class_exists("CParty")) {
 		class CParty extends CJukeboxDB {
 			function __construct() {
 				parent::__construct("Party");
+			}
+			
+			// Asks Spotify for the party's current playback status.
+			// Returns JSON straight from Spotify - no modification.
+			public function GetCurrentPlaybackInfo($partyid) {
+				global $JUKE;
+				$row = $this->FindPartyWithID($partyid);
+				if($row === NULL)
+					return NULL;
+				
+				$json = $JUKE->GetRequest("https://api.spotify.com/v1/me/player/currently-playing?market=AU",
+					array("Authorization: Bearer " . $row["AuthAccessToken"]));
+					
+				return $json;
 			}
 			
 			private $_insertParty = "
