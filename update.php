@@ -70,7 +70,10 @@
 				$songs = $PLAYLIST->GetPartySongs($this->_NET_SESSION["PartyID"]);
 				
 				// songs is a resource, fetch assoc array.
-				$songArray = $this->GetAllResults($songs);
+				if($songs !== NULL)
+					$songArray = $this->GetAllResults($songs);
+				else
+					$songArray = "NoSongsAdded";
 				
 				// can safely drop this.
 				// this can be processed exactly like in the party form, only with JSON on the mobile device.
