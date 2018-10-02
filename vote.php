@@ -142,7 +142,12 @@
 						$this->RemoveVote($songid);
 					}
 					
-					header("Location: jukebox.php");
+					// Only redirect if we're on web, otherwise return a confirmation.
+					if(!$this->IsClientMobile()) {
+						header("Location: jukebox.php");
+					}else{
+						$this->DropNetMessage(array("Status"	=>	"Success"));
+					}
 				}
 			}
 			

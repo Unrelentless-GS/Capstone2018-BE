@@ -21,7 +21,6 @@
 		class CUpdate extends CNetwork {
 			function __construct() {
 				parent::__construct("Update", "", "", array ());
-				error_log("Hello");
 				
 				if(!$this->IsSessionValid()) {
 					error_log("[WARNING] Mobile user has an invalid session. (userhash:" . $_POST["JukeboxCookie"] . ")");
