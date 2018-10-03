@@ -33,6 +33,9 @@
 					$this->AuthoriseUserIntoParty($partyRow);
 				}elseif($this->IsClientMobile() && isset($_POST["Nickname"]) && isset($_POST["PartyCode"])) {		// <-- Authorising a mobile client.
 					$this->AuthoriseMobileIntoParty();
+				}elseif($this->IsClientMobile() && isset($_POST["PartyCode"])) {
+					// The user is checking whether the party exists. This is just for smoother client facing.
+					$this->DoesPartyExist();
 				}else{ 
 					$this->RequestPartyID();
 				}
@@ -98,6 +101,21 @@
 											 "Songs" 		=> $songArray,
 											 "HostName"		=> $hostName
 									));
+			}
+			
+			private function DoesPartyExist() {
+				global $PLAYLIST;
+				global $PARTY;
+				
+				$party = $PARTY->FindPartyWithUniqueString(strtoupper($_POST["PartyCode"]));
+				
+				if($party === NULL){
+					$this->DropNetMessage(array( "JukeboxFault" => "NoSuchParty" ));
+					return;
+				}
+				$hostName = $PARTY->GetHostNickname($party["PartyID"]);
+				
+				$this->DropNetMessage(array( "Status" => "Success", "HostName" => $hostName ));	
 			}
 		}
 	}
