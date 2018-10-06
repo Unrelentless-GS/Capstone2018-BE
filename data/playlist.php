@@ -122,14 +122,59 @@
 				INNER JOIN playlist p
 				ON s.PlaylistID=p.PlaylistID
 				
-				WHERE p.PartyID=:id
+				WHERE p.PartyID=:partyid1
 				ORDER BY VoteCount DESC
 			";
 			public function GetPartySongs($partyid) {
 				$result = $this->RunQuery($this->_getSongs,
 					[
 						"partyid"		=> $partyid,
-						"id"			=> $partyid
+						"partyid1"			=> $partyid
+					]);
+					
+				if($result === NULL || $result->rowCount() <= 0)
+					return NULL;
+				return $result;
+			}
+			
+			// Same as the above function, except this one returns 1, 0 or -1 depending on a users vote.
+			// This is quite terrible code duplication. :/
+			private $_getPartySongsVote = "
+				SELECT 
+					s.*,
+					(
+						SELECT COALESCE(SUM(v.VoteValue),0)
+						FROM vote v
+						
+						INNER JOIN song s1
+						ON s1.SongID=v.SongID
+						
+						INNER JOIN playlist p
+						ON s1.PlaylistID=p.PlaylistID
+						
+						WHERE p.PartyID=:partyid
+							AND s.SongID=v.SongID
+					) AS VoteCount,
+					
+					(
+						SELECT COALESCE(SUM(v1.VoteValue),0)
+						FROM vote v1
+						WHERE v1.SongID=s.SongID AND v1.UserID=:userid
+					) AS YourVote
+					
+				FROM song s
+				INNER JOIN playlist p
+				ON s.PlaylistID=p.PlaylistID
+
+				WHERE p.PartyID=:partyid1
+				ORDER BY VoteCount DESC
+			";
+			public function GetPartySongsWithUserVote($partyid, $userid) {
+				$result = $this->RunQuery($this->_getPartySongsVote,
+					[
+						"partyid"		=> $partyid,
+						"partyid1"		=> $partyid,
+						"userid"		=> $userid
 					]);
 					
 				if($result === NULL || $result->rowCount() <= 0)

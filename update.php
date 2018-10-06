@@ -66,7 +66,7 @@
 			
 			private function DropPlaylist() {
 				global $PLAYLIST;
-				$songs = $PLAYLIST->GetPartySongs($this->_NET_SESSION["PartyID"]);
+				$songs = $PLAYLIST->GetPartySongsWithUserVote($this->_NET_SESSION["PartyID"], $this->_NET_SESSION["UserID"]);
 				
 				// songs is a resource, fetch assoc array.
 				if($songs !== NULL)
