@@ -28,15 +28,19 @@
 				{
 					$action = $_GET["Action"];
 				}
+				elseif(isset($_POST["Action"]))
+				{
+					$action = $_POST["Action"];
+				}
 			
 				switch($action) {
 					case "GetDevices":
-						$partyid = $_GET["PartyID"];
+						$partyid = $this->_NET_SESSION["PartyID"];
 						$this->GetDevices($partyid);
 						break;
 						
 					case "PlayOnDevice":
-						$partyid = $_GET["PartyID"];
+						$partyid = $this->_NET_SESSION["PartyID"];
 						$this->PlayOnDevice($partyid);
 						break;
 				}

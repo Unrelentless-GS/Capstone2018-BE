@@ -24,6 +24,20 @@
 					return;
 				}
 
+				if(isset($_POST["ImMobile"])) 
+				{
+					$partyid = $this->_NET_SESSION["PartyID"];
+					//If no active spotify device, return to jukebox and open the devicechoice modal
+					$noActiveDevice = $this->checkActiveSpotifyDevice($partyid);
+					if ($noActiveDevice)
+					{
+						print("NoDeviceSelected");
+					}
+					
+					$this->TogglePause($partyid);
+					return;
+				}
+
 				if(isset($_POST["PartyID"])) 
 				{
 					$partyid = $_POST["PartyID"];
@@ -82,7 +96,6 @@
 				$results = $this->GetDevices($partyid);
 				$resultsObj = json_decode($results, TRUE);
 				$noActiveDeviceFound = TRUE;
-				print($results);
 			
 				foreach ($resultsObj["devices"] as $dev) 
 				{
