@@ -94,6 +94,15 @@ ul {
     margin-top: 12.5%;
     margin-left: 25%;
   }
+	
+	.current-music {
+		height: 5vh;
+	}
+
+	.player, .chooseDevice, .disbandParty {
+		margin-top: 10px;
+		text-align: center;
+	}
 }
 
 .search-results {
