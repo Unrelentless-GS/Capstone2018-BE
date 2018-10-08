@@ -50,10 +50,10 @@
 						<div class="row main-section">
 							<div class="col-xs-12 main-row">
 								<div class="row search-row">
-									<div class="col-xs-2 logo-containter">
+									<div class="col-s-2 col-xs-3 logo-containter">
 										<img class="logo" src="iconAndName.png" />
 									</div>
-									<div class="col-xs-10 searchbar section">
+									<div class="col-s-10 col-xs-9 searchbar section">
 										<input type="hidden" name="Mode" id="Mode" value="AuthorisationCode">
 										<input type="hidden" name="Type" id="Type" value="track">
 										<input class="form-control" placeholder="Search..." name="Term" id="Term" type="search">
