@@ -89,12 +89,11 @@ ul {
 }
 
 @media only screen and (max-width: 425px) {
-  img.logo {
-    height: 50%;
-    margin-top: 12.5%;
-    margin-left: 25%;
-  }
-	
+	img.logo {
+		height: 50%;
+		margin-top: 20%;
+	}
+
 	.current-music {
 		height: 5vh;
 	}
@@ -102,6 +101,18 @@ ul {
 	.player, .chooseDevice, .disbandParty {
 		margin-top: 10px;
 		text-align: center;
+	}
+
+	.logo-loginpage {
+		width: 75%;
+	}
+
+	.login-selector {
+		margin-top: 50%;
+	}
+
+	.button-hostlogin, .button-guestlogin {
+		padding: 15px 80px;
 	}
 }
 
