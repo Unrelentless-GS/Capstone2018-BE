@@ -91,7 +91,11 @@
 				
 				// Now collect data about the party.
 				$songs = $PLAYLIST->GetPartySongs($party["PartyID"]);
-				$songArray = $this->GetAllResults($songs);
+				if($songs !== NULL)
+					$songArray = $this->GetAllResults($songs);
+				else
+					$songArray = "NoSongsAdded";
+				
 				$hostName = $PARTY->GetHostNickname($party["PartyID"]);
 				
 				$userhash = $this->CompletePartyJoin();
