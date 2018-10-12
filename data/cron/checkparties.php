@@ -174,7 +174,7 @@
 				// Uncomment for diagnosis.
 				//print("Song is " . $duration . " seconds long, " . $elapsed . " seconds through." . "\n");
 				
-				if($duration - $elapsed <= 4) {
+				if($duration - $elapsed <= 3) {
 					//print("Song is ready to be changed." . "\n");
 					// Song is ready to be changed.
 					$this->UpdateSong($row);

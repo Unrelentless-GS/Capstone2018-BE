@@ -655,7 +655,7 @@ function Initialise()
 				//Else Set timer for 2 seconds
     			timer = setTimeout(function (event){
         			PerformQuery()
-   				}, 1000);
+   				}, 200);
 			}
 		}
 	});

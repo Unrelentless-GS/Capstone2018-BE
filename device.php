@@ -77,7 +77,15 @@
 
 				global $PARTY;
 				$row = $PARTY->FindPartyWithID($partyid);
-				$deviceid = $_GET["DeviceID"];
+
+				if(isset($_GET["DeviceID"]))
+				{
+					$deviceid = $_GET["DeviceID"];
+				}
+				elseif(isset($_POST["DeviceID"]))
+				{
+					$deviceid = $_POST["DeviceID"];
+				}
 				
 				$result = $JUKE->PutRequest(
 					"https://api.spotify.com/v1/me/player",

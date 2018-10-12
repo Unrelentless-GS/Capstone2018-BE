@@ -99,7 +99,7 @@
 				}
 				
 				//Renews auth token 120 seconds before it would expire
-				if((time() + 120) > $this->_NET_SESSION["AuthExpires"]) {
+				if((time() + 1200) > $this->_NET_SESSION["AuthExpires"]) {
 					global $JUKE;
 					
 					// Authorisation has expired.
