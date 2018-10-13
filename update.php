@@ -49,7 +49,30 @@
 					case "AddSong":
 						$this->AddSong();
 						break;
+						
+					case "EndParty":
+						$this->EndParty();
+						break;
+						
+					case "LeaveParty":
+						$this->LeaveParty();
+						break;
 				}
+			}
+			
+			private function EndParty() {
+				global $PARTY;
+				
+				$PARTY->EndParty($this->_NET_SESSION["PartyID"]);
+				$this->DropNetMessage(array( "Status"	=>	"Success"));
+			}
+			
+			private function LeaveParty() {
+				global $PARTY;
+				
+				$PARTY->LeaveParty($this->_NET_SESSION["PartyID"], 
+					$this->_NET_SESSION["UserID"]);
+				$this->DropNetMessage(array( "Status"	=>	"Success"));
 			}
 			
 			private function AddSong() {
