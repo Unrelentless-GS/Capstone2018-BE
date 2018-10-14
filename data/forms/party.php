@@ -60,7 +60,7 @@
 									</div>
 								</div>
 								<div class="row results-row display-hide">
-									<div class="col-xs-10 search-results">
+									<div class="col-s-10 col-xs-9 search-results">
 										<div class="table-responsive" >	
 											<table id="search-table" class="table search-list">
 												<tbody id="search-results">

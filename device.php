@@ -98,7 +98,7 @@
 					NULL,
 					NULL
 				);
-				print($result);
+				$this->DropNetMessage(array( "Status"	=>	"Success"));
 			}
 		}
 	}
