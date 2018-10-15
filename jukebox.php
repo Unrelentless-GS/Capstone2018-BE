@@ -181,11 +181,18 @@
 						// this logic will in turn create a party or return the user's existing one.
 						$userhash = $this->FinishCreatingParty(FALSE);
 						
+						// Get Join Code.
+						$_POST["JukeboxCookie"] = $userhash;
+						$this->SessionRequired();
+						
+						$joinCode = $this->_NET_SESSION["PartyUniqueID"];
+						
 						// The userhash is the key to the party, so we'll give it to the user.
 						// Also, this is where we'd attach existing data, such as current playlist.
 						
 						$this->DropNetMessage(array( "UserHash"		=> 		$userhash,
 													 "YourName"		=>		$state["Nick"],
+													 "JoinCode"		=>		$joinCode
 											  ));
 					}
 				);

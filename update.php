@@ -63,6 +63,13 @@
 			private function EndParty() {
 				global $PARTY;
 				
+				if($this->_NET_SESSION["IsHost"] !== 1) {
+					error_log("[WARNING-SECURITY-BREACH] Non-host attempted to end party!");
+					$this->DropFault("NotAuthorised");
+					
+					return;
+				}
+				
 				$PARTY->EndParty($this->_NET_SESSION["PartyID"]);
 				$this->DropNetMessage(array( "Status"	=>	"Success"));
 			}

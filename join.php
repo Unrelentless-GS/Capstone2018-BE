@@ -97,13 +97,14 @@
 					$songArray = "NoSongsAdded";
 				
 				$hostName = $PARTY->GetHostNickname($party["PartyID"]);
-				
+				$joinCode = $party["PartyUniqueID"];
 				$userhash = $this->CompletePartyJoin();
 				
 				// TODO: Insert currently playing here.
 				$this->DropNetMessage(array( "UserHash" 	=> $userhash,
 											 "Songs" 		=> $songArray,
-											 "HostName"		=> $hostName
+											 "HostName"		=> $hostName,
+											 "JoinCode" 	=> $joinCode
 									));
 			}
 			
@@ -117,6 +118,7 @@
 					$this->DropNetMessage(array( "JukeboxFault" => "NoSuchParty" ));
 					return;
 				}
+				
 				$hostName = $PARTY->GetHostNickname($party["PartyID"]);
 				
 				$this->DropNetMessage(array( "Status" => "Success", "HostName" => $hostName ));	
