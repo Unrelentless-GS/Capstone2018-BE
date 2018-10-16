@@ -116,7 +116,21 @@
 						
 						WHERE p.PartyID=:partyid
 							AND s.SongID=v.SongID
-					) AS VoteCount
+					) AS VoteCount,
+					(
+						SELECT CASE WHEN p.CurrentlyPlaying=s.SongID THEN
+							1
+						ELSE
+							0
+						END
+					) AS IsPlaying,
+					(
+						SELECT CASE WHEN p.CurrentlyPlaying=s.SongID THEN
+							1
+						ELSE
+							0
+						END
+					) AS IsPlaying
 					
 				FROM song s
 				INNER JOIN playlist p
@@ -160,7 +174,14 @@
 						SELECT COALESCE(SUM(v1.VoteValue),0)
 						FROM vote v1
 						WHERE v1.SongID=s.SongID AND v1.UserID=:userid
-					) AS YourVote
+					) AS YourVote,
+					(
+						SELECT CASE WHEN p.CurrentlyPlaying=s.SongID THEN
+							1
+						ELSE
+							0
+						END
+					) AS IsPlaying
 					
 				FROM song s
 				INNER JOIN playlist p
