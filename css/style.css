@@ -610,3 +610,13 @@ input {
 .noPadding{
 	padding: 0 !important;
 }
+
+#incorrectID {
+    background: #000;
+    color: red;
+    width: 25%;
+    border-radius: 4px;
+    padding: 2px 20px;
+    text-align: center;
+    margin: 0 auto;
+}

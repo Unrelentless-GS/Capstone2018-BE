@@ -672,17 +672,16 @@ function Initialise()
 		{
 			AddSongsError();
 		}
-
-		jQuery(".focusSearchBar").click(function() 
-		{
-			jQuery(".form-control").focus();
-			jQuery('.form-control').addClass('form-active');
-			jQuery('.content-row').addClass('display-hide');
-			jQuery('.header-row').addClass('display-hide');
-			jQuery('.results-row').removeClass('display-hide');
-		});
-
 	}
+
+	jQuery(".focusSearchBar").click(function() 
+	{
+		jQuery(".form-control").focus();
+		jQuery('.form-control').addClass('form-active');
+		jQuery('.content-row').addClass('display-hide');
+		jQuery('.header-row').addClass('display-hide');
+		jQuery('.results-row').removeClass('display-hide');
+	});
 
 	//Timer for UpdateCurrentlyPlaying, which then calls UpdateVotes
 	setInterval(function(){UpdateCurrentlyPlaying();}, 4000);

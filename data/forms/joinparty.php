@@ -51,16 +51,22 @@
 						<?php
 					}
 					
-					public function RequestPartyID() {
+					public function RequestPartyID($incorrectID) {
 						// The user wants to join a party. Which one though?
 						
 						?>
 						<section class="cols-xs-12 login-content guest-login section">
 							<img class="logo-loginpage" src="iconAndName.png" />
 							<table class="login-choice guest-list">
+								<?php
+									if ($incorrectID)
+									{
+										?><p id=incorrectID>Incorrect Party ID</p><?php
+									} 
+								?>
 								<div class="formwrapper">
 									<form method="GET" action="join.php">
-  										<input type="text" name="ID" id="ID" placeholder="Party Unique ID"> <br>
+										<input type="text" name="ID" id="ID" placeholder="Party Unique ID"><br>
 									 	<input type="submit" name="btnJoin" value="Join">
 									</form>
 								</div>

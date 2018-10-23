@@ -26,7 +26,7 @@
 					$partyRow = $PARTY->FindPartyWithUniqueString(strtoupper($_GET["ID"]));
 					
 					if($partyRow === NULL){
-						$this->RequestPartyID();
+						$this->RequestPartyID(true);
 						return;
 					}
 					
@@ -37,7 +37,7 @@
 					// The user is checking whether the party exists. This is just for smoother client facing.
 					$this->DoesPartyExist();
 				}else{ 
-					$this->RequestPartyID();
+					$this->RequestPartyID(false);
 				}
 			}
 			
@@ -68,11 +68,11 @@
 				$joinform->GetUsername($party);
 			}
 			
-			private function RequestPartyID() {
+			private function RequestPartyID($incorrectID) {
 				require_once("data/forms/joinparty.php");
 				
 				$joinform = new CJoinParty();
-				$joinform->RequestPartyID();
+				$joinform->RequestPartyID($incorrectID);
 			}
 			
 			private function AuthoriseMobileIntoParty() {
