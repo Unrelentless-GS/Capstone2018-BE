@@ -117,7 +117,7 @@ ul {
 }
 
 .search-results {
-	background-color: #424242;
+	background-color: #2e2e29;
 	float:right;
 }
 
@@ -167,7 +167,7 @@ ul {
 	position: fixed;
 	bottom: 0;
 	height: 10vh;
-	background-color: #424242;
+	background-color: #363636;
 	padding-top: 1%;
 }
 
@@ -259,7 +259,7 @@ ul {
 }
 
 .form-active {
-	background-color: #424242;
+	background-color: #2e2e29;
 }
 
 .input-group.add-on {
@@ -334,11 +334,11 @@ a:focus, a:hover {
 }
 
 .upvote.active-vote {
-	color: #1db954;
+	color: #2ecc71;
 }
 
 .downvote.active-vote {
-	color: #f44b42;
+	color: #e74c3c;
 }
 
 .results-frame {
@@ -400,8 +400,7 @@ button {
 }
 
 .addSongButton:hover {
-	background-color: rgb(255,149,0); /* Fallback color */
-	background-color: rgba(255,149,0, 0.5); /* With 80% opacity */
+	background-color: #8a550a;
 }
 
 .song-select button {
@@ -486,8 +485,12 @@ input {
 
 /*Current Song / Player / Admin Options*/
 
+.currentArtistName{
+	color:#c8c8c8;
+}
+
 .darkerArtistName{
-	color:#949494;
+	color:#c8c8c8;
 }
 
 /*Host*/
@@ -578,8 +581,7 @@ input {
 /*Currently Playing Song Row*/
 
 .currently-playing{
-	background-color: rgb(255,149,0); /* Fallback color */
-	background-color: rgba(255,149,0, 0.5); /* With 80% opacity */
+	background-color: #8a550a;
 }
 
 /* Custom Scollbar */

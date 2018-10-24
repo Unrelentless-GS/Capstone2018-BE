@@ -398,6 +398,7 @@ function AddToList(item, index)
 	button.appendChild(title);
 
     var artist = document.createElement("td");
+    artist.setAttribute("class", "darkerArtistName");
     var t = document.createTextNode(item.artists[0].name);
 	artist.appendChild(t);
 	button.appendChild(artist);

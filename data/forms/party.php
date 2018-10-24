@@ -256,7 +256,7 @@
 													</div>
 												</div>
 												<div class="row">
-													<div class="col-xs-12 currentArtistName darkerArtistName">
+													<div class="col-xs-12 currentArtistName">
 													</div>
 												</div>
 											</div>
