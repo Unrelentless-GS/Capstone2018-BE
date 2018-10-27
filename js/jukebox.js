@@ -54,12 +54,22 @@ function UpdateCurrentlyPlaying()
 	
 				//Update picture
 				var src = result.SongImageLink;
-				var img = document.createElement('img');
-				img.src = src;
-				img.setAttribute("height", "64");
-				img.setAttribute("width", "64");
-				var imgParent = document.getElementById("artworkparent");
-				imgParent.replaceChild(img, imgParent.firstChild);
+				
+				//For bottom part
+				var imgBottom = document.createElement('img');
+				imgBottom.src = src;
+				imgBottom.setAttribute("height", "64");
+				imgBottom.setAttribute("width", "64");
+				var imgParentBottom = document.getElementById("artworkparent");
+				imgParentBottom.replaceChild(imgBottom, imgParentBottom.firstChild);
+
+				//For top row
+				var imgTopRow = document.createElement('img');
+				imgTopRow.src = src;
+				imgTopRow.setAttribute("height", "42");
+				imgTopRow.setAttribute("width", "42");
+				var imgParentTop = document.getElementById("currentSongArtwork");
+				imgParentTop.replaceChild(imgTopRow, imgParentTop.firstChild);
 
 				//Set CurrentlyPlayingID
 				CurrentlyPlayingID = result.SongID;
@@ -99,6 +109,7 @@ function UpdateVotes()
 	{
 		if(this.readyState == 4 && this.status == 200) 
 		{
+			console.log(this.responseText);
 			var songData = JSON.parse(this.responseText);
 			//If not null
 			if (songData != null)
@@ -169,6 +180,16 @@ function UpdateVotes()
 						//Add the song using elements
 						var tr = document.createElement("TR"); 
 						tr.setAttribute("class", "song-select");
+
+						//SongArtwork
+						var songArtwork = document.createElement("td");
+						songArtwork.setAttribute("class", "songArtwork");
+						var img = document.createElement('img');
+						img.src = songData[i].SongImageLink;
+						img.setAttribute("height", "42");
+						img.setAttribute("width", "42");
+						songArtwork.appendChild(img);
+						tr.appendChild(songArtwork);
 	
 						//SongName
 						var songName = document.createElement("td");

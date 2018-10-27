@@ -86,6 +86,7 @@
 						s.SongID,
 						s.SongName,
 						s.SongArtists,
+						s.SongImageLink,
 						(
 							SELECT COALESCE(SUM(v.VoteValue),0)
 							FROM vote v

@@ -123,13 +123,6 @@
 						ELSE
 							0
 						END
-					) AS IsPlaying,
-					(
-						SELECT CASE WHEN p.CurrentlyPlaying=s.SongID THEN
-							1
-						ELSE
-							0
-						END
 					) AS IsPlaying
 					
 				FROM song s
@@ -137,7 +130,7 @@
 				ON s.PlaylistID=p.PlaylistID
 				
 				WHERE p.PartyID=:partyid1
-				ORDER BY VoteCount DESC
+				ORDER BY s.SongID = p.CurrentlyPlaying DESC, VoteCount DESC
 			";
 			public function GetPartySongs($partyid) {
 				$result = $this->RunQuery($this->_getSongs,
@@ -169,7 +162,6 @@
 						WHERE p.PartyID=:partyid
 							AND s.SongID=v.SongID
 					) AS VoteCount,
-					
 					(
 						SELECT COALESCE(SUM(v1.VoteValue),0)
 						FROM vote v1
@@ -188,7 +180,7 @@
 				ON s.PlaylistID=p.PlaylistID
 
 				WHERE p.PartyID=:partyid1
-				ORDER BY VoteCount DESC
+				ORDER BY s.SongID = p.CurrentlyPlaying DESC, VoteCount DESC
 			";
 			public function GetPartySongsWithUserVote($partyid, $userid) {
 				$result = $this->RunQuery($this->_getPartySongsVote,

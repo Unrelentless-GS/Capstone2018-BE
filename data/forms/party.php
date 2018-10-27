@@ -81,15 +81,6 @@
 										<section class="cols-xs-12 playlist-content vote-selector section">
 											<div class="table-responsive">	
 												<table id="vote-table" class="table choice-list vote-list">
-													<thead>
-														<tr>
-															<th>Track</th>
-															<th>Artist</th>
-															<th></th>
-															<th class="voteHeader">Vote</th>
-															<th></th>
-														</tr>
-													</thead>
 													<tbody id="vote-table-attach-point">
 														<!--Currently Playing Song-->
 														<?php
@@ -98,6 +89,8 @@
 														{
 															?>
 															<tr class='currently-playing'>
+																<td id="currentSongArtwork">
+																</td>
 																<td class="currentSongName">
 																</td>
 																
@@ -119,6 +112,9 @@
 														{
 															?>
 															<tr class='currently-playing display-hide'>
+																<td id="currentSongArtwork">
+																	<div></div>
+																</td>
 																<td class="currentSongName">
 																</td>
 																
@@ -147,6 +143,9 @@
 
 															?>
 																<tr class='song-select'>
+																	<td class="songArtwork">
+																		<img src="<?php print($song["SongImageLink"]);?>" height="42" width="42">
+																	</td>
 																	<td class="song">
 																		<?php
 																		print($song["SongName"]);
@@ -248,7 +247,6 @@
 										{
 											?>
 											<div class="col-xs-6 artwork" id="artworkparent">
-												<div></div>
 											</div>
 											<div class="col-xs-6 current-info">
 												<div class="row">

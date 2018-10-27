@@ -485,7 +485,7 @@ input {
 
 /*Current Song / Player / Admin Options*/
 
-.currentArtistName{
+.currentArtistName, .artist{
 	color:#c8c8c8;
 }
 
@@ -621,4 +621,10 @@ input {
     padding: 2px 20px;
     text-align: center;
     margin: 0 auto;
+}
+
+
+.songArtwork, #currentSongArtwork{
+	padding: 4px !important;
+	text-align: center;
 }
