@@ -113,7 +113,7 @@
 				global $PARTY;
 				
 				$json = $PARTY->GetCurrentPlaybackInfo($this->_NET_SESSION["PartyID"]);
-				if($json === NULL) {
+				if($json === NULL OR $json === "") {
 					$this->DropFault("UnableToFindParty");
 					return;
 				}
